@@ -787,7 +787,11 @@
       twitter: "%ED%8A%B8%EC%9C%84%ED%84%B0%EC%A1%B4.png",
       telegram: "%ED%85%94%EB%A0%88%EA%B7%B8%EB%9E%A8%EC%A1%B4.png",
       wallet: "%EC%9B%94%EB%A0%9B%EC%A1%B4.png",
-      market: "%EB%A7%88%EC%BC%93%EC%A1%B4.png"
+      market: "%EB%A7%88%EC%BC%93%EC%A1%B4.png",
+      lbank: "LBANK.png"
+    };
+    const SHOP_IMAGE_OVERRIDE_SRC = {
+      lbank: "https://raw.githubusercontent.com/faglobalxgp2024-design/XGP-world/main/LBANK.png"
     };
     const shopArt = Object.create(null);
     function loadShopArt() {
@@ -797,7 +801,7 @@
         shopArt[key] = { img: im, loaded: false };
         im.onload = () => { shopArt[key].loaded = true; };
         im.onerror = () => { shopArt[key].loaded = false; };
-        im.src = SHOP_IMAGE_ROOT + file;
+        im.src = SHOP_IMAGE_OVERRIDE_SRC[key] || (SHOP_IMAGE_ROOT + file);
       });
     }
     loadShopArt();
@@ -826,11 +830,12 @@
       { key: "shooting", label: "SHOOTING", status: "soon", url: "", message: "COMING SOON", type: "tower", size: "L", x: 0, y: 0, w: 0, h: 0 },
       { key: "archery", label: "ARCHERY", status: "soon", url: "", message: "COMING SOON", type: "tower", size: "L", x: 0, y: 0, w: 0, h: 0 },
       { key: "janggi", label: "JANGGI", status: "soon", url: "", message: "COMING SOON", type: "dojo", size: "L", x: 0, y: 0, w: 0, h: 0 },
-      { key: "omok", label: "OMOK", status: "soon", url: "", message: "COMING SOON", type: "cafe", size: "L", x: 0, y: 0, w: 0, h: 0 },
+      { key: "omok", label: "OMOK", status: "open", url: "https://fagomoku.xyz/", message: "Enter Gomoku?", type: "cafe", size: "L", x: 0, y: 0, w: 0, h: 0 },
       { key: "twitter", label: "TWITTER", status: "open", url: "https://x.com/FAGLOBAL_", type: "social", size: "L", x: 0, y: 0, w: 0, h: 0 },
       { key: "telegram", label: "TELEGRAM", status: "open", url: "https://t.me/faglobalgp", type: "social", size: "L", x: 0, y: 0, w: 0, h: 0 },
       { key: "wallet", label: "WALLET", status: "open", url: "https://faglobal.site/", type: "wallet", size: "L", x: 0, y: 0, w: 0, h: 0 },
       { key: "market", label: "MARKET", status: "open", url: "https://famarket.store/", type: "market", size: "L", x: 0, y: 0, w: 0, h: 0 },
+      { key: "lbank", label: "LBANK", status: "open", url: "https://www.lbank.com/trade/xgp_usdt", type: "market", size: "L", x: 0, y: 0, w: 0, h: 0 },
       { key: "blacksmith", label: "BLACKSMITH", status: "shop", url: "", message: "SHOP에 GO IN하시겠습니까?", type: "building", size: "M", x: 0, y: 0, w: 0, h: 0 }
     ];
 
@@ -1971,6 +1976,10 @@
           p.w *= 1.18;
           p.h *= 1.14;
         }
+        if (p.key === "lbank") {
+          p.w *= 0.80;
+          p.h *= 0.80;
+        }
         if (p.key === "blacksmith") {
           p.w *= 0.58;
           p.h *= 0.58;
@@ -2012,11 +2021,13 @@
           if (touchLayout) {
             if (p.key === "twitter") placeByRect(p, z, leftX, topY);
             else if (p.key === "wallet") placeByRect(p, z, rightX, topY + 6);
+            else if (p.key === "lbank") placeByRect(p, z, z.x + z.w * 0.49 - p.w * 0.5, z.y + z.h * 0.28 - p.h * 0.5);
             else if (p.key === "telegram") placeByRect(p, z, rightX + 18, bottomY + 18);
             else if (p.key === "market") placeByRect(p, z, leftX + 24, bottomY - 22);
           } else {
             if (p.key === "twitter") placeByRect(p, z, leftX, topY);
             else if (p.key === "wallet") placeByRect(p, z, rightX, topY);
+            else if (p.key === "lbank") placeByRect(p, z, z.x + z.w * 0.49 - p.w * 0.5, z.y + z.h * 0.30 - p.h * 0.5);
             else if (p.key === "telegram") placeByRect(p, z, leftX + 176, bottomY + 4);
             else if (p.key === "market") placeByRect(p, z, rightX - p.w - 190, topY + 20);
           }
