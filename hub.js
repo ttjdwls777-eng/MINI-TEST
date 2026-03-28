@@ -1977,8 +1977,8 @@
           p.h *= 1.14;
         }
         if (p.key === "lbank") {
-          p.w *= 0.80;
-          p.h *= 0.80;
+          p.w *= 0.56;
+          p.h *= 0.56;
         }
         if (p.key === "blacksmith") {
           p.w *= 0.58;
@@ -2021,13 +2021,13 @@
           if (touchLayout) {
             if (p.key === "twitter") placeByRect(p, z, leftX, topY);
             else if (p.key === "wallet") placeByRect(p, z, rightX, topY + 6);
-            else if (p.key === "lbank") placeByRect(p, z, z.x + z.w * 0.49 - p.w * 0.5, z.y + z.h * 0.28 - p.h * 0.5);
+            else if (p.key === "lbank") placeByRect(p, z, rightX - p.w - 18, topY - 18);
             else if (p.key === "telegram") placeByRect(p, z, rightX + 18, bottomY + 18);
             else if (p.key === "market") placeByRect(p, z, leftX + 24, bottomY - 22);
           } else {
             if (p.key === "twitter") placeByRect(p, z, leftX, topY);
             else if (p.key === "wallet") placeByRect(p, z, rightX, topY);
-            else if (p.key === "lbank") placeByRect(p, z, z.x + z.w * 0.49 - p.w * 0.5, z.y + z.h * 0.30 - p.h * 0.5);
+            else if (p.key === "lbank") placeByRect(p, z, rightX - p.w - 26, topY - 26);
             else if (p.key === "telegram") placeByRect(p, z, leftX + 176, bottomY + 4);
             else if (p.key === "market") placeByRect(p, z, rightX - p.w - 190, topY + 20);
           }
