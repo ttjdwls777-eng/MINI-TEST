@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQVEQH5V81"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LQVEQH5V81');
+  </script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>FA WORLD </title>
+  <link rel="stylesheet" href="hub.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <div class="title">XGP 미니월드</div>
+        <div class="subtitle">미니미를 움직여 건물(포탈)로 들어가요</div>
+      </div>
+    </div>
+
+    <div class="tips">
+      <span class="chip">PC: WASD / 방향키</span>
+      <span class="chip">마우스: 미니미 드래그</span>
+      <span class="chip">모바일: 터치 드래그</span>
+      <span class="chip">포탈 위: Enter/E · 모바일: 손 떼기</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <canvas id="world" aria-label="미니월드"></canvas>
+
+    <div class="hud">
+      <div class="hud-row">
+        <div class="pill" id="coord">x: 0 · y: 0</div>
+        <div class="pill" id="fps">fps: -</div>
+      </div>
+      <div class="help">
+        건물에 닿으면 안내가 떠요. <b>Enter/E</b>로 입장 (모바일은 손 떼면 입장).
+      </div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <div id="fade" class="fade" aria-hidden="true"></div>
+  </main>
+
+  <script src="hub.js"></script>
+</body>
+</html>
