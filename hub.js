@@ -2021,13 +2021,13 @@
           if (touchLayout) {
             if (p.key === "twitter") placeByRect(p, z, leftX, topY);
             else if (p.key === "wallet") placeByRect(p, z, rightX, topY + 6);
-            else if (p.key === "lbank") placeByRect(p, z, rightX - p.w - 18, topY - 18);
+            else if (p.key === "lbank") placeByRect(p, z, rightX - p.w - 140, topY - 18);
             else if (p.key === "telegram") placeByRect(p, z, rightX + 18, bottomY + 18);
             else if (p.key === "market") placeByRect(p, z, leftX + 24, bottomY - 22);
           } else {
             if (p.key === "twitter") placeByRect(p, z, leftX, topY);
             else if (p.key === "wallet") placeByRect(p, z, rightX, topY);
-            else if (p.key === "lbank") placeByRect(p, z, rightX - p.w - 26, topY - 26);
+            else if (p.key === "lbank") placeByRect(p, z, rightX - p.w - 150, topY - 26);
             else if (p.key === "telegram") placeByRect(p, z, leftX + 176, bottomY + 4);
             else if (p.key === "market") placeByRect(p, z, rightX - p.w - 190, topY + 20);
           }
