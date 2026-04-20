@@ -1647,41 +1647,56 @@
         const d = Math.hypot(m.x - player.x, m.y - player.y);
         if (d < best) { best = d; target = m; }
       }
-      const aimX = target ? target.x - anchor.x : anchor.vx * 120 + anchor.x;
-      const aimY = target ? target.y - anchor.y : anchor.vy * 120 + anchor.y;
+      const aimX = target ? target.x - anchor.x : anchor.vx * 150 + anchor.x;
+      const aimY = target ? target.y - anchor.y : anchor.vy * 150 + anchor.y;
       const len = Math.hypot(aimX, aimY) || 1;
       combatState.fireballCd = now + 3000;
       combatState.fireballs.push({
-        x: anchor.x, y: anchor.y, vx: (aimX / len) * 520, vy: (aimY / len) * 520,
-        life: 1.4, radius: 14, damage: Math.max(2, Math.round(base * 2)), burn: 2.8, targetId: target ? target.id : null
+        x: anchor.x,
+        y: anchor.y,
+        vx: (aimX / len) * 610,
+        vy: (aimY / len) * 610,
+        life: 1.8,
+        radius: 22,
+        damage: Math.max(3, Math.round(base * 2.35)),
+        burn: 4.2,
+        trail: [],
+        targetId: target ? target.id : null,
+        tier: getEquippedVisuals().weaponTier?.label || "",
+        plus: getEnhanceLevel("weapon") || 0
       });
-      player.gearFlashT = 0.35;
+      player.gearFlashT = 0.48;
     }
 
     function triggerThunderstorm() {
       const now = performance.now();
       if (combatState.thunderCd > now) return;
       combatState.thunderCd = now + 3000;
-      player.gearFlashT = 0.52;
-      const radius = 240;
-      const targets = [...combatState.slimes, ...combatState.titans].filter((m) => !m.dead && Math.hypot(m.x - player.x, m.y - player.y) <= radius + (m.scale ? m.scale * 0.8 : 0));
-      const base = Math.max(3, Math.round(playerAttackPower() * 1.5));
+      player.gearFlashT = 0.62;
+      const radius = 430;
+      const targets = [...combatState.slimes, ...combatState.titans].filter((m) => !m.dead && Math.hypot(m.x - player.x, m.y - player.y) <= radius + (m.scale ? m.scale * 1.05 : 0));
+      const base = Math.max(4, Math.round(playerAttackPower() * 1.7));
       targets.forEach((m, idx) => {
-        const delay = idx * 0.05;
-        const damage = Math.round(base * (m.scale ? 0.95 : 1.15));
-        combatState.thunderBolts.push({ x: m.x, y: m.y, life: 0.52 + delay, maxLife: 0.52 + delay, delay, damage, done: false, target: m });
+        const delay = idx * 0.028;
+        const damage = Math.round(base * (m.scale ? 1.05 : 1.2));
+        combatState.thunderBolts.push({ x: m.x, y: m.y, life: 0.78 + delay, maxLife: 0.78 + delay, delay, damage, done: false, target: m, spread: 1 + (idx % 3) });
       });
-      for (let i = 0; i < 8; i++) {
-        const ang = i / 8 * Math.PI * 2;
-        combatState.thunderBursts.push({ x: player.x + Math.cos(ang) * 60, y: player.y + Math.sin(ang) * 32, life: 0.42, ring: true });
-      }
-      if (!targets.length) {
-        for (let i = 0; i < 6; i++) {
-          const ang = i / 6 * Math.PI * 2;
-          combatState.thunderBolts.push({ x: player.x + Math.cos(ang) * 130, y: player.y + Math.sin(ang) * 80, life: 0.48, maxLife: 0.48, delay: i * 0.03, damage: 0, done: true, target: null });
+      for (let ring = 0; ring < 3; ring++) {
+        const cnt = 10 + ring * 4;
+        const rr = 72 + ring * 82;
+        for (let i = 0; i < cnt; i++) {
+          const ang = i / cnt * Math.PI * 2 + ring * 0.22;
+          combatState.thunderBursts.push({ x: player.x + Math.cos(ang) * rr, y: player.y + Math.sin(ang) * rr * 0.72, life: 0.56, ring: true, big: ring === 2 });
         }
       }
-      spawnDamageText(player.x, player.y - 54, "THUNDER STORM", "#c4b5fd", 1.08);
+      if (!targets.length) {
+        for (let i = 0; i < 18; i++) {
+          const ang = i / 18 * Math.PI * 2;
+          const rr = 120 + (i % 3) * 70;
+          combatState.thunderBolts.push({ x: player.x + Math.cos(ang) * rr, y: player.y + Math.sin(ang) * rr * 0.76, life: 0.74, maxLife: 0.74, delay: i * 0.02, damage: 0, done: true, target: null, spread: 2 });
+        }
+      }
+      spawnDamageText(player.x, player.y - 58, "THUNDER STORM", "#c4b5fd", 1.14);
     }
 
     function triggerHaste() {
@@ -3571,6 +3586,253 @@ function drawWorldTitle() {
     
 function drawMinifig(x, y, opts = {}) {
       const isHero = !!opts.isHero;
+      const pal = opts.palette || {
+        torso: isHero ? "#2563eb" : "#0a84ff",
+        pants: isHero ? "#334155" : "#374151",
+        hat: isHero ? "#ef4444" : "#ffcc00",
+        skin: "#ffd7b5",
+        hair: "#1f2937"
+      };
+      const gear = isHero ? getEquippedVisuals() : null;
+      const dir = opts.dirOverride || player.dir;
+      const moving = typeof opts.moving === "boolean" ? opts.moving : player.moving;
+      const walkPhase = typeof opts.walkPhase === "number" ? opts.walkPhase : player.walkPhase;
+      const bob = moving ? Math.sin(walkPhase * 1.15) * 2.4 : Math.sin(performance.now() / 420) * 0.7;
+      const hipSwing = moving ? Math.sin(walkPhase) * 0.34 : 0;
+      const shoulderSwing = moving ? Math.sin(walkPhase + Math.PI / 2) * 0.28 : 0;
+      const attackPose = isHero && combatState.attackT > 0;
+      const attackEase = attackPose ? Math.sin(Math.min(1, combatState.attackT / 0.28) * Math.PI) : 0;
+      const side = dir === "left" ? -1 : 1;
+      const isSide = dir === "left" || dir === "right";
+      const isBack = dir === "up";
+      const isFront = dir === "down";
+
+      const armorBase = gear && gear.armorColor ? gear.armorColor : '#111827';
+      const armorHi = shade(armorBase, 34);
+      const armorLo = shade(armorBase, -34);
+      const trim = gear?.hatTier?.color || gear?.weaponTier?.color || '#d4af5c';
+      const cape = isHero ? 'rgba(116,24,24,0.96)' : 'rgba(51,65,85,0.9)';
+      const shieldColor = gear?.shieldColor || '#64748b';
+      const swordColor = gear?.weaponColor || '#cbd5e1';
+      const shieldGlow = gear?.shieldTier?.glow || shieldColor;
+      const swordGlow = gear?.weaponTier?.glow || swordColor;
+
+      ctx.save();
+      ctx.translate(x, y + 4 + bob);
+      ctx.globalAlpha = 0.24;
+      ctx.fillStyle = 'rgba(10,14,24,0.52)';
+      ctx.beginPath();
+      ctx.ellipse(0, 31, isSide ? 16 : 20, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      if (isSide) {
+        ctx.scale(side, 1);
+      }
+
+      // back cape layer
+      if (isHero) {
+        ctx.save();
+        ctx.translate(0, isBack ? -1 : 1);
+        ctx.rotate(hipSwing * 0.08);
+        ctx.fillStyle = cape;
+        ctx.beginPath();
+        if (isBack) {
+          ctx.moveTo(-16, -13); ctx.quadraticCurveTo(-22, 8, -10, 26); ctx.lineTo(10, 26); ctx.quadraticCurveTo(22, 6, 16, -13);
+        } else if (isSide) {
+          ctx.moveTo(-8, -12); ctx.quadraticCurveTo(-16, 8, -6, 24); ctx.lineTo(8, 22); ctx.quadraticCurveTo(16, 4, 6, -12);
+        } else {
+          ctx.moveTo(-18, -14); ctx.quadraticCurveTo(-24, 10, -10, 28); ctx.lineTo(10, 28); ctx.quadraticCurveTo(24, 8, 18, -14);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.18;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.moveTo(-5, -6); ctx.lineTo(0, 22); ctx.lineTo(5, -6); ctx.closePath(); ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      }
+
+      // rear arm
+      ctx.save();
+      ctx.translate(isSide ? -10 : -14, -6);
+      ctx.rotate((isBack ? -0.18 : 0.16) + shoulderSwing * 0.7);
+      ctx.fillStyle = armorLo;
+      roundRect(-4.5, 0, 9, 23, 4.5);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      roundRect(-4, 3, 8, 4, 2.2); ctx.fill();
+      ctx.restore();
+
+      // legs
+      const legGap = isSide ? 4 : 7;
+      const legWidth = isSide ? 10 : 9;
+      ctx.save();
+      ctx.translate(-legGap, 10);
+      ctx.rotate(hipSwing * 0.24 + (isBack ? 0.04 : 0));
+      ctx.fillStyle = shade(armorBase, -24);
+      roundRect(-legWidth/2, 0, legWidth, 22, 4);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      roundRect(-legWidth/2, 14, legWidth, 3.5, 2); ctx.fill();
+      ctx.restore();
+      ctx.save();
+      ctx.translate(legGap, 10);
+      ctx.rotate(-hipSwing * 0.24 + (isBack ? -0.04 : 0));
+      ctx.fillStyle = shade(armorBase, -18);
+      roundRect(-legWidth/2, 0, legWidth, 22, 4);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      roundRect(-legWidth/2, 14, legWidth, 3.5, 2); ctx.fill();
+      ctx.restore();
+
+      // torso core
+      const torsoW = isSide ? 24 : 34;
+      const torsoX = -torsoW / 2;
+      const torsoGrad = ctx.createLinearGradient(0, -20, 0, 16);
+      torsoGrad.addColorStop(0, armorHi);
+      torsoGrad.addColorStop(0.42, armorBase);
+      torsoGrad.addColorStop(1, armorLo);
+      ctx.fillStyle = torsoGrad;
+      roundRect(torsoX, -16, torsoW, 31, 10);
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = trim;
+      roundRect(torsoX + 2, -14, torsoW - 4, 27, 9);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      roundRect(torsoX + 4, -12, torsoW - 8, 7, 4); ctx.fill();
+      ctx.fillStyle = trim;
+      if (isBack) {
+        roundRect(-3, -9, 6, 16, 3); ctx.fill();
+      } else if (isSide) {
+        roundRect(-2, -8, 5, 14, 2.5); ctx.fill();
+      } else {
+        roundRect(-4, -10, 8, 18, 3); ctx.fill();
+        roundRect(-11, -1, 22, 4, 2); ctx.fill();
+      }
+
+      // pauldrons
+      ctx.fillStyle = shade(armorBase, 16);
+      if (isSide) {
+        roundRect(2, -14, 11, 10, 4); ctx.fill();
+        ctx.fillStyle = trim; ctx.beginPath(); ctx.moveTo(9, -16); ctx.lineTo(14, -22); ctx.lineTo(12, -10); ctx.closePath(); ctx.fill();
+      } else {
+        roundRect(-18, -14, 12, 10, 4); ctx.fill();
+        roundRect(6, -14, 12, 10, 4); ctx.fill();
+        ctx.fillStyle = trim;
+        ctx.beginPath(); ctx.moveTo(-11, -16); ctx.lineTo(-16, -22); ctx.lineTo(-14, -10); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(11, -16); ctx.lineTo(16, -22); ctx.lineTo(14, -10); ctx.closePath(); ctx.fill();
+      }
+
+      // head / helmet
+      const helmGlow = gear?.hatTier?.glow || trim;
+      ctx.save();
+      if (isSide) ctx.translate(4, -1);
+      const headW = isSide ? 18 : 24;
+      ctx.fillStyle = pal.skin || '#ffd7b5';
+      roundRect(-headW/2, -35, headW, 17, 8); ctx.fill();
+      const helmGrad = ctx.createLinearGradient(0, -56, 0, -18);
+      helmGrad.addColorStop(0, '#4b5563');
+      helmGrad.addColorStop(0.28, '#05070c');
+      helmGrad.addColorStop(1, '#000000');
+      ctx.fillStyle = helmGrad;
+      if (isBack) {
+        roundRect(-13, -42, 26, 24, 10); ctx.fill();
+        ctx.fillStyle = trim; roundRect(-3, -50, 6, 11, 3); ctx.fill();
+      } else if (isSide) {
+        ctx.beginPath();
+        ctx.moveTo(-8, -40); ctx.quadraticCurveTo(8, -50, 12, -28); ctx.lineTo(6, -18); ctx.lineTo(-10, -18); ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = trim; ctx.beginPath(); ctx.moveTo(10, -38); ctx.lineTo(18, -46); ctx.lineTo(14, -30); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = 'rgba(96,165,250,0.95)'; roundRect(1, -31, 8, 3.6, 1.8); ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(-16,-28); ctx.quadraticCurveTo(-13,-50,0,-54); ctx.quadraticCurveTo(13,-50,16,-28); ctx.lineTo(12,-15); ctx.lineTo(6,-10); ctx.lineTo(4,-22); ctx.lineTo(-4,-22); ctx.lineTo(-6,-10); ctx.lineTo(-12,-15); ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = trim;
+        roundRect(-3, -49, 6, 10, 3); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(-12,-36); ctx.lineTo(-20,-50); ctx.lineTo(-9,-44); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(12,-36); ctx.lineTo(20,-50); ctx.lineTo(9,-44); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = 'rgba(96,165,250,0.95)';
+        roundRect(-9, -30, 18, 4, 2); ctx.fill();
+      }
+      ctx.shadowColor = helmGlow; ctx.shadowBlur = 16;
+      ctx.fillStyle = 'rgba(255,255,255,0.16)';
+      roundRect(isSide ? -4 : -10, -42, isSide ? 10 : 20, 4, 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      if (!isBack) {
+        ctx.fillStyle = '#111827';
+        if (isSide) {
+          ctx.beginPath(); ctx.arc(6, -27, 1.3, 0, Math.PI * 2); ctx.fill();
+          ctx.fillRect(2, -22, 6, 1.2);
+        } else {
+          ctx.beginPath(); ctx.arc(-4, -24, 1.4, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(4, -24, 1.4, 0, Math.PI * 2); ctx.fill();
+          ctx.fillRect(-4, -20, 8, 1.3);
+        }
+      }
+      ctx.restore();
+
+      // front arm + weapon
+      ctx.save();
+      ctx.translate(isSide ? 10 : 17, -7);
+      ctx.rotate((isBack ? 0.26 : -0.18) - shoulderSwing * 0.6 + (attackPose ? (-0.88 - 0.9 * attackEase) : (isSide ? 0.12 : -0.1)));
+      ctx.fillStyle = armorBase;
+      roundRect(-4.5, 0, 9, 24, 4.5);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      roundRect(-4, 3, 8, 4, 2.2); ctx.fill();
+      if (isHero) {
+        ctx.save();
+        ctx.translate(isSide ? 6 : 5, 13);
+        const swordLen = gear?.weaponTier?.label === 'MYTHIC' ? 48 : gear?.weaponTier?.label === 'LEGEND' ? 42 : 38;
+        const swordGrad = ctx.createLinearGradient(0, -swordLen, 0, 8);
+        swordGrad.addColorStop(0, '#ffffff');
+        swordGrad.addColorStop(0.28, swordGlow);
+        swordGrad.addColorStop(0.62, swordColor);
+        swordGrad.addColorStop(1, shade(swordColor, -35));
+        ctx.shadowColor = swordGlow; ctx.shadowBlur = 20;
+        ctx.fillStyle = swordGrad;
+        ctx.beginPath();
+        ctx.moveTo(-2.4, 8); ctx.lineTo(-3.3, 2); ctx.lineTo(-2.4, -10); ctx.lineTo(0, -swordLen); ctx.lineTo(2.4, -10); ctx.lineTo(3.3, 2); ctx.lineTo(2.4, 8); ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = trim; roundRect(-7, 3.8, 14, 4, 2); ctx.fill();
+        ctx.fillStyle = shade(swordColor, -18); roundRect(-2.2, 7.4, 4.4, 10, 2.2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.arc(0, -swordLen + 2, 1.8, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
+
+      // shield on other side
+      if (isHero) {
+        ctx.save();
+        ctx.translate(isSide ? -5 : -19, -1);
+        ctx.rotate(isSide ? -0.36 : -0.18);
+        ctx.shadowColor = shieldGlow; ctx.shadowBlur = 18;
+        const shieldGrad = ctx.createLinearGradient(0, -24, 0, 24);
+        shieldGrad.addColorStop(0, '#f8fafc');
+        shieldGrad.addColorStop(0.26, gear?.shieldTier?.color || '#d4af5c');
+        shieldGrad.addColorStop(0.60, shieldColor);
+        shieldGrad.addColorStop(1, '#020617');
+        ctx.fillStyle = shieldGrad;
+        if (isSide) {
+          ctx.beginPath(); ctx.moveTo(-8,-18); ctx.lineTo(7,-12); ctx.lineTo(6,12); ctx.lineTo(-8,18); ctx.closePath(); ctx.fill();
+        } else {
+          ctx.beginPath(); ctx.moveTo(0,-23); ctx.lineTo(16,-13); ctx.lineTo(13,10); ctx.lineTo(0,22); ctx.lineTo(-13,10); ctx.lineTo(-16,-13); ctx.closePath(); ctx.fill();
+        }
+        ctx.strokeStyle = trim; ctx.lineWidth = 2.2; ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        roundRect(-1.3, -14, 2.6, 27, 1.2); ctx.fill();
+        roundRect(-8, -1.4, 16, 2.8, 1.2); ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.restore();
+      }
+
+      if (isHero) drawGearEffect(0, -7);
+      ctx.restore();
+    }) {
+      const isHero = !!opts.isHero;
       const pal = opts.palette || { torso: isHero ? "#1a1723" : "#172035", pants: isHero ? "#08090f" : "#161a27", hat: isHero ? "#7c3aed" : "#22d3ee", skin: "#e7cab4", hair: "#0b0f18" };
       const gear = isHero ? getEquippedVisuals() : null;
       const dir = opts.dirOverride || player.dir;
@@ -4424,29 +4686,49 @@ function drawMinifig(x, y, opts = {}) {
       for (const f of combatState.fireballs) {
         ctx.save();
         ctx.translate(f.x, f.y);
-        ctx.shadowColor = "rgba(251,146,60,0.98)";
-        ctx.shadowBlur = 34;
-        for (let i = 0; i < 4; i++) {
-          ctx.rotate(0.7 + i * 0.2);
-          ctx.fillStyle = i % 2 ? "rgba(255,240,180,0.32)" : "rgba(249,115,22,0.28)";
+        const time = performance.now() / 1000;
+        for (let i = 0; i < 8; i++) {
+          const ang = time * 4.2 + i * (Math.PI * 2 / 8);
+          const rr = f.radius + 12 + (i % 2) * 7;
+          ctx.globalAlpha = 0.14;
+          ctx.fillStyle = i % 2 ? "rgba(255,234,160,0.34)" : "rgba(249,115,22,0.28)";
           ctx.beginPath();
-          ctx.moveTo(-6, 0); ctx.quadraticCurveTo(-22, -9, -34, 0); ctx.quadraticCurveTo(-20, 8, -6, 2); ctx.closePath();
+          ctx.ellipse(Math.cos(ang) * 9, Math.sin(ang) * 7, rr * 0.95, rr * 0.34, ang, 0, Math.PI * 2);
           ctx.fill();
         }
-        const g = ctx.createRadialGradient(0, 0, 2, 0, 0, f.radius + 12);
+        ctx.globalAlpha = 1;
+        ctx.shadowColor = f.tier === 'MYTHIC' ? "rgba(236,72,153,0.98)" : "rgba(251,146,60,0.98)";
+        ctx.shadowBlur = 42 + (f.plus || 0) * 1.3;
+        const g = ctx.createRadialGradient(0, 0, 2, 0, 0, f.radius + 22);
         g.addColorStop(0, "rgba(255,255,255,1)");
-        g.addColorStop(0.16, "rgba(255,242,204,1)");
-        g.addColorStop(0.42, "rgba(254,215,170,0.98)");
-        g.addColorStop(0.72, "rgba(249,115,22,0.96)");
-        g.addColorStop(1, "rgba(153,27,27,0.0)");
+        g.addColorStop(0.10, "rgba(255,249,214,1)");
+        g.addColorStop(0.30, "rgba(254,215,170,0.98)");
+        g.addColorStop(0.56, "rgba(249,115,22,0.98)");
+        g.addColorStop(0.82, "rgba(220,38,38,0.84)");
+        g.addColorStop(1, "rgba(127,29,29,0.0)");
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(0, 0, f.radius + 12, 0, Math.PI * 2);
+        ctx.arc(0, 0, f.radius + 22, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        const core = ctx.createRadialGradient(-4, -5, 1, 0, 0, f.radius * 0.75);
+        core.addColorStop(0, "rgba(255,255,255,1)");
+        core.addColorStop(0.18, "rgba(255,245,200,1)");
+        core.addColorStop(0.62, "rgba(251,146,60,0.88)");
+        core.addColorStop(1, "rgba(251,146,60,0)");
+        ctx.fillStyle = core;
         ctx.beginPath();
-        ctx.arc(-3, -3, f.radius * 0.38, 0, Math.PI * 2);
+        ctx.arc(0, 0, f.radius * 0.88, 0, Math.PI * 2);
         ctx.fill();
+        for (let i = 0; i < 10; i++) {
+          const ang = time * 5.6 + i * 0.63;
+          const len = f.radius + 18 + (i % 3) * 7;
+          ctx.strokeStyle = i % 2 ? "rgba(255,244,180,0.92)" : "rgba(251,146,60,0.82)";
+          ctx.lineWidth = 2 + (i % 2);
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(ang) * f.radius * 0.35, Math.sin(ang) * f.radius * 0.35);
+          ctx.lineTo(Math.cos(ang) * len, Math.sin(ang) * len);
+          ctx.stroke();
+        }
         ctx.restore();
       }
       for (const ex of combatState.fireExplosions) {
@@ -4478,35 +4760,48 @@ function drawMinifig(x, y, opts = {}) {
         ctx.save();
         const alpha = Math.max(0, Math.min(1, tb.life / (tb.maxLife || 0.5)));
         ctx.globalAlpha = alpha;
-        ctx.strokeStyle = "rgba(196,181,253,0.95)";
-        ctx.lineWidth = 4;
-        ctx.shadowColor = "rgba(167,139,250,0.95)";
-        ctx.shadowBlur = 22;
-        let px = tb.x + (Math.random() - 0.5) * 10;
-        let py = tb.y - 260;
+        ctx.strokeStyle = "rgba(224,231,255,0.98)";
+        ctx.lineWidth = 4.5;
+        ctx.shadowColor = "rgba(129,140,248,0.98)";
+        ctx.shadowBlur = 28;
+        let px = tb.x + (Math.random() - 0.5) * 16;
+        let py = tb.y - 340 - (tb.spread || 0) * 18;
         ctx.beginPath();
         ctx.moveTo(px, py);
-        for (let i = 0; i < 7; i++) {
-          const ny = tb.y - 220 + i * 38;
-          const nx = tb.x + (Math.random() - 0.5) * 30;
+        for (let i = 0; i < 10 + (tb.spread || 0); i++) {
+          const ny = tb.y - 300 + i * 34;
+          const nx = tb.x + (Math.random() - 0.5) * (38 + (tb.spread || 0) * 8);
           ctx.lineTo(nx, ny);
         }
+        ctx.lineTo(tb.x, tb.y);
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(255,255,255,0.92)";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(tb.x - 6, tb.y - 290);
+        ctx.lineTo(tb.x + 2, tb.y - 230);
+        ctx.lineTo(tb.x - 14, tb.y - 170);
+        ctx.lineTo(tb.x + 8, tb.y - 100);
         ctx.lineTo(tb.x, tb.y);
         ctx.stroke();
         ctx.restore();
       }
       for (const burst of combatState.thunderBursts) {
         ctx.save();
-        const a = Math.max(0, burst.life / 0.45);
+        const a = Math.max(0, burst.life / 0.56);
         ctx.globalAlpha = a;
         ctx.translate(burst.x, burst.y);
-        ctx.strokeStyle = "rgba(196,181,253,0.95)";
-        ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.arc(0, 0, 26 + (1-a) * 42, 0, Math.PI * 2); ctx.stroke();
-        for (let i = 0; i < 6; i++) {
-          const ang = i / 6 * Math.PI * 2;
-          ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(ang) * (26 + (1-a) * 42), Math.sin(ang) * (26 + (1-a) * 42)); ctx.stroke();
+        const rad = (burst.big ? 54 : 34) + (1-a) * (burst.big ? 72 : 54);
+        ctx.strokeStyle = "rgba(196,181,253,0.98)";
+        ctx.lineWidth = burst.big ? 4 : 3;
+        ctx.beginPath(); ctx.arc(0, 0, rad, 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < 8; i++) {
+          const ang = i / 8 * Math.PI * 2 + (1-a) * 0.4;
+          ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(ang) * rad, Math.sin(ang) * rad); ctx.stroke();
         }
+        ctx.strokeStyle = "rgba(255,255,255,0.82)";
+        ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.arc(0, 0, rad * 0.58, 0, Math.PI * 2); ctx.stroke();
         ctx.restore();
       }
       for (const fx of combatState.slashFx) {
@@ -4517,32 +4812,41 @@ function drawMinifig(x, y, opts = {}) {
         const rot = fx.dir === 'left' ? Math.PI : fx.dir === 'up' ? -Math.PI/2 : fx.dir === 'down' ? Math.PI/2 : 0;
         ctx.rotate(rot);
         const fxCol = fx.color || 'rgba(147,197,253,0.92)';
-        const bonus = fx.tier === "MYTHIC" ? 16 : fx.tier === "LEGEND" ? 10 : fx.tier === "EPIC" ? 6 : 0;
+        const bonus = fx.tier === "MYTHIC" ? 18 : fx.tier === "LEGEND" ? 11 : fx.tier === "EPIC" ? 6 : 0;
         ctx.shadowColor = fxCol;
-        ctx.shadowBlur = 24 + bonus;
+        ctx.shadowBlur = 28 + bonus;
         ctx.strokeStyle = 'rgba(255,255,255,0.98)';
         ctx.lineWidth = 10 + Math.min(4, fx.plus || 0);
         ctx.beginPath();
-        ctx.arc(0, 0, 24 + (fx.combo||1)*2 + bonus * 0.2, 0.18, 1.66);
+        ctx.arc(0, 0, 26 + (fx.combo||1)*2 + bonus * 0.2, 0.18, 1.7);
         ctx.stroke();
         ctx.strokeStyle = fxCol;
-        ctx.lineWidth = 6 + Math.min(3, (fx.plus || 0) * 0.25);
+        ctx.lineWidth = 6.5 + Math.min(3.2, (fx.plus || 0) * 0.28);
         ctx.beginPath();
-        ctx.arc(0, 0, 31 + (fx.combo||1)*3 + bonus * 0.35, 0.10, 1.74);
+        ctx.arc(0, 0, 34 + (fx.combo||1)*3 + bonus * 0.36, 0.1, 1.82);
         ctx.stroke();
-        ctx.strokeStyle = 'rgba(255,255,255,0.72)';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(0, 0, 27 + (fx.combo||1)*2 + bonus * 0.28, -1.68, -0.28);
-        ctx.stroke();
-        if (fx.tier === "MYTHIC") {
-          ctx.fillStyle = "rgba(180,235,255,0.26)";
+        if (fx.tier === 'MYTHIC') {
+          ctx.globalAlpha = a * 0.74;
+          ctx.fillStyle = 'rgba(255,170,80,0.18)';
           ctx.beginPath();
-          ctx.moveTo(-42,-6); ctx.quadraticCurveTo(-12,-46,18,-22); ctx.quadraticCurveTo(34,-12,44,-22); ctx.quadraticCurveTo(24,-4,16,10); ctx.quadraticCurveTo(-4,20,-22,10); ctx.quadraticCurveTo(-34,4,-42,-6); ctx.closePath();
+          ctx.moveTo(-10, -2);
+          ctx.quadraticCurveTo(18, -44, 44, -22);
+          ctx.quadraticCurveTo(70, 2, 52, 22);
+          ctx.quadraticCurveTo(34, 42, 14, 24);
+          ctx.quadraticCurveTo(28, 8, 16, -4);
+          ctx.quadraticCurveTo(2, 10, -10, -2);
+          ctx.closePath();
           ctx.fill();
-          ctx.strokeStyle = "rgba(120,210,255,0.8)";
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'rgba(255,214,102,0.92)';
+          ctx.lineWidth = 2.2;
+          ctx.beginPath();
+          ctx.moveTo(8, -2);
+          ctx.quadraticCurveTo(34, -32, 58, -16);
+          ctx.quadraticCurveTo(74, 6, 52, 20);
+          ctx.quadraticCurveTo(38, 28, 20, 16);
           ctx.stroke();
+          ctx.fillStyle = 'rgba(255,90,90,0.94)';
+          ctx.beginPath(); ctx.arc(58, -14, 2.4, 0, Math.PI * 2); ctx.fill();
         }
         ctx.restore();
       }
@@ -5210,4 +5514,39 @@ loop();
     requestAnimationFrame(styleThemeButtons);
   }
   styleThemeButtons();
+})();
+
+
+/* ===== v3 mobile theme switch + panel visibility polish ===== */
+(function(){
+  function syncThemeSwitch(){
+    try{
+      const morning = document.getElementById('btn_theme_morning');
+      const night = document.getElementById('btn_theme_night');
+      if(!morning || !night){ requestAnimationFrame(syncThemeSwitch); return; }
+      const wrap = morning.parentElement;
+      const inv = document.getElementById('inventory_panel');
+      const eq = document.getElementById('equipment_panel');
+      const invOpen = !!inv && getComputedStyle(inv).display !== 'none';
+      const eqOpen = !!eq && getComputedStyle(eq).display !== 'none';
+      wrap.style.display = (invOpen || eqOpen) ? 'none' : 'flex';
+      wrap.style.position = 'fixed';
+      wrap.style.right = '18px';
+      wrap.style.top = (window.innerWidth <= 900 ? '132px' : '18px');
+      wrap.style.zIndex = '10006';
+      wrap.style.alignItems = 'center';
+      wrap.style.gap = '6px';
+      wrap.style.padding = '4px';
+      wrap.style.borderRadius = '999px';
+      wrap.style.background = 'linear-gradient(180deg, rgba(34,24,18,0.96), rgba(10,8,8,0.94))';
+      wrap.style.border = '1px solid rgba(212,174,92,0.38)';
+      [morning, night].forEach(btn=>{
+        btn.style.width = window.innerWidth <= 900 ? '40px' : '44px';
+        btn.style.height = window.innerWidth <= 900 ? '40px' : '44px';
+        btn.style.borderRadius = '999px';
+      });
+    }catch(e){}
+    requestAnimationFrame(syncThemeSwitch);
+  }
+  syncThemeSwitch();
 })();
