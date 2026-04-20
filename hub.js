@@ -343,6 +343,7 @@
     const atkBtn = ensureEl("btn_attack", "button", mobileBtns);
     const fireBtn = ensureEl("btn_fireball", "button", mobileBtns);
     const hasteBtn = ensureEl("btn_haste", "button", mobileBtns);
+    const thunderBtn = ensureEl("btn_thunder", "button", mobileBtns);
     invBtn.textContent = "INVEN";
     eqBtn.textContent = "EQUIP";
     saveBtn.textContent = "SAVE";
@@ -350,7 +351,8 @@
     atkBtn.textContent = "ATTACK";
     fireBtn.textContent = "FIRE";
     hasteBtn.textContent = "SPEED";
-    [invBtn, eqBtn, saveBtn, enterBtn, atkBtn, fireBtn, hasteBtn].forEach((b) => {
+    thunderBtn.textContent = "THUNDER";
+    [invBtn, eqBtn, saveBtn, enterBtn, atkBtn, fireBtn, hasteBtn, thunderBtn].forEach((b) => {
       b.style.minWidth = "96px";
       b.style.cursor = "pointer";
       b.style.border = "1px solid rgba(255,255,255,0.12)";
@@ -362,7 +364,7 @@
       b.style.boxShadow = "0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,233,159,0.14)";
       b.style.transition = "transform 90ms ease, filter 90ms ease, opacity 90ms ease";
     });
-    [invBtn, eqBtn, saveBtn, enterBtn, atkBtn, fireBtn, hasteBtn].forEach((b)=>{
+    [invBtn, eqBtn, saveBtn, enterBtn, atkBtn, fireBtn, hasteBtn, thunderBtn].forEach((b)=>{
       b.addEventListener("pointerdown", ()=>{ b.style.transform = "scale(0.94)"; b.style.filter = "brightness(0.92)"; });
       const up=()=>{ b.style.transform = "scale(1)"; b.style.filter = "brightness(1)"; };
       b.addEventListener("pointerup", up); b.addEventListener("pointercancel", up); b.addEventListener("pointerleave", up);
@@ -387,12 +389,18 @@
     hasteBtn.style.color = "#fff";
     hasteBtn.style.fontWeight = "1000";
     hasteBtn.style.minWidth = "110px";
+    thunderBtn.style.background = "linear-gradient(180deg,#a78bfa,#4338ca)";
+    thunderBtn.style.color = "#fff";
+    thunderBtn.style.fontWeight = "1000";
+    thunderBtn.style.minWidth = "110px";
     const desktopSaveBtn = ensureEl("btn_save_desktop", "button");
     const desktopFireBtn = ensureEl("btn_fireball_desktop", "button");
     const desktopHasteBtn = ensureEl("btn_haste_desktop", "button");
+    const desktopThunderBtn = ensureEl("btn_thunder_desktop", "button");
     desktopSaveBtn.textContent = "SAVE";
     desktopFireBtn.textContent = "Q FIRE";
     desktopHasteBtn.textContent = "R SPEED";
+    desktopThunderBtn.textContent = "T THUNDER";
     desktopSaveBtn.style.position = "fixed";
     desktopSaveBtn.style.left = "14px";
     desktopSaveBtn.style.top = "14px";
@@ -406,9 +414,9 @@
     desktopSaveBtn.style.borderRadius = "14px";
     desktopSaveBtn.style.boxShadow = "0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,233,159,0.14)";
     desktopSaveBtn.style.display = isTouchDevice() ? "none" : "block";
-    [desktopFireBtn, desktopHasteBtn].forEach((b, i) => {
+    [desktopFireBtn, desktopHasteBtn, desktopThunderBtn].forEach((b, i) => {
       b.style.position = "fixed";
-      b.style.right = `${14 + i * 98}px`;
+      b.style.right = `${14 + i * 108}px`;
       b.style.top = "182px";
       b.style.zIndex = "10002";
       b.style.cursor = "pointer";
@@ -422,6 +430,7 @@
     });
     desktopFireBtn.style.background = "linear-gradient(180deg,#fb923c,#ea580c)";
     desktopHasteBtn.style.background = "linear-gradient(180deg,#22c55e,#0f766e)";
+    desktopThunderBtn.style.background = "linear-gradient(180deg,#a78bfa,#4338ca)";
 
     if (isTouchDevice()) {
       saveBtn.style.position = "fixed";
@@ -479,8 +488,19 @@
       hasteBtn.style.minWidth = "64px";
       hasteBtn.style.padding = "0";
       hasteBtn.style.borderRadius = "999px";
+      thunderBtn.style.position = "fixed";
+      thunderBtn.style.right = "104px";
+      thunderBtn.style.bottom = "114px";
+      thunderBtn.style.left = "auto";
+      thunderBtn.style.top = "auto";
+      thunderBtn.style.zIndex = "10003";
+      thunderBtn.style.width = "64px";
+      thunderBtn.style.height = "64px";
+      thunderBtn.style.minWidth = "64px";
+      thunderBtn.style.padding = "0";
+      thunderBtn.style.borderRadius = "999px";
       mobileBtns.style.pointerEvents = "none";
-      [saveBtn, invBtn, eqBtn, atkBtn, enterBtn, fireBtn, hasteBtn].forEach((b)=> b.style.pointerEvents = "auto");
+      [saveBtn, invBtn, eqBtn, atkBtn, enterBtn, fireBtn, hasteBtn, thunderBtn].forEach((b)=> b.style.pointerEvents = "auto");
     }
 
     const style = ensureEl("lego_style_injected", "style", document.head);
@@ -704,7 +724,7 @@
     return {
       canvas, toast, coord, fps, fade, modal, modalTitle, modalBody, modalHint,
       shopModal, shopCard, shopTitle, shopBody, shopHint,
-      inventoryPanel, equipmentPanel, invBtn, eqBtn, saveBtn, desktopSaveBtn, enterBtn, atkBtn, fireBtn, hasteBtn, desktopFireBtn, desktopHasteBtn, joyState
+      inventoryPanel, equipmentPanel, invBtn, eqBtn, saveBtn, desktopSaveBtn, enterBtn, atkBtn, fireBtn, hasteBtn, thunderBtn, desktopFireBtn, desktopHasteBtn, desktopThunderBtn, joyState
     };
   }
 
@@ -881,8 +901,8 @@
       try { localStorage.setItem("xgp_world_theme", worldThemeMode); } catch (_) {}
       const mBtn = document.getElementById("btn_theme_morning");
       const nBtn = document.getElementById("btn_theme_night");
-      if (mBtn) { mBtn.style.background = worldThemeMode === "morning" ? "linear-gradient(180deg,#f5d77a,#7c4f18)" : "linear-gradient(180deg,#3b2a18,#120e0b)"; mBtn.style.color = worldThemeMode === "morning" ? "#241508" : "#e8cf94"; }
-      if (nBtn) { nBtn.style.background = worldThemeMode === "night" ? "linear-gradient(180deg,#8e6bff,#24113d)" : "linear-gradient(180deg,#3b2a18,#120e0b)"; nBtn.style.color = worldThemeMode === "night" ? "#f4ecff" : "#e8cf94"; }
+      if (mBtn) { mBtn.style.background = worldThemeMode === "morning" ? "linear-gradient(180deg,#f5d77a,#7c4f18)" : "transparent"; mBtn.style.color = worldThemeMode === "morning" ? "#241508" : "#e8cf94"; mBtn.style.transform = worldThemeMode === "morning" ? "translateY(-1px)" : "none"; }
+      if (nBtn) { nBtn.style.background = worldThemeMode === "night" ? "linear-gradient(180deg,#8e6bff,#24113d)" : "transparent"; nBtn.style.color = worldThemeMode === "night" ? "#f4ecff" : "#e8cf94"; nBtn.style.transform = worldThemeMode === "night" ? "translateY(-1px)" : "none"; }
     }
 
     const combatState = {
@@ -898,8 +918,11 @@
       combo: 0,
       comboT: 0,
       fireballCd: 0,
+      thunderCd: 0,
       hasteCd: 0,
-      hasteUntil: 0
+      hasteUntil: 0,
+      thunderBolts: [],
+      thunderBursts: []
     };
 
     /* ----------------------- Inventory / Equipment ----------------------- */
@@ -1362,6 +1385,8 @@
     function renderPanels() {
       UI.inventoryPanel.style.display = inventoryState.inventoryOpen ? "block" : "none";
       UI.equipmentPanel.style.display = inventoryState.equipmentOpen ? "block" : "none";
+      const themeWrap = document.getElementById("world_theme_toggle");
+      if (themeWrap) themeWrap.style.display = (inventoryState.inventoryOpen || inventoryState.equipmentOpen) ? "none" : "flex";
       UI.inventoryPanel.style.background = "linear-gradient(180deg, rgba(15,23,42,0.96), rgba(15,23,42,0.88))";
       UI.inventoryPanel.style.border = "1px solid rgba(148,163,184,0.18)";
       UI.inventoryPanel.style.maxHeight = "74vh";
@@ -1426,15 +1451,17 @@
         const item = itemId ? getItemById(itemId) : null;
         row.innerHTML = `
           ${item ? iconMarkup(item, true) : '<div class="item-icon" style="background:linear-gradient(180deg,#1e293b,#0f172a)"></div>'}
-          <div class="meta">
+          <div class="meta" style="padding-right:8px;">
             <b>${label}</b>
-            <span>${item ? `${item.name} (${statLine(item)})` : "비어 있음"}</span>
+            <span style="white-space:normal; line-height:1.35;">${item ? `${item.name} (${statLine(item)})` : "비어 있음"}</span>
           </div>
         `;
         const actionWrap = document.createElement("div");
         actionWrap.style.display = "flex";
-        actionWrap.style.gap = "8px";
-        actionWrap.style.alignItems = "center";
+        actionWrap.style.flexDirection = "column";
+        actionWrap.style.gap = "6px";
+        actionWrap.style.alignItems = "stretch";
+        actionWrap.style.minWidth = "108px";
         const btn = document.createElement("button");
         btn.textContent = item ? "UNEQUIP" : "없음";
         btn.disabled = !item;
@@ -1466,12 +1493,14 @@
     UI.desktopSaveBtn.addEventListener("click", () => saveNowToast());
     UI.fireBtn.addEventListener("click", () => triggerFireball());
     UI.hasteBtn.addEventListener("click", () => triggerHaste());
-    [UI.fireBtn, UI.hasteBtn].forEach((btn, idx) => {
-      btn.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); idx===0 ? triggerFireball() : triggerHaste(); }, { passive: false });
-      btn.addEventListener("touchstart", (e) => { e.preventDefault(); e.stopPropagation(); idx===0 ? triggerFireball() : triggerHaste(); }, { passive: false });
+    UI.thunderBtn.addEventListener("click", () => triggerThunderstorm());
+    [[UI.fireBtn, triggerFireball],[UI.hasteBtn, triggerHaste],[UI.thunderBtn, triggerThunderstorm]].forEach(([btn, fn]) => {
+      btn.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); fn(); }, { passive: false });
+      btn.addEventListener("touchstart", (e) => { e.preventDefault(); e.stopPropagation(); fn(); }, { passive: false });
     });
     UI.desktopFireBtn.addEventListener("click", () => triggerFireball());
     UI.desktopHasteBtn.addEventListener("click", () => triggerHaste());
+    UI.desktopThunderBtn.addEventListener("click", () => triggerThunderstorm());
     function onMobilePortalAction() {
       if (!activePortal) return;
       if (activePortal.key === "blacksmith") {
@@ -1520,29 +1549,37 @@
       const wrap = document.createElement("div");
       wrap.id = "world_theme_toggle";
       wrap.style.position = "fixed";
-      wrap.style.right = isTouchDevice() ? "12px" : "18px";
-      wrap.style.top = isTouchDevice() ? "132px" : "182px";
+      wrap.style.right = isTouchDevice() ? "14px" : "18px";
+      wrap.style.top = isTouchDevice() ? "14px" : "62px";
       wrap.style.zIndex = "10030";
       wrap.style.display = "flex";
-      wrap.style.gap = "8px";
+      wrap.style.gap = "0";
       wrap.style.pointerEvents = "auto";
-      const mk = (id, label) => {
+      wrap.style.padding = "6px";
+      wrap.style.borderRadius = "999px";
+      wrap.style.background = "linear-gradient(180deg, rgba(28,20,14,0.96), rgba(10,8,8,0.94))";
+      wrap.style.border = "1px solid rgba(212,174,92,0.42)";
+      wrap.style.boxShadow = "0 10px 26px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,232,176,0.14)";
+      const mk = (id, label, icon) => {
         const b = document.createElement("button");
         b.id = id;
         b.type = "button";
-        b.textContent = label;
+        b.innerHTML = `<span style="font-size:15px">${icon}</span>`;
+        b.title = label;
+        b.setAttribute("aria-label", label);
         b.style.cursor = "pointer";
-        b.style.border = "1px solid rgba(212,174,92,0.42)";
-        b.style.borderRadius = "14px";
-        b.style.padding = isTouchDevice() ? "10px 12px" : "10px 14px";
+        b.style.border = "none";
+        b.style.borderRadius = "999px";
+        b.style.width = isTouchDevice() ? "42px" : "44px";
+        b.style.height = isTouchDevice() ? "42px" : "44px";
         b.style.font = "1000 11px system-ui";
         b.style.letterSpacing = "0.06em";
-        b.style.boxShadow = "0 10px 26px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,232,176,0.14)";
-        b.style.backdropFilter = "blur(6px)";
+        b.style.boxShadow = "inset 0 1px 0 rgba(255,232,176,0.14)";
+        b.style.background = "transparent";
         return b;
       };
-      const morning = mk("btn_theme_morning", "MORNING");
-      const night = mk("btn_theme_night", "NIGHT");
+      const morning = mk("btn_theme_morning", "Morning mode", "☀️");
+      const night = mk("btn_theme_night", "Night mode", "🌙");
       morning.onclick = () => setWorldThemeMode("morning");
       night.onclick = () => setWorldThemeMode("night");
       wrap.appendChild(morning); wrap.appendChild(night);
@@ -1621,6 +1658,32 @@
       player.gearFlashT = 0.35;
     }
 
+    function triggerThunderstorm() {
+      const now = performance.now();
+      if (combatState.thunderCd > now) return;
+      combatState.thunderCd = now + 3000;
+      player.gearFlashT = 0.52;
+      const radius = 240;
+      const targets = [...combatState.slimes, ...combatState.titans].filter((m) => !m.dead && Math.hypot(m.x - player.x, m.y - player.y) <= radius + (m.scale ? m.scale * 0.8 : 0));
+      const base = Math.max(3, Math.round(playerAttackPower() * 1.5));
+      targets.forEach((m, idx) => {
+        const delay = idx * 0.05;
+        const damage = Math.round(base * (m.scale ? 0.95 : 1.15));
+        combatState.thunderBolts.push({ x: m.x, y: m.y, life: 0.52 + delay, maxLife: 0.52 + delay, delay, damage, done: false, target: m });
+      });
+      for (let i = 0; i < 8; i++) {
+        const ang = i / 8 * Math.PI * 2;
+        combatState.thunderBursts.push({ x: player.x + Math.cos(ang) * 60, y: player.y + Math.sin(ang) * 32, life: 0.42, ring: true });
+      }
+      if (!targets.length) {
+        for (let i = 0; i < 6; i++) {
+          const ang = i / 6 * Math.PI * 2;
+          combatState.thunderBolts.push({ x: player.x + Math.cos(ang) * 130, y: player.y + Math.sin(ang) * 80, life: 0.48, maxLife: 0.48, delay: i * 0.03, damage: 0, done: true, target: null });
+        }
+      }
+      spawnDamageText(player.x, player.y - 54, "THUNDER STORM", "#c4b5fd", 1.08);
+    }
+
     function triggerHaste() {
       const now = performance.now();
       if (combatState.hasteCd > now) return;
@@ -1654,6 +1717,10 @@
       if (k === "r") {
         e.preventDefault();
         triggerHaste();
+      }
+      if (k === "t") {
+        e.preventDefault();
+        triggerThunderstorm();
       }
       if (k === "enter" || k === "e") {
         const portalTarget = activePortal || getNearestPortalCandidate(isTouchDevice() ? 240 : 260);
@@ -3681,8 +3748,21 @@ function drawMinifig(x, y, opts = {}) {
         ctx.fillStyle = pal.hair || "#0b0f18"; roundRect(-14, -38, 28, 10, 7); ctx.fill();
         ctx.fillStyle = pal.hat || "#22d3ee"; roundRect(-10, -45, 20, 8, 5); ctx.fill();
       }
-      ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(-4, -24, 1.5, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(4, -24, 1.5, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(-4, -20, 8, 1.4, 0.7); ctx.fill();
+      if (dir === "up") {
+        ctx.fillStyle = isHero ? "rgba(120,195,255,0.46)" : "#0b1020";
+        roundRect(-7, -30, 14, 5, 2); ctx.fill();
+        ctx.fillStyle = "rgba(30,41,59,0.82)";
+        roundRect(-5, -24, 10, 2.4, 1.2); ctx.fill();
+      } else if (dir === "left") {
+        ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(-3, -24, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(-6, -20, 6, 1.4, 0.7); ctx.fill();
+      } else if (dir === "right") {
+        ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(3, -24, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(0, -20, 6, 1.4, 0.7); ctx.fill();
+      } else {
+        ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(-4, -24, 1.5, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(4, -24, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(-4, -20, 8, 1.4, 0.7); ctx.fill();
+      }
       if (isHero) drawGearEffect(0, -8);
       ctx.restore();
     }
@@ -4044,7 +4124,7 @@ function drawMinifig(x, y, opts = {}) {
         const baseDamage = playerAttackPower();
         const comboBonus = 1 + (combatState.combo - 1) * 0.22;
         const critChance = 0.14 + getEnhanceLevel("weapon") * 0.015;
-        combatState.slashFx.push({ x: fxX, y: fxY, dir: player.dir, life: 0.28, combo: combatState.combo, color: getEquippedVisuals().weaponTier?.glow || getEquippedVisuals().weaponColor || "#ffffff" });
+        combatState.slashFx.push({ x: fxX, y: fxY, dir: player.dir, life: 0.34, combo: combatState.combo, color: getEquippedVisuals().weaponTier?.glow || getEquippedVisuals().weaponColor || "#ffffff", tier: getEquippedVisuals().weaponTier?.label || "", plus: getEnhanceLevel("weapon") || 0 });
         for (const m of combatState.slimes) {
           if (m.dead) continue;
           if (Math.hypot(m.x - fxX, m.y - fxY) < range) {
@@ -4134,6 +4214,23 @@ function drawMinifig(x, y, opts = {}) {
       for (let i = combatState.fireExplosions.length - 1; i >= 0; i--) {
         combatState.fireExplosions[i].life -= dt;
         if (combatState.fireExplosions[i].life <= 0) combatState.fireExplosions.splice(i, 1);
+      }
+      for (let i = combatState.thunderBursts.length - 1; i >= 0; i--) {
+        combatState.thunderBursts[i].life -= dt;
+        if (combatState.thunderBursts[i].life <= 0) combatState.thunderBursts.splice(i, 1);
+      }
+      for (let i = combatState.thunderBolts.length - 1; i >= 0; i--) {
+        const tb = combatState.thunderBolts[i];
+        tb.life -= dt;
+        tb.delay = Math.max(0, tb.delay - dt);
+        if (!tb.done && tb.delay <= 0) {
+          tb.done = true;
+          if (tb.target && !tb.target.dead && tb.damage > 0) {
+            applyMonsterHit(tb.target, tb.damage, Math.random() < 0.18);
+            combatState.thunderBursts.push({ x: tb.x, y: tb.y, life: 0.45 });
+          }
+        }
+        if (tb.life <= 0) combatState.thunderBolts.splice(i, 1);
       }
       for (const m of [...combatState.slimes, ...combatState.titans]) {
         if (m.dead || !m.burnT) continue;
@@ -4226,10 +4323,11 @@ function drawMinifig(x, y, opts = {}) {
 
       const nowCd = performance.now();
       const cdFire = Math.max(0, (combatState.fireballCd - nowCd) / 1000);
+      const cdThunder = Math.max(0, (combatState.thunderCd - nowCd) / 1000);
       const cdSpeed = Math.max(0, (combatState.hasteCd - nowCd) / 1000);
       const applyCd = (btn, secs, base) => {
         if (!btn) return;
-        const total = base === "FIRE" ? 3 : 12;
+        const total = (base.includes("FIRE") || base.includes("THUNDER")) ? 3 : 12;
         const ratio = Math.max(0, Math.min(1, secs / total));
         btn.classList.toggle("cooling", secs > 0.01);
         if (!btn.dataset.basebg) btn.dataset.basebg = btn.style.background || "linear-gradient(180deg,#1d4ed8,#1e3a8a)";
@@ -4243,8 +4341,10 @@ function drawMinifig(x, y, opts = {}) {
         btn.innerHTML = secs > 0.01 ? `<span>${base}</span><span class="skill-cd">${secs.toFixed(secs > 9 ? 0 : 1)}</span>` : `<span>${base}</span>`;
       };
       applyCd(UI.fireBtn, cdFire, "FIRE");
+      applyCd(UI.thunderBtn, cdThunder, "THUNDER");
       applyCd(UI.hasteBtn, cdSpeed, "SPEED");
       applyCd(UI.desktopFireBtn, cdFire, "Q FIRE");
+      applyCd(UI.desktopThunderBtn, cdThunder, "T THUNDER");
       applyCd(UI.desktopHasteBtn, cdSpeed, "R SPEED");
 
       updateCamera(dt);
@@ -4324,20 +4424,28 @@ function drawMinifig(x, y, opts = {}) {
       for (const f of combatState.fireballs) {
         ctx.save();
         ctx.translate(f.x, f.y);
-        ctx.shadowColor = "rgba(251,146,60,0.95)";
-        ctx.shadowBlur = 24;
-        const g = ctx.createRadialGradient(0, 0, 2, 0, 0, f.radius + 6);
-        g.addColorStop(0, "rgba(255,255,255,0.98)");
-        g.addColorStop(0.28, "rgba(254,215,170,0.98)");
-        g.addColorStop(0.65, "rgba(249,115,22,0.96)");
+        ctx.shadowColor = "rgba(251,146,60,0.98)";
+        ctx.shadowBlur = 34;
+        for (let i = 0; i < 4; i++) {
+          ctx.rotate(0.7 + i * 0.2);
+          ctx.fillStyle = i % 2 ? "rgba(255,240,180,0.32)" : "rgba(249,115,22,0.28)";
+          ctx.beginPath();
+          ctx.moveTo(-6, 0); ctx.quadraticCurveTo(-22, -9, -34, 0); ctx.quadraticCurveTo(-20, 8, -6, 2); ctx.closePath();
+          ctx.fill();
+        }
+        const g = ctx.createRadialGradient(0, 0, 2, 0, 0, f.radius + 12);
+        g.addColorStop(0, "rgba(255,255,255,1)");
+        g.addColorStop(0.16, "rgba(255,242,204,1)");
+        g.addColorStop(0.42, "rgba(254,215,170,0.98)");
+        g.addColorStop(0.72, "rgba(249,115,22,0.96)");
         g.addColorStop(1, "rgba(153,27,27,0.0)");
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(0, 0, f.radius + 6, 0, Math.PI * 2);
+        ctx.arc(0, 0, f.radius + 12, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = "rgba(255,255,255,0.95)";
         ctx.beginPath();
-        ctx.arc(-2, -2, f.radius * 0.32, 0, Math.PI * 2);
+        ctx.arc(-3, -3, f.radius * 0.38, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
@@ -4346,42 +4454,96 @@ function drawMinifig(x, y, opts = {}) {
         const a = Math.max(0, ex.life / 0.36);
         ctx.globalAlpha = a;
         ctx.translate(ex.x, ex.y);
-        const rr = ex.r * (1 + (1-a) * 1.8);
+        const rr = ex.r * (1 + (1-a) * 2.2);
         const eg = ctx.createRadialGradient(0, 0, 2, 0, 0, rr);
-        eg.addColorStop(0, "rgba(255,255,255,0.95)");
-        eg.addColorStop(0.18, "rgba(254,215,170,0.95)");
-        eg.addColorStop(0.55, "rgba(249,115,22,0.78)");
+        eg.addColorStop(0, "rgba(255,255,255,0.98)");
+        eg.addColorStop(0.14, "rgba(255,244,180,0.98)");
+        eg.addColorStop(0.34, "rgba(254,215,170,0.98)");
+        eg.addColorStop(0.58, "rgba(249,115,22,0.86)");
         eg.addColorStop(1, "rgba(127,29,29,0)");
         ctx.fillStyle = eg;
         ctx.beginPath(); ctx.arc(0, 0, rr, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "rgba(255,245,245,0.82)";
         ctx.lineWidth = 3;
         ctx.beginPath(); ctx.arc(0, 0, rr * 0.68, 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < 8; i++) {
+          const ang = i / 8 * Math.PI * 2;
+          ctx.strokeStyle = i % 2 ? "rgba(255,245,220,0.9)" : "rgba(251,146,60,0.84)";
+          ctx.lineWidth = 2.2;
+          ctx.beginPath(); ctx.moveTo(Math.cos(ang) * rr * 0.25, Math.sin(ang) * rr * 0.25); ctx.lineTo(Math.cos(ang) * rr * 0.95, Math.sin(ang) * rr * 0.95); ctx.stroke();
+        }
+        ctx.restore();
+      }
+      for (const tb of combatState.thunderBolts) {
+        ctx.save();
+        const alpha = Math.max(0, Math.min(1, tb.life / (tb.maxLife || 0.5)));
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = "rgba(196,181,253,0.95)";
+        ctx.lineWidth = 4;
+        ctx.shadowColor = "rgba(167,139,250,0.95)";
+        ctx.shadowBlur = 22;
+        let px = tb.x + (Math.random() - 0.5) * 10;
+        let py = tb.y - 260;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        for (let i = 0; i < 7; i++) {
+          const ny = tb.y - 220 + i * 38;
+          const nx = tb.x + (Math.random() - 0.5) * 30;
+          ctx.lineTo(nx, ny);
+        }
+        ctx.lineTo(tb.x, tb.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+      for (const burst of combatState.thunderBursts) {
+        ctx.save();
+        const a = Math.max(0, burst.life / 0.45);
+        ctx.globalAlpha = a;
+        ctx.translate(burst.x, burst.y);
+        ctx.strokeStyle = "rgba(196,181,253,0.95)";
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(0, 0, 26 + (1-a) * 42, 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < 6; i++) {
+          const ang = i / 6 * Math.PI * 2;
+          ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(ang) * (26 + (1-a) * 42), Math.sin(ang) * (26 + (1-a) * 42)); ctx.stroke();
+        }
         ctx.restore();
       }
       for (const fx of combatState.slashFx) {
         ctx.save();
-        const a = Math.max(0, fx.life / 0.20);
+        const a = Math.max(0, fx.life / 0.34);
         ctx.globalAlpha = a;
         ctx.translate(fx.x, fx.y);
         const rot = fx.dir === 'left' ? Math.PI : fx.dir === 'up' ? -Math.PI/2 : fx.dir === 'down' ? Math.PI/2 : 0;
         ctx.rotate(rot);
         const fxCol = fx.color || 'rgba(147,197,253,0.92)';
+        const bonus = fx.tier === "MYTHIC" ? 16 : fx.tier === "LEGEND" ? 10 : fx.tier === "EPIC" ? 6 : 0;
+        ctx.shadowColor = fxCol;
+        ctx.shadowBlur = 24 + bonus;
         ctx.strokeStyle = 'rgba(255,255,255,0.98)';
-        ctx.lineWidth = 10;
+        ctx.lineWidth = 10 + Math.min(4, fx.plus || 0);
         ctx.beginPath();
-        ctx.arc(0, 0, 24 + (fx.combo||1)*2, 0.18, 1.66);
+        ctx.arc(0, 0, 24 + (fx.combo||1)*2 + bonus * 0.2, 0.18, 1.66);
         ctx.stroke();
         ctx.strokeStyle = fxCol;
-        ctx.lineWidth = 6;
+        ctx.lineWidth = 6 + Math.min(3, (fx.plus || 0) * 0.25);
         ctx.beginPath();
-        ctx.arc(0, 0, 31 + (fx.combo||1)*3, 0.10, 1.74);
+        ctx.arc(0, 0, 31 + (fx.combo||1)*3 + bonus * 0.35, 0.10, 1.74);
         ctx.stroke();
         ctx.strokeStyle = 'rgba(255,255,255,0.72)';
         ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.arc(0, 0, 27 + (fx.combo||1)*2, -1.68, -0.28);
+        ctx.arc(0, 0, 27 + (fx.combo||1)*2 + bonus * 0.28, -1.68, -0.28);
         ctx.stroke();
+        if (fx.tier === "MYTHIC") {
+          ctx.fillStyle = "rgba(180,235,255,0.26)";
+          ctx.beginPath();
+          ctx.moveTo(-42,-6); ctx.quadraticCurveTo(-12,-46,18,-22); ctx.quadraticCurveTo(34,-12,44,-22); ctx.quadraticCurveTo(24,-4,16,10); ctx.quadraticCurveTo(-4,20,-22,10); ctx.quadraticCurveTo(-34,4,-42,-6); ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = "rgba(120,210,255,0.8)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
         ctx.restore();
       }
       for (const d of combatState.damageTexts) {
@@ -4921,7 +5083,7 @@ loop();
 (function(){
   function applyGoldDarkUI(){
     try{
-      const ids=["toast","coord","fps","inventory_panel","equipment_panel","blacksmith_card","joystick_base","joystick_knob","btn_inventory","btn_equipment","btn_save","btn_enter","btn_attack","btn_fireball","btn_haste","btn_save_desktop","btn_fireball_desktop","btn_haste_desktop"];
+      const ids=["toast","coord","fps","inventory_panel","equipment_panel","blacksmith_card","joystick_base","joystick_knob","btn_inventory","btn_equipment","btn_save","btn_enter","btn_attack","btn_fireball","btn_haste","btn_thunder","btn_save_desktop","btn_fireball_desktop","btn_haste_desktop","btn_thunder_desktop"];
       ids.forEach(id=>{
         const el=document.getElementById(id);
         if(!el) return;
@@ -5042,7 +5204,7 @@ loop();
       wrap.style.filter='drop-shadow(0 8px 24px rgba(0,0,0,0.38))';
       wrap.querySelectorAll('button').forEach(btn=>{
         btn.style.textShadow='0 1px 0 rgba(0,0,0,0.62)';
-        btn.style.minWidth='78px';
+        btn.style.minWidth='0';
       });
     }catch(e){}
     requestAnimationFrame(styleThemeButtons);
