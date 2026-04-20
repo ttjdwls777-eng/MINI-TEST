@@ -490,6 +490,8 @@
         to   { opacity: 1; transform: translateY(0); }
       }
       * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+      .shop-item, .slot-card, #inventory_panel, #equipment_panel, #blacksmith_card { box-shadow: 0 22px 54px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.06); }
+      .shop-item { border:1px solid rgba(255,255,255,0.10); }
       .slot-card {
         display:flex; align-items:center; justify-content:space-between;
         gap:10px; margin:10px 0; padding:12px;
@@ -1280,61 +1282,73 @@
     }
 
     function iconMarkup(item, equipped = false) {
-      const rare = rarityStyle(item?.price || 0);
       const mode = item?.icon || item?.slot || "item";
-      const base = item?.color || rare.color || "#94a3b8";
-      const glow = item?.glow || rare.glow || base;
-      const plus = getEnhanceLevel(item?.slot || "weapon");
-      const mythic = rare.label === "MYTHIC";
-      const legend = rare.label === "LEGEND";
-      const frameGlow = equipped ? `0 0 0 2px ${glow}, 0 0 24px ${glow}aa, 0 18px 26px rgba(2,6,23,0.34)` : `0 0 0 1px rgba(255,255,255,0.08), 0 14px 20px rgba(2,6,23,0.22)`;
-      const bg = `radial-gradient(circle at 30% 24%, ${shade(base, 48)}, ${shade(base, -8)} 42%, #020617 96%)`;
-      const accent = shade(base, 24);
-      const embers = Array.from({ length: Math.max(3, Math.min(7, 2 + plus + (legend ? 1 : 0) + (mythic ? 1 : 0))) }).map((_, i) => {
-        const px = 8 + ((i * 11) % 34);
-        const py = 8 + ((i * 9) % 34);
-        const sz = i % 2 ? 2.3 : 1.6;
-        return `<div style="position:absolute;left:${px}px;top:${py}px;width:${sz}px;height:${sz}px;border-radius:999px;background:${i % 3 === 0 ? 'rgba(255,255,255,0.95)' : glow};box-shadow:0 0 10px ${glow},0 0 18px ${glow};opacity:${0.55 + i * 0.05}"></div>`;
-      }).join("");
-      const flares = Array.from({ length: mythic ? 5 : legend ? 4 : 3 }).map((_, i) => {
-        const left = 5 + i * 10;
-        const h = 10 + (i % 3) * 5 + (mythic ? 4 : 0);
-        return `<div style="position:absolute;left:${left}px;bottom:${2 + (i % 2) * 2}px;width:10px;height:${h}px;filter:blur(2px);background:linear-gradient(180deg, rgba(255,255,255,0), ${rare.flame || glow});clip-path:polygon(50% 0%, 75% 32%, 100% 100%, 0% 100%, 25% 32%)"></div>`;
-      }).join("");
-      let art = '';
-      if (mode === 'sword') {
-        art = `
-          <div style="position:absolute;left:28px;top:6px;width:5px;height:32px;border-radius:4px;background:linear-gradient(180deg,#ffffff,#dbeafe 24%,${accent} 58%,${shade(base,-26)} 100%);transform:rotate(30deg);box-shadow:0 0 16px ${glow}, inset 0 0 6px rgba(255,255,255,0.55)"></div>
-          <div style="position:absolute;left:18px;top:29px;width:24px;height:6px;border-radius:6px;background:linear-gradient(90deg,${shade(base,-26)},${accent},${shade(base,-26)});transform:rotate(30deg);box-shadow:0 0 10px ${glow}"></div>
-          <div style="position:absolute;left:16px;top:36px;width:8px;height:13px;border-radius:4px;background:linear-gradient(180deg,#2b1d14,#0f172a);transform:rotate(30deg)"></div>
-          <div style="position:absolute;left:33px;top:2px;width:6px;height:6px;border-radius:999px;background:#fff;box-shadow:0 0 18px ${glow}"></div>`;
-      } else if (mode === 'shield') {
-        art = `
-          <div style="position:absolute;left:11px;right:11px;top:8px;bottom:8px;background:linear-gradient(180deg,${shade(base,36)},${base} 44%,${shade(base,-32)} 100%);clip-path:polygon(50% 0%, 92% 18%, 86% 72%, 50% 100%, 14% 72%, 8% 18%);box-shadow:inset 0 0 18px rgba(255,255,255,0.18), 0 0 14px ${glow}88"></div>
-          <div style="position:absolute;left:23px;top:14px;width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,0.92);box-shadow:0 0 12px ${glow}"></div>
-          <div style="position:absolute;left:25px;top:18px;width:4px;height:20px;border-radius:4px;background:#f8fafc"></div>
-          <div style="position:absolute;left:18px;top:26px;width:18px;height:4px;border-radius:4px;background:${accent}"></div>`;
-      } else if (mode === 'helm') {
-        art = `
-          <div style="position:absolute;left:10px;right:10px;top:8px;height:23px;border-radius:15px 15px 10px 10px;background:linear-gradient(180deg,${shade(base,32)},${base} 48%,${shade(base,-28)} 100%);border:1px solid rgba(255,255,255,0.16);box-shadow:0 0 12px ${glow}66"></div>
-          <div style="position:absolute;left:14px;right:14px;top:15px;height:8px;border-radius:10px;background:linear-gradient(90deg,transparent,${accent},transparent);box-shadow:0 0 12px ${glow}"></div>
-          <div style="position:absolute;left:20px;right:20px;top:24px;height:12px;border-radius:0 0 12px 12px;background:linear-gradient(180deg,#0f172a,#374151)"></div>
+      const rare = rarityStyle(item?.price || 0);
+      const t = performance.now() / 1000;
+      const glow = item?.glow || item?.color || rare.glow || "rgba(148,163,184,0.45)";
+      const metallic = `linear-gradient(180deg, ${shade(rare.color, 58)} 0%, ${shade(rare.color, 22)} 24%, ${shade(rare.color, -18)} 58%, #020617 100%)`;
+      let bg = `radial-gradient(circle at 50% 18%, ${shade(rare.color, 42)}, #020617 78%)`;
+      let shape = "";
+      let rim = `box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -10px 20px rgba(0,0,0,0.26), 0 0 28px ${glow}88, 0 10px 22px rgba(2,6,23,0.34)`;
+      const shine = `<div style="position:absolute;left:8px;right:8px;top:6px;height:12px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0));filter:blur(0.3px)"></div>`;
+      if (mode === "helm") {
+        bg = `radial-gradient(circle at 50% 20%, ${shade(rare.color, 28)}, #020617 80%)`;
+        shape = `
+          <div style="position:absolute;left:10px;right:10px;top:8px;height:22px;border-radius:15px 15px 10px 10px;background:${metallic};border:1px solid rgba(255,255,255,0.18)"></div>
+          <div style="position:absolute;left:14px;right:14px;top:15px;height:9px;border-radius:10px;background:linear-gradient(90deg,transparent,rgba(96,165,250,0.95),transparent);box-shadow:0 0 10px rgba(96,165,250,0.8)"></div>
+          <div style="position:absolute;left:19px;right:19px;top:24px;height:12px;border-radius:0 0 12px 12px;background:linear-gradient(180deg,#0f172a,#374151)"></div>
+          <div style="position:absolute;left:27px;top:5px;width:10px;height:10px;transform:rotate(45deg);background:${rare.color};box-shadow:0 0 14px ${glow}"></div>
           <div style="position:absolute;left:8px;top:9px;width:8px;height:18px;border-radius:8px;background:linear-gradient(180deg,#111827,#020617)"></div>
           <div style="position:absolute;right:8px;top:9px;width:8px;height:18px;border-radius:8px;background:linear-gradient(180deg,#111827,#020617)"></div>
-          <div style="position:absolute;left:27px;top:4px;width:10px;height:10px;transform:rotate(45deg);background:${accent};box-shadow:0 0 14px ${glow}"></div>`;
-      } else {
-        art = `
-          <div style="position:absolute;left:11px;right:11px;top:8px;height:31px;border-radius:12px;background:linear-gradient(180deg,${shade(base,28)},${base} 44%,${shade(base,-26)} 100%);border:1px solid rgba(255,255,255,0.16)"></div>
-          <div style="position:absolute;left:17px;right:17px;top:13px;height:7px;border-radius:8px;background:linear-gradient(90deg,transparent,${accent},transparent);box-shadow:0 0 10px ${glow}"></div>
-          <div style="position:absolute;left:20px;right:20px;top:22px;height:14px;border-radius:8px;background:rgba(255,255,255,0.08)"></div>
+          ${shine}`;
+      } else if (mode === "armor") {
+        bg = `radial-gradient(circle at 50% 22%, ${shade(rare.color, 20)}, #020617 78%)`;
+        shape = `
+          <div style="position:absolute;left:11px;right:11px;top:8px;height:31px;border-radius:12px;background:${metallic};border:1px solid rgba(255,255,255,0.16)"></div>
+          <div style="position:absolute;left:17px;right:17px;top:12px;height:8px;border-radius:8px;background:linear-gradient(90deg,transparent,${rare.color},transparent);box-shadow:0 0 10px ${glow}"></div>
+          <div style="position:absolute;left:20px;right:20px;top:20px;height:14px;border-radius:8px;background:rgba(255,255,255,0.08)"></div>
           <div style="position:absolute;left:7px;top:12px;width:11px;height:12px;border-radius:6px;background:linear-gradient(180deg,#0f172a,#334155)"></div>
-          <div style="position:absolute;right:7px;top:12px;width:11px;height:12px;border-radius:6px;background:linear-gradient(180deg,#0f172a,#334155)"></div>`;
+          <div style="position:absolute;right:7px;top:12px;width:11px;height:12px;border-radius:6px;background:linear-gradient(180deg,#0f172a,#334155)"></div>
+          <div style="position:absolute;left:27px;top:6px;width:8px;height:8px;transform:rotate(45deg);background:${rare.color};box-shadow:0 0 12px ${glow}"></div>
+          ${shine}`;
+      } else if (mode === "sword") {
+        bg = `radial-gradient(circle at 50% 18%, ${shade(rare.color, 18)}, #020617 80%)`;
+        shape = `
+          <div style="position:absolute;left:27px;top:6px;width:6px;height:31px;border-radius:4px;background:linear-gradient(180deg,#ffffff,#e2e8f0 28%,#cbd5e1 52%,#94a3b8 84%,#334155 100%);transform:rotate(32deg);box-shadow:0 0 12px rgba(255,255,255,0.52),0 0 24px ${glow}"></div>
+          <div style="position:absolute;left:18px;top:30px;width:22px;height:5px;border-radius:6px;background:linear-gradient(90deg,${shade(rare.color,-18)},${rare.color},${shade(rare.color,-18)});transform:rotate(32deg);box-shadow:0 0 10px ${glow}"></div>
+          <div style="position:absolute;left:16px;top:36px;width:8px;height:13px;border-radius:4px;background:linear-gradient(180deg,#7f1d1d,#1f2937);transform:rotate(32deg)"></div>
+          <div style="position:absolute;left:13px;top:10px;width:14px;height:3px;background:rgba(255,255,255,0.95);transform:rotate(-25deg);filter:blur(0.3px)"></div>
+          <div style="position:absolute;left:30px;top:8px;width:3px;height:20px;background:rgba(255,255,255,0.55);transform:rotate(32deg)"></div>
+          <div style="position:absolute;left:33px;top:2px;width:6px;height:6px;border-radius:999px;background:#fff;box-shadow:0 0 16px ${glow},0 0 26px rgba(255,255,255,0.8)"></div>`;
+      } else if (mode === "shield") {
+        bg = `radial-gradient(circle at 50% 20%, ${shade(rare.color, 24)}, #020617 78%)`;
+        shape = `
+          <div style="position:absolute;left:12px;right:12px;top:8px;bottom:10px;background:${metallic};clip-path:polygon(50% 0%, 92% 18%, 86% 72%, 50% 100%, 14% 72%, 8% 18%);border:1px solid rgba(255,255,255,0.16);box-shadow:0 0 12px ${glow}55 inset"></div>
+          <div style="position:absolute;left:17px;right:17px;top:15px;height:6px;border-radius:6px;background:${rare.color};box-shadow:0 0 10px ${glow}"></div>
+          <div style="position:absolute;left:24px;top:18px;width:4px;height:18px;border-radius:4px;background:#ffffff"></div>
+          <div style="position:absolute;left:18px;top:24px;width:16px;height:4px;border-radius:4px;background:#0f172a"></div>
+          <div style="position:absolute;left:22px;top:12px;width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,0.85);box-shadow:0 0 12px ${glow}"></div>`;
       }
-      const plusBadge = plus > 0 ? `<div style="position:absolute;right:4px;top:4px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:linear-gradient(180deg,#fbbf24,#f97316);color:#fff;font:1000 9px/16px system-ui;text-align:center;box-shadow:0 0 10px rgba(251,191,36,0.75)">+${plus}</div>` : '';
-      return `<div class="item-icon${equipped ? ' active' : ''}" style="background:${bg};box-shadow:${frameGlow};overflow:hidden"><div style="position:absolute;inset:-14%;background:radial-gradient(circle at 22% 18%, rgba(255,255,255,0.28), transparent 32%), radial-gradient(circle at 80% 78%, ${glow}22, transparent 28%), radial-gradient(circle at 50% 50%, ${glow}18, transparent 56%)"></div>${flares}${art}${embers}${plusBadge}</div>`;
+      const stars = Math.max(1, Math.min(5, Math.ceil((item?.price || 1) / 220)));
+      const gems = Array.from({ length: stars }).map((_, i) => `<div style="position:absolute;bottom:5px;left:${8 + i * 10}px;width:6px;height:6px;border-radius:999px;background:${rare.color};box-shadow:0 0 12px ${glow}"></div>`).join("");
+      const sparks = Array.from({ length: Math.max(3, stars + 1) }).map((_, i) => {
+        const px = 8 + ((i * 13) % 36);
+        const py = 8 + ((i * 11) % 32);
+        const size = i % 2 ? 3 : 2;
+        return `<div style="position:absolute;left:${px}px;top:${py}px;width:${size}px;height:${size}px;border-radius:999px;background:rgba(255,255,255,0.95);box-shadow:0 0 10px ${glow},0 0 18px ${glow};opacity:${0.45 + i * 0.08}"></div>`;
+      }).join("");
+      const activeRing = equipped ? `0 0 0 2px ${rare.color}, 0 0 28px ${glow}, 0 0 52px ${glow}66` : `0 0 0 1px rgba(255,255,255,0.08)`;
+      const auraCols = [rare.flame || glow, glow, "rgba(255,255,255,0.95)"];
+      const flameFx = Array.from({ length: Math.max(3, stars) }).map((_, i) => {
+        const left = 6 + i * 11;
+        const h = 12 + (i % 3) * 6;
+        const col = auraCols[i % auraCols.length];
+        return `<div style="position:absolute;left:${left}px;bottom:${2 + (i%2)*3}px;width:10px;height:${h}px;filter:blur(2px);background:linear-gradient(180deg, rgba(255,255,255,0.0), ${col});clip-path:polygon(50% 0%, 75% 28%, 100% 100%, 0% 100%, 24% 28%)"></div>`;
+      }).join("");
+      return `<div class="item-icon${equipped ? " active" : ""}" style="background:${bg};box-shadow:${activeRing}, ${rim};overflow:hidden"><div style="position:absolute;inset:-10%;background:radial-gradient(circle at 22% 18%, rgba(255,255,255,0.22), transparent 34%), radial-gradient(circle at 80% 78%, ${glow}22, transparent 28%), radial-gradient(circle at 50% 50%, ${glow}20, transparent 56%)"></div>${flameFx}${shape}${gems}${sparks}</div>`;
     }
 
-function renderPanels() {
+    function renderPanels() {
       UI.inventoryPanel.style.display = inventoryState.inventoryOpen ? "block" : "none";
       UI.equipmentPanel.style.display = inventoryState.equipmentOpen ? "block" : "none";
       UI.inventoryPanel.style.background = "linear-gradient(180deg, rgba(15,23,42,0.96), rgba(15,23,42,0.88))";
@@ -2902,230 +2916,239 @@ function renderPanels() {
       return adImageCache[key];
     }
 
-    function drawAdBuilding(b, t) {
-      const c = legoStyleForType(b.key === "youtube" ? "bbq" : b.key === "tiktok" ? "baskin" : b.key === "instagram" ? "social" : "mcd");
-      const x = b.x, y = b.y, w = b.w, h = b.h;
-      groundAO(x + 12, y + h - 18, w - 24, 42, 0.14);
-      softShadow(x + 22, y + h - 12, w - 44, 18, 0.06);
+    
+function drawAdBuilding(b, t) {
+  const x = b.x, y = b.y, w = b.w, h = b.h;
+  const palette = {
+    youtube: { a: "#ef4444", b: "#7f1d1d", c: "#fee2e2", trim: "#fef2f2" },
+    tiktok: { a: "#111827", b: "#0f172a", c: "#67e8f9", trim: "#f472b6" },
+    instagram: { a: "#8b5cf6", b: "#ec4899", c: "#f59e0b", trim: "#fdf2f8" }
+  }[b.key] || { a: "#1e293b", b: "#0f172a", c: "#38bdf8", trim: "#e2e8f0" };
+  groundAO(x + 16, y + h - 18, w - 32, 44, 0.16);
+  softShadow(x + 18, y + h - 10, w - 36, 18, 0.08);
 
-      const adImg = getAdImageForKey(b.key);
-      if (adImg && adImg.complete && adImg.naturalWidth > 0) {
-        ctx.save();
-        const pad = 8;
-        const availW = w - pad * 2;
-        const availH = h - 34;
-        const scale = Math.min(availW / adImg.naturalWidth, availH / adImg.naturalHeight);
-        const iw = adImg.naturalWidth * scale;
-        const ih = adImg.naturalHeight * scale;
-        const ix = x + (w - iw) * 0.5;
-        const iy = y + Math.max(0, (h - ih) * 0.32);
-        ctx.drawImage(adImg, ix, iy, iw, ih);
-        ctx.fillStyle = "rgba(10,14,24,0.82)";
-        roundRect(x + w*0.5 - 66, y + h - 42, 132, 24, 12);
-        ctx.fill();
-        ctx.fillStyle = "#f8fafc";
-        ctx.font = "900 13px system-ui";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("COMING SOON", x + w*0.5, y + h - 30);
-        ctx.restore();
-        return;
-      }
+  ctx.save();
+  const body = ctx.createLinearGradient(x, y, x, y + h);
+  body.addColorStop(0, palette.a);
+  body.addColorStop(0.52, palette.b);
+  body.addColorStop(1, "#020617");
+  ctx.fillStyle = body;
+  roundRect(x, y + 34, w, h - 34, 28);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.18)";
+  ctx.lineWidth = 3;
+  roundRect(x, y + 34, w, h - 34, 28);
+  ctx.stroke();
 
-      ctx.save();
-      const wall = ctx.createLinearGradient(x, y, x, y + h);
-      wall.addColorStop(0, shade(c.wall, 10));
-      wall.addColorStop(1, shade(c.wall, -12));
-      ctx.fillStyle = wall;
-      roundRect(x, y + 30, w, h - 30, 24);
-      ctx.fill();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = "rgba(255,255,255,0.18)";
-      roundRect(x, y + 30, w, h - 30, 24);
-      ctx.stroke();
+  const signW = w * 0.82;
+  const signH = 68;
+  const signX = x + (w - signW) * 0.5;
+  const signY = y;
+  const signGrad = ctx.createLinearGradient(signX, signY, signX + signW, signY + signH);
+  signGrad.addColorStop(0, palette.a);
+  signGrad.addColorStop(1, palette.b);
+  ctx.fillStyle = signGrad;
+  roundRect(signX, signY, signW, signH, 24);
+  ctx.fill();
+  ctx.strokeStyle = palette.trim;
+  ctx.lineWidth = 4;
+  roundRect(signX, signY, signW, signH, 24);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,0.14)";
+  roundRect(signX + 10, signY + 8, signW - 20, 16, 12);
+  ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `1000 ${b.key === "instagram" ? 24 : 26}px system-ui`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(b.label, x + w * 0.5, signY + signH * 0.56);
 
-      ctx.fillStyle = shade(c.frame, -10);
-      roundRect(x + 20, y + h - 64, w - 40, 22, 8);
-      ctx.fill();
+  const portalGlow = ctx.createRadialGradient(x + w * 0.5, y + h * 0.58, 6, x + w * 0.5, y + h * 0.58, w * 0.42);
+  portalGlow.addColorStop(0, palette.c + "aa");
+  portalGlow.addColorStop(0.44, palette.a + "44");
+  portalGlow.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = portalGlow;
+  ctx.beginPath();
+  ctx.arc(x + w * 0.5, y + h * 0.58, w * 0.28, 0, Math.PI * 2);
+  ctx.fill();
 
-      const awningY = y + h * 0.46;
-      for (let i = 0; i < 8; i++) {
-        ctx.fillStyle = i % 2 ? "#ffffff" : b.color;
-        ctx.beginPath();
-        ctx.moveTo(x + 18 + i * ((w - 36) / 8), awningY);
-        ctx.lineTo(x + 18 + (i + 1) * ((w - 36) / 8), awningY);
-        ctx.lineTo(x + 28 + (i + 1) * ((w - 36) / 8), awningY + 38);
-        ctx.lineTo(x + 8 + i * ((w - 36) / 8), awningY + 38);
-        ctx.closePath();
-        ctx.fill();
-      }
+  const adImg = getAdImageForKey(b.key);
+  if (adImg && adImg.complete && adImg.naturalWidth > 0) {
+    const pad = 14;
+    const availW = w - pad * 2;
+    const availH = h * 0.42;
+    const scale = Math.min(availW / adImg.naturalWidth, availH / adImg.naturalHeight);
+    const iw = adImg.naturalWidth * scale;
+    const ih = adImg.naturalHeight * scale;
+    const ix = x + (w - iw) * 0.5;
+    const iy = y + h * 0.22 - ih * 0.18;
+    ctx.save();
+    ctx.shadowColor = palette.c;
+    ctx.shadowBlur = 20;
+    ctx.drawImage(adImg, ix, iy, iw, ih);
+    ctx.restore();
+  }
 
-      const signW = w * 0.78;
-      const signH = 64;
-      const signX = x + (w - signW) * 0.5;
-      const signY = y;
-      const sg = ctx.createLinearGradient(signX, signY, signX + signW, signY + signH);
-      sg.addColorStop(0, shade(b.color, 4));
-      sg.addColorStop(1, shade(b.color, -28));
-      ctx.fillStyle = sg;
-      roundRect(signX, signY, signW, signH, 22);
-      ctx.fill();
-      ctx.lineWidth = 6;
-      ctx.strokeStyle = b.key === "instagram" ? "rgba(255,255,255,0.35)" : "rgba(255,230,180,0.35)";
-      roundRect(signX, signY, signW, signH, 22);
-      ctx.stroke();
-      ctx.fillStyle = b.key === "instagram" ? "#f8fafc" : "#fff7d6";
-      ctx.font = `1000 ${b.key === "instagram" ? 25 : 24}px system-ui`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(b.label, x + w * 0.5, signY + signH * 0.54);
+  ctx.fillStyle = "rgba(2,6,23,0.82)";
+  roundRect(x + w * 0.16, y + h * 0.54, w * 0.18, h * 0.22, 16);
+  roundRect(x + w * 0.66, y + h * 0.54, w * 0.18, h * 0.22, 16);
+  ctx.fill();
+  const doorGrad = ctx.createLinearGradient(x, y, x, y + h);
+  doorGrad.addColorStop(0, palette.c);
+  doorGrad.addColorStop(1, palette.a);
+  ctx.fillStyle = doorGrad;
+  roundRect(x + w * 0.40, y + h * 0.48, w * 0.20, h * 0.32, 18);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.20)";
+  ctx.lineWidth = 2;
+  roundRect(x + w * 0.40, y + h * 0.48, w * 0.20, h * 0.32, 18);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,0.92)";
+  ctx.beginPath();
+  ctx.arc(x + w * 0.56, y + h * 0.65, 4, 0, Math.PI * 2);
+  ctx.fill();
 
-      if (b.key === "instagram") {
-        const ig = ctx.createLinearGradient(x + 26, y + 88, x + 96, y + 158);
-        ig.addColorStop(0, "#f59e0b");
-        ig.addColorStop(0.5, "#ec4899");
-        ig.addColorStop(1, "#8b5cf6");
-        ctx.fillStyle = ig;
-        roundRect(x + 26, y + 88, 70, 70, 18);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(255,255,255,0.95)";
-        ctx.lineWidth = 5;
-        roundRect(x + 40, y + 102, 42, 42, 12);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(x + 61, y + 123, 9, 0, Math.PI*2);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(x + 77, y + 107, 3.5, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(255,255,255,0.95)";
-        ctx.fill();
-      } else if (b.key === "tiktok") {
-        ctx.strokeStyle = "#22d3ee";
-        ctx.lineWidth = 9;
-        ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(x + 54, y + 92);
-        ctx.lineTo(x + 54, y + 146);
-        ctx.quadraticCurveTo(x + 54, y + 160, x + 38, y + 160);
-        ctx.stroke();
-        ctx.strokeStyle = "#f472b6";
-        ctx.beginPath();
-        ctx.moveTo(x + 64, y + 88);
-        ctx.lineTo(x + 64, y + 142);
-        ctx.quadraticCurveTo(x + 64, y + 156, x + 48, y + 156);
-        ctx.stroke();
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(x + 45, y + 155, 12, 0, Math.PI*2);
-        ctx.fill();
-      } else if (b.key === "youtube") {
-        ctx.fillStyle = "#ef4444";
-        roundRect(x + 24, y + 96, 80, 52, 16);
-        ctx.fill();
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.moveTo(x + 56, y + 109);
-        ctx.lineTo(x + 56, y + 135);
-        ctx.lineTo(x + 78, y + 122);
-        ctx.closePath();
-        ctx.fill();
-      }
+  ctx.fillStyle = "rgba(10,14,24,0.84)";
+  roundRect(x + w * 0.5 - 76, y + h - 54, 152, 28, 14);
+  ctx.fill();
+  ctx.fillStyle = "#f8fafc";
+  ctx.font = "1000 14px system-ui";
+  ctx.fillText("FUTURE RAID GATE", x + w * 0.5, y + h - 39);
+  ctx.restore();
+}
 
+    
+function drawPortalBuilding(p, t) {
+  const c = legoStyleForType(p.type);
+  const x = p.x, y = p.y, w = p.w, h = p.h;
+  const pulse = 0.5 + 0.5 * Math.sin(t * 2.4 + x * 0.002);
+  groundAO(x + 8, y + h - 16, w - 16, 36, 0.24);
+  softShadow(x + 8, y + h - 12, w - 16, 20, 0.12);
 
-      ctx.fillStyle = "rgba(10,14,24,0.76)";
-      roundRect(x + w*0.5 - 62, y + h - 48, 124, 26, 12);
-      ctx.fill();
-      ctx.fillStyle = "#f8fafc";
-      ctx.font = "900 14px system-ui";
-      ctx.fillText("COMING SOON", x + w*0.5, y + h - 35);
+  if (hasShopArt(p.key)) {
+    const art = shopArt[p.key].img;
+    const ratio = Math.min(w / Math.max(1, art.naturalWidth || art.width), h / Math.max(1, art.naturalHeight || art.height));
+    const drawW = Math.max(24, (art.naturalWidth || art.width) * ratio);
+    const drawH = Math.max(24, (art.naturalHeight || art.height) * ratio);
+    const dx = x + (w - drawW) * 0.5;
+    const dy = y + (h - drawH) * 0.5;
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(art, dx, dy, drawW, drawH);
+    ctx.restore();
+    return;
+  }
 
-      ctx.fillStyle = "rgba(188,232,255,0.90)";
-      roundRect(x + 24, y + h * 0.58, w * 0.28, h * 0.20, 12);
-      roundRect(x + w * 0.68 - w * 0.18, y + h * 0.58, w * 0.18, h * 0.20, 12);
-      ctx.fill();
-      ctx.fillStyle = "#1f2937";
-      roundRect(x + w * 0.41, y + h * 0.54, w * 0.18, h * 0.30, 12);
-      ctx.fill();
-      ctx.fillStyle = "rgba(255,255,255,0.28)";
-      roundRect(x + 28, y + h * 0.60, w * 0.22, h * 0.06, 8);
-      roundRect(x + w * 0.70 - w * 0.14, y + h * 0.60, w * 0.12, h * 0.06, 8);
-      ctx.fill();
-      ctx.restore();
-    }
+  ctx.save();
+  const roofH = h * 0.24;
+  const wallY = y + roofH * 0.74;
+  const wallH = h - roofH * 0.74;
+  const wallGrad = ctx.createLinearGradient(x, wallY, x, wallY + wallH);
+  wallGrad.addColorStop(0, shade(c.wall, 20));
+  wallGrad.addColorStop(0.5, c.wall);
+  wallGrad.addColorStop(1, shade(c.frame, -18));
+  ctx.fillStyle = wallGrad;
+  roundRect(x, wallY, w, wallH, 28);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.16)";
+  ctx.lineWidth = 3;
+  roundRect(x, wallY, w, wallH, 28);
+  ctx.stroke();
 
-    function drawPortalBuilding(p, t) {
-      const c = legoStyleForType(p.type);
-      const x = p.x, y = p.y, w = p.w, h = p.h;
-      groundAO(x + 8, y + h - 16, w - 16, 34, 0.22);
-      softShadow(x + 8, y + h - 14, w - 16, 22, 0.11);
+  const roofGrad = ctx.createLinearGradient(x, y, x, y + roofH);
+  roofGrad.addColorStop(0, shade(c.sign, 26));
+  roofGrad.addColorStop(1, shade(c.sign, -24));
+  ctx.fillStyle = roofGrad;
+  ctx.beginPath();
+  ctx.moveTo(x + w * 0.06, wallY + 14);
+  ctx.lineTo(x + w * 0.94, wallY + 14);
+  ctx.lineTo(x + w * 0.78, y + 10);
+  ctx.lineTo(x + w * 0.22, y + 10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.18)";
+  ctx.beginPath();
+  ctx.moveTo(x + w * 0.26, y + 18);
+  ctx.lineTo(x + w * 0.74, y + 18);
+  ctx.lineTo(x + w * 0.68, y + 30);
+  ctx.lineTo(x + w * 0.32, y + 30);
+  ctx.closePath();
+  ctx.fill();
 
-      if (hasShopArt(p.key)) {
-        const art = shopArt[p.key].img;
-        ctx.save();
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = "high";
-        ctx.shadowColor = "rgba(15,23,42,0.28)";
-        ctx.shadowBlur = 22;
-        ctx.drawImage(art, x, y, w, h);
-        const rim = ctx.createLinearGradient(x, y, x, y + h);
-        rim.addColorStop(0, "rgba(255,255,255,0.26)");
-        rim.addColorStop(1, "rgba(15,23,42,0.26)");
-        ctx.strokeStyle = rim;
-        ctx.lineWidth = 3;
-        roundRect(x + 6, y + 6, w - 12, h - 12, 22);
-        ctx.stroke();
-        ctx.restore();
-      } else {
-        if (p.key === "blacksmith") {
-          ctx.save();
-          const roofH = h * 0.18;
-          const wallY = y + roofH * 0.75;
-          const wallH = h - roofH * 0.75;
-          const forgeWall = ctx.createLinearGradient(x, wallY, x, y + h);
-          forgeWall.addColorStop(0, "#5b3a28");
-          forgeWall.addColorStop(1, "#241711");
-          ctx.fillStyle = forgeWall;
-          roundRect(x, wallY, w, wallH, 26); ctx.fill();
-          ctx.fillStyle = "#6b1d1d";
-          ctx.beginPath(); ctx.moveTo(x + w * 0.05, wallY + 10); ctx.lineTo(x + w * 0.95, wallY + 10); ctx.lineTo(x + w * 0.78, y + 14); ctx.lineTo(x + w * 0.22, y + 14); ctx.closePath(); ctx.fill();
-          ctx.fillStyle = "#111827";
-          roundRect(x + w * 0.10, y + 24, w * 0.80, 44, 16); ctx.fill();
-          ctx.strokeStyle = "rgba(251,191,36,0.65)"; ctx.lineWidth = 3; roundRect(x + w * 0.10, y + 24, w * 0.80, 44, 16); ctx.stroke();
-          ctx.fillStyle = "#fde68a"; ctx.font = `1000 ${Math.max(14, Math.floor(w * 0.085))}px system-ui`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("BLACKSMITH", x + w * 0.5, y + 46);
-          ctx.fillStyle = "#0f172a"; roundRect(x + w * 0.39, y + h * 0.56, w * 0.22, h * 0.22, 18); ctx.fill();
-          ctx.fillStyle = "#94a3b8"; roundRect(x + w * 0.16, y + h * 0.56, w * 0.13, h * 0.14, 10); roundRect(x + w * 0.71, y + h * 0.56, w * 0.13, h * 0.14, 10); ctx.fill();
-          const ember = ctx.createRadialGradient(x + w * 0.5, y + h * 0.62, 6, x + w * 0.5, y + h * 0.62, 30);
-          ember.addColorStop(0, "rgba(251,191,36,0.95)"); ember.addColorStop(0.5, "rgba(249,115,22,0.55)"); ember.addColorStop(1, "rgba(249,115,22,0.00)");
-          ctx.fillStyle = ember; ctx.beginPath(); ctx.arc(x + w * 0.5, y + h * 0.62, 30, 0, Math.PI * 2); ctx.fill();
-          ctx.restore();
-        } else {
-          drawLegoBrickGrid(x, y + 18, w, h - 18);
-          ctx.save();
-          const roofGrad = ctx.createLinearGradient(x, y, x, y + 40);
-          roofGrad.addColorStop(0, shade(c.wall, -6)); roofGrad.addColorStop(1, shade(c.wall, -20));
-          ctx.fillStyle = roofGrad;
-          roundRect(x + 10, y, w - 20, 30, 16); ctx.fill();
-          drawLegoStudRow(x + 30, y + 8, w - 60, Math.max(4, Math.floor((w - 60) / 44)), shade(c.wall, -12));
-          ctx.restore();
-          const signH = Math.max(40, h * 0.19);
-          drawLegoSignPlaque(x + w * 0.10, y + 28, w * 0.80, signH, p.label, Math.max(15, Math.floor(signH * 0.34)), c.sign);
-          const winY = y + 28 + signH + 14;
-          const doorY = y + h * 0.54;
-          if (p.size === "L") {
-            drawLegoWindow(x + w * 0.10, winY, w * 0.24, h * 0.18, c.frame, c.glassA, c.glassB);
-            drawLegoDoor(x + w * 0.39, doorY, w * 0.22, h * 0.30, c.accent, c.frame, c.knob);
-            drawLegoWindow(x + w * 0.66, winY, w * 0.24, h * 0.18, c.frame, c.glassA, c.glassB);
-          } else {
-            drawLegoWindow(x + w * 0.12, winY, w * 0.28, h * 0.18, c.frame, c.glassA, c.glassB);
-            drawLegoDoor(x + w * 0.58, doorY, w * 0.22, h * 0.28, c.accent, c.frame, c.knob);
-          }
-        }
-      }
-      ctx.save(); ctx.globalAlpha = 0.90; ctx.fillStyle = c.grass; roundRect(x + 14, y + h - 14, w - 28, 10, 8); ctx.fill(); ctx.restore();
-      const ez = portalEnterZone(p);
-    }
+  const signW = w * 0.74;
+  const signH = Math.max(44, h * 0.16);
+  const signX = x + (w - signW) * 0.5;
+  const signY = y + roofH * 0.64;
+  const signGrad = ctx.createLinearGradient(signX, signY, signX + signW, signY + signH);
+  signGrad.addColorStop(0, shade(c.sign, 10));
+  signGrad.addColorStop(1, shade(c.sign, -18));
+  ctx.fillStyle = signGrad;
+  roundRect(signX, signY, signW, signH, 18);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.22)";
+  ctx.lineWidth = 3;
+  roundRect(signX, signY, signW, signH, 18);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,0.98)";
+  ctx.font = `1000 ${Math.max(14, Math.floor(signH * 0.34))}px system-ui`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(p.label, x + w * 0.5, signY + signH * 0.56);
 
-function drawCar(c) {
+  const crystalGlow = ctx.createRadialGradient(x + w * 0.5, y + h * 0.54, 8, x + w * 0.5, y + h * 0.54, w * 0.38);
+  crystalGlow.addColorStop(0, c.accent + "88");
+  crystalGlow.addColorStop(0.42, c.sign + "33");
+  crystalGlow.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = crystalGlow;
+  ctx.beginPath();
+  ctx.arc(x + w * 0.5, y + h * 0.54, w * 0.24, 0, Math.PI * 2);
+  ctx.fill();
+
+  drawLegoWindow(x + w * 0.10, y + h * 0.34, w * 0.20, h * 0.18, c.frame, c.glassA, c.glassB);
+  drawLegoWindow(x + w * 0.70, y + h * 0.34, w * 0.20, h * 0.18, c.frame, c.glassA, c.glassB);
+  drawLegoWindow(x + w * 0.16, y + h * 0.58, w * 0.14, h * 0.13, c.frame, c.glassA, c.glassB);
+  drawLegoWindow(x + w * 0.70, y + h * 0.58, w * 0.14, h * 0.13, c.frame, c.glassA, c.glassB);
+
+  const doorX = x + w * 0.39;
+  const doorY = y + h * 0.48;
+  const doorW = w * 0.22;
+  const doorH = h * 0.34;
+  drawLegoDoor(doorX, doorY, doorW, doorH, c.accent, c.frame, c.knob);
+  ctx.fillStyle = c.accent;
+  ctx.beginPath();
+  ctx.moveTo(x + w * 0.50, y + h * 0.22);
+  ctx.lineTo(x + w * 0.56, y + h * 0.32);
+  ctx.lineTo(x + w * 0.44, y + h * 0.32);
+  ctx.closePath();
+  ctx.fill();
+
+  for (let i = 0; i < 4; i++) {
+    const px = x + w * (0.18 + i * 0.21);
+    const py = y + h * 0.16 + Math.sin(t * 2 + i) * 2;
+    ctx.fillStyle = i % 2 ? "rgba(255,255,255,0.92)" : c.accent;
+    ctx.beginPath();
+    ctx.arc(px, py, 2.2 + pulse * 1.4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (p.key === "blacksmith") {
+    ctx.fillStyle = "rgba(249,115,22,0.20)";
+    ctx.beginPath();
+    ctx.arc(x + w * 0.5, y + h * 0.62, w * 0.16, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(251,191,36,0.95)";
+    ctx.font = `1000 ${Math.max(12, Math.floor(w * 0.075))}px system-ui`;
+    ctx.fillText("UPGRADE GEAR", x + w * 0.5, y + h * 0.31);
+  }
+
+  ctx.fillStyle = c.grass;
+  roundRect(x + 14, y + h - 14, w - 28, 10, 8);
+  ctx.fill();
+  ctx.restore();
+}
+
+    function drawCar(c) {
       ctx.save();
       ctx.translate(c.x, c.y + Math.sin(c.bob) * 0.8);
       ctx.globalAlpha = 0.18;
@@ -3350,22 +3373,34 @@ function drawCar(c) {
       ctx.restore();
     }
 
-    function drawWorldTitle() {
-      ctx.save();
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      const title = "META WORLD";
-      ctx.font = "1000 34px system-ui";
-      ctx.fillStyle = "rgba(255,255,255,0.94)";
-      ctx.strokeStyle = "rgba(10,14,24,0.16)";
-      ctx.lineWidth = 6;
-      ctx.strokeText(title, W * 0.5, 18);
-      ctx.fillText(title, W * 0.5, 18);
-      ctx.font = "800 13px system-ui";
-      ctx.fillStyle = "rgba(10,14,24,0.66)";
-      ctx.fillText("PORTAL WORLD · COMMUNITY · ADS", W * 0.5, 58);
-      ctx.restore();
-    }
+    
+function drawWorldTitle() {
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  const title = "XGP HUB WORLD";
+  const sub = "MYTHIC MMORPG PORTAL CITY";
+  const gx = W * 0.5;
+  const gy = 14;
+  const grad = ctx.createLinearGradient(gx - 240, 0, gx + 240, 0);
+  grad.addColorStop(0, "#dbeafe");
+  grad.addColorStop(0.35, "#93c5fd");
+  grad.addColorStop(0.65, "#f5d0fe");
+  grad.addColorStop(1, "#fde68a");
+  ctx.shadowColor = "rgba(96,165,250,0.48)";
+  ctx.shadowBlur = 26;
+  ctx.font = "1000 36px system-ui";
+  ctx.fillStyle = grad;
+  ctx.strokeStyle = "rgba(2,6,23,0.34)";
+  ctx.lineWidth = 8;
+  ctx.strokeText(title, gx, gy);
+  ctx.fillText(title, gx, gy);
+  ctx.shadowBlur = 0;
+  ctx.font = "900 13px system-ui";
+  ctx.fillStyle = "rgba(241,245,249,0.84)";
+  ctx.fillText(sub, gx, gy + 42);
+  ctx.restore();
+}
 
     function drawMiniMap() {
       const mw = isTouchDevice() ? 146 : 220, mh = isTouchDevice() ? 104 : 154;
@@ -3493,73 +3528,287 @@ function drawCar(c) {
       ctx.restore();
     }
 
-    function drawMinifig(x, y, opts = {}) {
-      const isHero = !!opts.isHero;
-      const pal = opts.palette || { torso: isHero ? "#2563eb" : "#0a84ff", pants: isHero ? "#334155" : "#374151", hat: isHero ? "#ef4444" : "#ffcc00", skin: "#ffd7b5", hair: "#1f2937" };
-      const gear = isHero ? getEquippedVisuals() : null;
-      const dir = opts.dirOverride || player.dir;
-      const moving = typeof opts.moving === "boolean" ? opts.moving : player.moving;
-      const walkPhase = typeof opts.walkPhase === "number" ? opts.walkPhase : player.walkPhase;
-      const bob = moving ? Math.sin(walkPhase) * 1.9 : 0;
-      const armSwing = moving ? Math.sin(walkPhase) * 0.55 : 0;
-      const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.48 : 0;
-      const atk = isHero ? combatState.attackT / 0.28 : 0;
-      const attackPose = isHero && combatState.attackT > 0;
-      const attackEase = attackPose ? Math.sin(Math.min(1, atk) * Math.PI) : 0;
-      const armorBase = gear && !window.disableArmorVisual && gear.armorColor ? gear.armorColor : (isHero ? "#111827" : pal.torso);
-      const armorGlow = gear?.armorTier?.glow || shade(armorBase, 20);
-      const helmGlow = gear?.hatTier?.glow || pal.hat;
-      ctx.save();
-      ctx.translate(x, y + bob + 4);
-      if (dir === "left") ctx.scale(-1, 1);
-      ctx.globalAlpha = 0.24;
-      ctx.fillStyle = "rgba(10,14,24,0.46)";
-      ctx.beginPath(); ctx.ellipse(0, 31, 20, 8.2, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
-      const legGrad = ctx.createLinearGradient(0, 10, 0, 34); legGrad.addColorStop(0, shade(armorBase, -4)); legGrad.addColorStop(1, "#020617");
-      ctx.save(); ctx.translate(0, 10); ctx.rotate(legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(-13, 0, 10, 22, 4); ctx.fill(); ctx.fillStyle = "#94a3b8"; roundRect(-13, 15, 10, 4, 2); ctx.fill(); ctx.restore();
-      ctx.save(); ctx.translate(0, 10); ctx.rotate(-legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(3, 0, 10, 22, 4); ctx.fill(); ctx.fillStyle = "#94a3b8"; roundRect(3, 15, 10, 4, 2); ctx.fill(); ctx.restore();
-      const torsoGrad = ctx.createLinearGradient(0, -18, 0, 18); torsoGrad.addColorStop(0, shade(armorBase, 18)); torsoGrad.addColorStop(0.52, armorBase); torsoGrad.addColorStop(1, shade(armorBase, -24));
-      ctx.fillStyle = torsoGrad; roundRect(-18, -15, 36, 32, 11); ctx.fill(); ctx.strokeStyle = armorGlow; ctx.lineWidth = 2; roundRect(-14, -8, 28, 18, 8); ctx.stroke();
-      ctx.fillStyle = "rgba(255,255,255,0.14)"; roundRect(-10, -11, 20, 8, 4); ctx.fill();
-      ctx.fillStyle = "#0f172a"; roundRect(-5, -4, 10, 20, 4); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-2, -1, 4, 10, 2); ctx.fill();
-      if (gear?.armorTier?.horn > 0) { ctx.shadowColor = gear.armorTier.glow; ctx.shadowBlur = 16; ctx.fillStyle = gear.armorTier.color; ctx.beginPath(); ctx.moveTo(-16,-14); ctx.lineTo(-22,-24); ctx.lineTo(-10,-18); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(16,-14); ctx.lineTo(22,-24); ctx.lineTo(10,-18); ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0; }
-      ctx.save(); ctx.translate(-19, -4); ctx.rotate(-0.38 + armSwing * 0.50); ctx.fillStyle = torsoGrad; roundRect(-5, 0, 10, 23, 5); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-4, 4, 8, 5, 3); ctx.fill(); ctx.restore();
-      ctx.save(); ctx.translate(18, -5); ctx.rotate(0.18 - armSwing * 0.28 + (attackPose ? (-0.76 - 1.02 * attackEase) : -0.46)); ctx.fillStyle = torsoGrad; roundRect(-5, 0, 10, 23, 5); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-4, 4, 8, 5, 3); ctx.fill();
-      if (isHero && gear && gear.weaponColor) {
-        ctx.save();
-        const sideMap = { up: -2.38, down: 2.20, left: -2.14, right: 2.04 };
-        const swingBase = sideMap[dir] ?? 2.18;
-        const swingArc = dir === "up" ? (attackPose ? (0.24 - 0.92 * attackEase) : 0.05) : dir === "left" ? (attackPose ? (0.32 - 0.98 * attackEase) : 0.05) : dir === "right" ? (attackPose ? (0.42 - 1.10 * attackEase) : 0.06) : (attackPose ? (0.42 - 1.18 * attackEase) : 0.06);
-        const gripOffsetX = dir === "left" ? -5.0 : dir === "up" ? -1.4 : 5.8;
-        const gripOffsetY = dir === "up" ? 11.0 : 13.8;
-        ctx.translate(gripOffsetX, gripOffsetY); ctx.rotate(swingBase + swingArc);
-        const weaponGlow = gear.weaponTier ? gear.weaponTier.glow : gear.weaponColor;
-        const bladeGrad = ctx.createLinearGradient(0, -42, 0, 14); bladeGrad.addColorStop(0, "#ffffff"); bladeGrad.addColorStop(0.22, shade(gear.weaponColor, 48)); bladeGrad.addColorStop(0.60, gear.weaponColor); bladeGrad.addColorStop(1, shade(gear.weaponColor, -35));
-        ctx.shadowColor = weaponGlow; ctx.shadowBlur = 20 + ((gear.weaponTier && gear.weaponTier.label === "MYTHIC") ? 12 : (gear.weaponTier && gear.weaponTier.label === "LEGEND") ? 8 : 0);
-        ctx.fillStyle = bladeGrad; ctx.beginPath(); ctx.moveTo(-2.5, 11); ctx.lineTo(-3.4, 3.5); ctx.lineTo(-2.2, -8); ctx.lineTo(0, -31); ctx.lineTo(2.2, -8); ctx.lineTo(3.4, 3.5); ctx.lineTo(2.5, 11); ctx.closePath(); ctx.fill();
-        ctx.lineWidth = 1.2; ctx.strokeStyle = "rgba(255,255,255,0.95)"; ctx.beginPath(); ctx.moveTo(0, -31); ctx.lineTo(0, 5); ctx.stroke();
-        const guardGrad = ctx.createLinearGradient(-9, 0, 9, 0); guardGrad.addColorStop(0, shade(gear.weaponColor, -28)); guardGrad.addColorStop(0.5, shade(gear.weaponColor, 26)); guardGrad.addColorStop(1, shade(gear.weaponColor, -28));
-        ctx.shadowBlur = 9; ctx.fillStyle = guardGrad; roundRect(-8, 5.5, 16, 4.5, 2.2); ctx.fill(); ctx.fillStyle = shade(gear.weaponColor, -16); roundRect(-2.5, 9, 5, 10, 2.6); ctx.fill();
-        const plus = gear.weaponPlus || 0; for (let i = 0; i < Math.max(2, plus); i++) { const ang = performance.now() / 240 + i * (Math.PI * 2 / Math.max(2, plus)); const px = Math.cos(ang) * (9 + plus * 0.9); const py = Math.sin(ang) * (15 + plus * 0.6) - 12; ctx.fillStyle = (gear.weaponTier?.flame || weaponGlow) + "cc"; ctx.beginPath(); ctx.arc(px, py, 1.5 + (plus > 6 ? 0.8 : 0), 0, Math.PI * 2); ctx.fill(); }
-        ctx.restore();
-      }
-      ctx.restore();
-      if (isHero && gear && gear.shieldColor) { ctx.save(); ctx.translate(-22, -1); ctx.rotate(-0.22); const shieldGrad = ctx.createLinearGradient(0, -24, 0, 24); shieldGrad.addColorStop(0, "#f8fafc"); shieldGrad.addColorStop(0.20, shade(gear.shieldColor, 34)); shieldGrad.addColorStop(0.56, gear.shieldColor); shieldGrad.addColorStop(1, "#020617"); ctx.shadowColor = gear.shieldTier ? gear.shieldTier.glow : gear.shieldColor; ctx.shadowBlur = 20; ctx.fillStyle = shieldGrad; ctx.beginPath(); ctx.moveTo(0, -24); ctx.lineTo(18, -14); ctx.lineTo(15, 12); ctx.lineTo(0, 25); ctx.lineTo(-15, 12); ctx.lineTo(-18, -14); ctx.closePath(); ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.72)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.fillStyle = "rgba(255,255,255,0.86)"; roundRect(-1.5, -15, 3, 30, 1.4); ctx.fill(); roundRect(-9, -1.5, 18, 3, 1.3); ctx.fill(); for (let i = 0; i < 3 + (gear.shieldTier?.horn || 0); i++) { const ang = performance.now() / 380 + i * 2.09; const px = Math.cos(ang) * (11 + i * 1.5); const py = Math.sin(ang) * (14 + i * 1.5); ctx.fillStyle = (gear.shieldTier?.flame || gear.shieldColor) + 'cc'; ctx.beginPath(); ctx.arc(px, py, i % 2 ? 1.6 : 2.1, 0, Math.PI * 2); ctx.fill(); } ctx.restore(); }
-      ctx.fillStyle = pal.skin || "#ffd7b5"; roundRect(-12, -34, 24, 18, 8); ctx.fill();
-      if (isHero) {
-        const helmColor = gear?.hatColor || "#05070c"; const helmGrad = ctx.createLinearGradient(0, -58, 0, -18); helmGrad.addColorStop(0, shade(helmColor, 24)); helmGrad.addColorStop(0.32, helmColor); helmGrad.addColorStop(1, "#000000");
-        ctx.save(); for (let i = 0; i < 4; i++) { const flameA = 0.14 - i * 0.025; ctx.globalAlpha = flameA; ctx.fillStyle = i % 2 ? "#111827" : "#000000"; ctx.beginPath(); ctx.moveTo(-10 - i, -28); ctx.quadraticCurveTo(-18 - i, -44 - i * 2, -9, -54 - i * 3); ctx.quadraticCurveTo(-3, -45, -4, -32); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(10 + i, -28); ctx.quadraticCurveTo(18 + i, -44 - i * 2, 9, -54 - i * 3); ctx.quadraticCurveTo(3, -45, 4, -32); ctx.closePath(); ctx.fill(); } ctx.restore();
-        ctx.fillStyle = "#020617"; ctx.beginPath(); ctx.moveTo(-18,-28); ctx.lineTo(-14,-46); ctx.lineTo(-7,-56); ctx.lineTo(-2,-50); ctx.lineTo(0,-58); ctx.lineTo(2,-50); ctx.lineTo(7,-56); ctx.lineTo(14,-46); ctx.lineTo(18,-28); ctx.lineTo(13,-14); ctx.lineTo(7,-9); ctx.lineTo(5,-23); ctx.lineTo(-5,-23); ctx.lineTo(-7,-9); ctx.lineTo(-13,-14); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = helmGrad; ctx.beginPath(); ctx.moveTo(-16,-28); ctx.quadraticCurveTo(-13,-50,0,-54); ctx.quadraticCurveTo(13,-50,16,-28); ctx.lineTo(12,-15); ctx.lineTo(6,-10); ctx.lineTo(4,-21); ctx.lineTo(-4,-21); ctx.lineTo(-6,-10); ctx.lineTo(-12,-15); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = gear?.hatTier?.color || "#60a5fa"; roundRect(-3,-48,6,10,3); ctx.fill(); roundRect(-9, -29, 18, 4, 2); ctx.fill();
-        const hornLevel = gear?.hatTier?.horn || 0; if (hornLevel > 0) { ctx.fillStyle = gear?.hatTier?.color || "#60a5fa"; ctx.shadowColor = helmGlow; ctx.shadowBlur = 18; ctx.beginPath(); ctx.moveTo(-12,-36); ctx.lineTo(-20,-52); ctx.lineTo(-9,-45); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(12,-36); ctx.lineTo(20,-52); ctx.lineTo(9,-45); ctx.closePath(); ctx.fill(); if (hornLevel > 1) { ctx.beginPath(); ctx.moveTo(-4,-50); ctx.lineTo(0,-62); ctx.lineTo(4,-50); ctx.closePath(); ctx.fill(); } ctx.shadowBlur = 0; }
-        ctx.fillStyle = "rgba(255,255,255,0.18)"; roundRect(-10,-42,20,4,2); ctx.fill();
-      } else { ctx.fillStyle = pal.hair || "#1f2937"; roundRect(-14, -38, 28, 10, 7); ctx.fill(); ctx.fillStyle = pal.hat || "#ffcc00"; roundRect(-10, -45, 20, 8, 5); ctx.fill(); }
-      ctx.fillStyle = "#111827"; ctx.beginPath(); ctx.arc(-4, -24, 1.4, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(4, -24, 1.4, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 0.85; ctx.fillRect(-4, -20, 8, 1.4); ctx.globalAlpha = 1; if (isHero) drawGearEffect(0, -8); ctx.restore();
-    }
+    
+function drawMinifig(x, y, opts = {}) {
+  const isHero = !!opts.isHero;
+  const pal = opts.palette || {
+    torso: isHero ? "#1d4ed8" : "#0ea5e9",
+    pants: isHero ? "#0f172a" : "#334155",
+    hat: isHero ? "#dc2626" : "#eab308",
+    skin: "#ffd7b5",
+    hair: "#111827"
+  };
+  const gear = isHero ? getEquippedVisuals() : null;
+  const dir = opts.dirOverride || player.dir;
+  const moving = typeof opts.moving === "boolean" ? opts.moving : player.moving;
+  const walkPhase = typeof opts.walkPhase === "number" ? opts.walkPhase : player.walkPhase;
+  const bob = moving ? Math.sin(walkPhase) * 1.8 : 0;
+  const armSwing = moving ? Math.sin(walkPhase) * 0.52 : 0;
+  const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.46 : 0;
+  const atk = isHero ? combatState.attackT / 0.28 : 0;
+  const attackPose = isHero && combatState.attackT > 0;
+  const attackEase = attackPose ? Math.sin(Math.min(1, atk) * Math.PI) : 0;
+  const armorMain = gear?.armorColor || (isHero ? "#0b1220" : pal.torso || "#2563eb");
+  const armorHi = gear?.armorTier?.color || shade(armorMain, 42);
+  const armorGlow = gear?.armorTier?.glow || "#60a5fa";
+  const weaponMain = gear?.weaponColor || "#cbd5e1";
+  const weaponGlow = gear?.weaponTier?.glow || weaponMain;
+  const shieldMain = gear?.shieldColor || "#94a3b8";
+  const shieldGlow = gear?.shieldTier?.glow || shieldMain;
+  const helmGlow = gear?.hatTier?.glow || gear?.hatColor || pal.hat || "#ef4444";
 
-function seedSlimes(rng) {
+  ctx.save();
+  ctx.translate(x, y + bob + 3);
+  if (dir === "left") ctx.scale(-1, 1);
+
+  ctx.globalAlpha = 0.24;
+  ctx.fillStyle = "rgba(2,6,23,0.55)";
+  ctx.beginPath();
+  ctx.ellipse(0, 31, 22, 8, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // back aura / jet glow
+  if (isHero) {
+    const aura = ctx.createRadialGradient(0, -6, 6, 0, -6, 34);
+    aura.addColorStop(0, armorGlow + "55");
+    aura.addColorStop(0.5, armorGlow + "20");
+    aura.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = aura;
+    ctx.beginPath(); ctx.arc(0, -6, 34, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // legs
+  const legGrad = ctx.createLinearGradient(0, -2, 0, 26);
+  legGrad.addColorStop(0, shade(armorMain, 14));
+  legGrad.addColorStop(1, shade(armorMain, -24));
+  ctx.save();
+  ctx.translate(-8, 12);
+  ctx.rotate(legSwing * 0.18);
+  ctx.fillStyle = legGrad;
+  roundRect(-6, 0, 11, 22, 4);
+  ctx.fill();
+  ctx.fillStyle = armorHi;
+  roundRect(-5, 3, 9, 5, 3);
+  ctx.fill();
+  ctx.fillStyle = "#94a3b8";
+  roundRect(-6, 18, 11, 4, 2);
+  ctx.fill();
+  ctx.restore();
+  ctx.save();
+  ctx.translate(8, 12);
+  ctx.rotate(-legSwing * 0.18);
+  ctx.fillStyle = legGrad;
+  roundRect(-5, 0, 11, 22, 4);
+  ctx.fill();
+  ctx.fillStyle = armorHi;
+  roundRect(-4, 3, 9, 5, 3);
+  ctx.fill();
+  ctx.fillStyle = "#94a3b8";
+  roundRect(-5, 18, 11, 4, 2);
+  ctx.fill();
+  ctx.restore();
+
+  // torso core
+  const torsoGrad = ctx.createLinearGradient(0, -22, 0, 16);
+  torsoGrad.addColorStop(0, shade(armorMain, 22));
+  torsoGrad.addColorStop(0.48, armorMain);
+  torsoGrad.addColorStop(1, shade(armorMain, -30));
+  ctx.fillStyle = torsoGrad;
+  roundRect(-19, -16, 38, 32, 11);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.14)";
+  ctx.lineWidth = 2;
+  roundRect(-19, -16, 38, 32, 11);
+  ctx.stroke();
+  ctx.fillStyle = armorHi;
+  roundRect(-13, -10, 26, 7, 4);
+  ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.14)";
+  roundRect(-11, -8, 22, 4, 2);
+  ctx.fill();
+  const core = ctx.createRadialGradient(0, -2, 2, 0, -2, 10);
+  core.addColorStop(0, "rgba(255,255,255,0.98)");
+  core.addColorStop(0.28, armorGlow);
+  core.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = core;
+  ctx.beginPath(); ctx.arc(0, -2, 10, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = shade(armorMain, -28);
+  roundRect(-4, -6, 8, 18, 4);
+  ctx.fill();
+  ctx.fillStyle = armorHi;
+  roundRect(-2, -1, 4, 8, 2);
+  ctx.fill();
+  if (isHero) {
+    ctx.fillStyle = armorHi;
+    ctx.beginPath(); ctx.moveTo(-17,-12); ctx.lineTo(-23,-20); ctx.lineTo(-11,-16); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(17,-12); ctx.lineTo(23,-20); ctx.lineTo(11,-16); ctx.closePath(); ctx.fill();
+  }
+
+  // left arm
+  ctx.save();
+  ctx.translate(-20, -3);
+  ctx.rotate(-0.32 + armSwing * 0.42);
+  ctx.fillStyle = torsoGrad;
+  roundRect(-5, 0, 10, 24, 5);
+  ctx.fill();
+  ctx.fillStyle = armorHi;
+  roundRect(-4, 3, 8, 5, 3);
+  ctx.fill();
+  ctx.restore();
+
+  // right arm + weapon
+  ctx.save();
+  ctx.translate(20, -4);
+  ctx.rotate(0.20 - armSwing * 0.24 + (attackPose ? (-0.80 - 1.04 * attackEase) : -0.44));
+  ctx.fillStyle = torsoGrad;
+  roundRect(-5, 0, 10, 24, 5);
+  ctx.fill();
+  ctx.fillStyle = armorHi;
+  roundRect(-4, 3, 8, 5, 3);
+  ctx.fill();
+  if (isHero) {
+    ctx.save();
+    const sideMap = { up: -2.34, down: 2.16, left: -2.08, right: 2.02 };
+    const swingBase = sideMap[dir] ?? 2.16;
+    const swingArc = dir === "up" ? (attackPose ? 0.18 - 0.94 * attackEase : 0.04)
+      : dir === "left" ? (attackPose ? 0.26 - 0.98 * attackEase : 0.03)
+      : dir === "right" ? (attackPose ? 0.40 - 1.10 * attackEase : 0.06)
+      : (attackPose ? 0.42 - 1.18 * attackEase : 0.07);
+    const gripOffsetX = dir === "left" ? -4.8 : dir === "up" ? -1.2 : 5.9;
+    const gripOffsetY = dir === "up" ? 12.0 : 14.0;
+    ctx.translate(gripOffsetX, gripOffsetY);
+    ctx.rotate(swingBase + swingArc);
+    ctx.shadowColor = weaponGlow;
+    ctx.shadowBlur = 18 + Math.max(0, (gear?.weaponPlus || 0) * 1.2);
+    const bladeGrad = ctx.createLinearGradient(0, -46, 0, 14);
+    bladeGrad.addColorStop(0, "#ffffff");
+    bladeGrad.addColorStop(0.18, armorHi);
+    bladeGrad.addColorStop(0.44, weaponGlow);
+    bladeGrad.addColorStop(0.74, weaponMain);
+    bladeGrad.addColorStop(1, shade(weaponMain, -32));
+    ctx.fillStyle = bladeGrad;
+    ctx.beginPath();
+    ctx.moveTo(-2.8, 12);
+    ctx.lineTo(-4.2, 2.5);
+    ctx.lineTo(-2.8, -12);
+    ctx.lineTo(0, -34);
+    ctx.lineTo(2.8, -12);
+    ctx.lineTo(4.2, 2.5);
+    ctx.lineTo(2.8, 12);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.98)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(0, -34); ctx.lineTo(0, 6); ctx.stroke();
+    const guardGrad = ctx.createLinearGradient(-10, 0, 10, 0);
+    guardGrad.addColorStop(0, shade(weaponMain, -26));
+    guardGrad.addColorStop(0.5, armorHi);
+    guardGrad.addColorStop(1, shade(weaponMain, -26));
+    ctx.fillStyle = guardGrad;
+    roundRect(-8, 6, 16, 4.6, 2.3); ctx.fill();
+    ctx.fillStyle = shade(weaponMain, -12);
+    roundRect(-2.6, 10, 5.2, 10.8, 2.6); ctx.fill();
+    ctx.fillStyle = armorHi;
+    ctx.beginPath(); ctx.moveTo(-5,-18); ctx.lineTo(0,-26); ctx.lineTo(5,-18); ctx.closePath(); ctx.fill();
+    for (let i = 0; i < Math.max(3, gear?.weaponPlus || 0); i++) {
+      const ang = performance.now() / 240 + i * 1.7;
+      const px = Math.cos(ang) * (8 + i * 1.2);
+      const py = Math.sin(ang) * (14 + i * 1.2) - 12;
+      ctx.fillStyle = (gear?.weaponTier?.flame || weaponGlow) + "cc";
+      ctx.beginPath(); ctx.arc(px, py, 1.2 + (i % 2) * 0.7, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // shield arm overlay
+  if (isHero) {
+    ctx.save();
+    ctx.translate(-23, -1);
+    ctx.rotate(-0.26);
+    const shieldGrad = ctx.createLinearGradient(0, -24, 0, 24);
+    shieldGrad.addColorStop(0, "#ffffff");
+    shieldGrad.addColorStop(0.16, armorHi);
+    shieldGrad.addColorStop(0.34, shieldGlow);
+    shieldGrad.addColorStop(0.76, shieldMain);
+    shieldGrad.addColorStop(1, "#020617");
+    ctx.shadowColor = shieldGlow;
+    ctx.shadowBlur = 16 + Math.max(0, (gear?.shieldPlus || 0));
+    ctx.fillStyle = shieldGrad;
+    ctx.beginPath();
+    ctx.moveTo(0, -24); ctx.lineTo(18, -14); ctx.lineTo(14, 10); ctx.lineTo(0, 24); ctx.lineTo(-14, 10); ctx.lineTo(-18, -14); ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.78)";
+    ctx.lineWidth = 2.4;
+    ctx.stroke();
+    ctx.fillStyle = armorHi;
+    roundRect(-1.4, -16, 2.8, 30, 1.4); ctx.fill();
+    roundRect(-10, -1.5, 20, 3, 1.3); ctx.fill();
+    if ((gear?.shieldTier?.horn || 0) > 0) {
+      ctx.fillStyle = armorHi;
+      ctx.beginPath(); ctx.moveTo(-10,-18); ctx.lineTo(-16,-26); ctx.lineTo(-8,-22); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(10,-18); ctx.lineTo(16,-26); ctx.lineTo(8,-22); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // head / helm
+  ctx.fillStyle = pal.skin || "#ffd7b5";
+  roundRect(-12, -36, 24, 18, 8);
+  ctx.fill();
+  if (isHero) {
+    const helmGrad = ctx.createLinearGradient(0, -60, 0, -16);
+    helmGrad.addColorStop(0, armorHi);
+    helmGrad.addColorStop(0.18, helmGlow);
+    helmGrad.addColorStop(0.42, "#0f172a");
+    helmGrad.addColorStop(1, "#000000");
+    ctx.fillStyle = helmGrad;
+    ctx.beginPath();
+    ctx.moveTo(-17, -28);
+    ctx.quadraticCurveTo(-14, -50, 0, -56);
+    ctx.quadraticCurveTo(14, -50, 17, -28);
+    ctx.lineTo(12, -15);
+    ctx.lineTo(7, -10);
+    ctx.lineTo(5, -22);
+    ctx.lineTo(-5, -22);
+    ctx.lineTo(-7, -10);
+    ctx.lineTo(-12, -15);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = armorHi;
+    roundRect(-10, -29, 20, 5, 3);
+    ctx.fill();
+    ctx.fillStyle = "rgba(96,165,250,0.98)";
+    roundRect(-8, -27, 16, 3.5, 2); ctx.fill();
+    ctx.shadowColor = helmGlow; ctx.shadowBlur = 18;
+    ctx.fillStyle = helmGlow;
+    ctx.beginPath(); ctx.moveTo(-12,-37); ctx.lineTo(-20,-54); ctx.lineTo(-9,-46); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(12,-37); ctx.lineTo(20,-54); ctx.lineTo(9,-46); ctx.closePath(); ctx.fill();
+    if ((gear?.hatTier?.horn || 0) > 1) { ctx.beginPath(); ctx.moveTo(-4,-50); ctx.lineTo(0,-64); ctx.lineTo(4,-50); ctx.closePath(); ctx.fill(); }
+    ctx.shadowBlur = 0;
+  } else {
+    ctx.fillStyle = pal.hair || "#1f2937";
+    roundRect(-14, -39, 28, 11, 7);
+    ctx.fill();
+    ctx.fillStyle = pal.hat || "#facc15";
+    roundRect(-10, -46, 20, 8, 5);
+    ctx.fill();
+  }
+
+  // face/visor
+  ctx.fillStyle = isHero ? "rgba(96,165,250,0.95)" : "#111827";
+  ctx.beginPath(); ctx.arc(-4, -26, 1.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(4, -26, 1.5, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = isHero ? 0.95 : 0.8;
+  ctx.fillRect(-5, -22, 10, 1.5);
+  ctx.globalAlpha = 1;
+  if (isHero) drawGearEffect(0, -8);
+  ctx.restore();
+}
+
+
+    function seedSlimes(rng) {
       combatState.slimes.length = 0;
       const spots = [
         { x: ZONES.game.x + 420, y: ZONES.game.y + ZONES.game.h + 210 },
