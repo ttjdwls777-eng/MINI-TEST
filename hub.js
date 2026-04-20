@@ -1280,73 +1280,61 @@
     }
 
     function iconMarkup(item, equipped = false) {
-      const mode = item?.icon || item?.slot || "item";
       const rare = rarityStyle(item?.price || 0);
-      const t = performance.now() / 1000;
-      const glow = item?.glow || item?.color || rare.glow || "rgba(148,163,184,0.45)";
-      const metallic = `linear-gradient(180deg, ${shade(rare.color, 58)} 0%, ${shade(rare.color, 22)} 24%, ${shade(rare.color, -18)} 58%, #020617 100%)`;
-      let bg = `radial-gradient(circle at 50% 18%, ${shade(rare.color, 42)}, #020617 78%)`;
-      let shape = "";
-      let rim = `box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -10px 20px rgba(0,0,0,0.26), 0 0 28px ${glow}88, 0 10px 22px rgba(2,6,23,0.34)`;
-      const shine = `<div style="position:absolute;left:8px;right:8px;top:6px;height:12px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0));filter:blur(0.3px)"></div>`;
-      if (mode === "helm") {
-        bg = `radial-gradient(circle at 50% 20%, ${shade(rare.color, 28)}, #020617 80%)`;
-        shape = `
-          <div style="position:absolute;left:10px;right:10px;top:8px;height:22px;border-radius:15px 15px 10px 10px;background:${metallic};border:1px solid rgba(255,255,255,0.18)"></div>
-          <div style="position:absolute;left:14px;right:14px;top:15px;height:9px;border-radius:10px;background:linear-gradient(90deg,transparent,rgba(96,165,250,0.95),transparent);box-shadow:0 0 10px rgba(96,165,250,0.8)"></div>
-          <div style="position:absolute;left:19px;right:19px;top:24px;height:12px;border-radius:0 0 12px 12px;background:linear-gradient(180deg,#0f172a,#374151)"></div>
-          <div style="position:absolute;left:27px;top:5px;width:10px;height:10px;transform:rotate(45deg);background:${rare.color};box-shadow:0 0 14px ${glow}"></div>
+      const mode = item?.icon || item?.slot || "item";
+      const base = item?.color || rare.color || "#94a3b8";
+      const glow = item?.glow || rare.glow || base;
+      const plus = getEnhanceLevel(item?.slot || "weapon");
+      const mythic = rare.label === "MYTHIC";
+      const legend = rare.label === "LEGEND";
+      const frameGlow = equipped ? `0 0 0 2px ${glow}, 0 0 24px ${glow}aa, 0 18px 26px rgba(2,6,23,0.34)` : `0 0 0 1px rgba(255,255,255,0.08), 0 14px 20px rgba(2,6,23,0.22)`;
+      const bg = `radial-gradient(circle at 30% 24%, ${shade(base, 48)}, ${shade(base, -8)} 42%, #020617 96%)`;
+      const accent = shade(base, 24);
+      const embers = Array.from({ length: Math.max(3, Math.min(7, 2 + plus + (legend ? 1 : 0) + (mythic ? 1 : 0))) }).map((_, i) => {
+        const px = 8 + ((i * 11) % 34);
+        const py = 8 + ((i * 9) % 34);
+        const sz = i % 2 ? 2.3 : 1.6;
+        return `<div style="position:absolute;left:${px}px;top:${py}px;width:${sz}px;height:${sz}px;border-radius:999px;background:${i % 3 === 0 ? 'rgba(255,255,255,0.95)' : glow};box-shadow:0 0 10px ${glow},0 0 18px ${glow};opacity:${0.55 + i * 0.05}"></div>`;
+      }).join("");
+      const flares = Array.from({ length: mythic ? 5 : legend ? 4 : 3 }).map((_, i) => {
+        const left = 5 + i * 10;
+        const h = 10 + (i % 3) * 5 + (mythic ? 4 : 0);
+        return `<div style="position:absolute;left:${left}px;bottom:${2 + (i % 2) * 2}px;width:10px;height:${h}px;filter:blur(2px);background:linear-gradient(180deg, rgba(255,255,255,0), ${rare.flame || glow});clip-path:polygon(50% 0%, 75% 32%, 100% 100%, 0% 100%, 25% 32%)"></div>`;
+      }).join("");
+      let art = '';
+      if (mode === 'sword') {
+        art = `
+          <div style="position:absolute;left:28px;top:6px;width:5px;height:32px;border-radius:4px;background:linear-gradient(180deg,#ffffff,#dbeafe 24%,${accent} 58%,${shade(base,-26)} 100%);transform:rotate(30deg);box-shadow:0 0 16px ${glow}, inset 0 0 6px rgba(255,255,255,0.55)"></div>
+          <div style="position:absolute;left:18px;top:29px;width:24px;height:6px;border-radius:6px;background:linear-gradient(90deg,${shade(base,-26)},${accent},${shade(base,-26)});transform:rotate(30deg);box-shadow:0 0 10px ${glow}"></div>
+          <div style="position:absolute;left:16px;top:36px;width:8px;height:13px;border-radius:4px;background:linear-gradient(180deg,#2b1d14,#0f172a);transform:rotate(30deg)"></div>
+          <div style="position:absolute;left:33px;top:2px;width:6px;height:6px;border-radius:999px;background:#fff;box-shadow:0 0 18px ${glow}"></div>`;
+      } else if (mode === 'shield') {
+        art = `
+          <div style="position:absolute;left:11px;right:11px;top:8px;bottom:8px;background:linear-gradient(180deg,${shade(base,36)},${base} 44%,${shade(base,-32)} 100%);clip-path:polygon(50% 0%, 92% 18%, 86% 72%, 50% 100%, 14% 72%, 8% 18%);box-shadow:inset 0 0 18px rgba(255,255,255,0.18), 0 0 14px ${glow}88"></div>
+          <div style="position:absolute;left:23px;top:14px;width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,0.92);box-shadow:0 0 12px ${glow}"></div>
+          <div style="position:absolute;left:25px;top:18px;width:4px;height:20px;border-radius:4px;background:#f8fafc"></div>
+          <div style="position:absolute;left:18px;top:26px;width:18px;height:4px;border-radius:4px;background:${accent}"></div>`;
+      } else if (mode === 'helm') {
+        art = `
+          <div style="position:absolute;left:10px;right:10px;top:8px;height:23px;border-radius:15px 15px 10px 10px;background:linear-gradient(180deg,${shade(base,32)},${base} 48%,${shade(base,-28)} 100%);border:1px solid rgba(255,255,255,0.16);box-shadow:0 0 12px ${glow}66"></div>
+          <div style="position:absolute;left:14px;right:14px;top:15px;height:8px;border-radius:10px;background:linear-gradient(90deg,transparent,${accent},transparent);box-shadow:0 0 12px ${glow}"></div>
+          <div style="position:absolute;left:20px;right:20px;top:24px;height:12px;border-radius:0 0 12px 12px;background:linear-gradient(180deg,#0f172a,#374151)"></div>
           <div style="position:absolute;left:8px;top:9px;width:8px;height:18px;border-radius:8px;background:linear-gradient(180deg,#111827,#020617)"></div>
           <div style="position:absolute;right:8px;top:9px;width:8px;height:18px;border-radius:8px;background:linear-gradient(180deg,#111827,#020617)"></div>
-          ${shine}`;
-      } else if (mode === "armor") {
-        bg = `radial-gradient(circle at 50% 22%, ${shade(rare.color, 20)}, #020617 78%)`;
-        shape = `
-          <div style="position:absolute;left:11px;right:11px;top:8px;height:31px;border-radius:12px;background:${metallic};border:1px solid rgba(255,255,255,0.16)"></div>
-          <div style="position:absolute;left:17px;right:17px;top:12px;height:8px;border-radius:8px;background:linear-gradient(90deg,transparent,${rare.color},transparent);box-shadow:0 0 10px ${glow}"></div>
-          <div style="position:absolute;left:20px;right:20px;top:20px;height:14px;border-radius:8px;background:rgba(255,255,255,0.08)"></div>
+          <div style="position:absolute;left:27px;top:4px;width:10px;height:10px;transform:rotate(45deg);background:${accent};box-shadow:0 0 14px ${glow}"></div>`;
+      } else {
+        art = `
+          <div style="position:absolute;left:11px;right:11px;top:8px;height:31px;border-radius:12px;background:linear-gradient(180deg,${shade(base,28)},${base} 44%,${shade(base,-26)} 100%);border:1px solid rgba(255,255,255,0.16)"></div>
+          <div style="position:absolute;left:17px;right:17px;top:13px;height:7px;border-radius:8px;background:linear-gradient(90deg,transparent,${accent},transparent);box-shadow:0 0 10px ${glow}"></div>
+          <div style="position:absolute;left:20px;right:20px;top:22px;height:14px;border-radius:8px;background:rgba(255,255,255,0.08)"></div>
           <div style="position:absolute;left:7px;top:12px;width:11px;height:12px;border-radius:6px;background:linear-gradient(180deg,#0f172a,#334155)"></div>
-          <div style="position:absolute;right:7px;top:12px;width:11px;height:12px;border-radius:6px;background:linear-gradient(180deg,#0f172a,#334155)"></div>
-          <div style="position:absolute;left:27px;top:6px;width:8px;height:8px;transform:rotate(45deg);background:${rare.color};box-shadow:0 0 12px ${glow}"></div>
-          ${shine}`;
-      } else if (mode === "sword") {
-        bg = `radial-gradient(circle at 50% 18%, ${shade(rare.color, 18)}, #020617 80%)`;
-        shape = `
-          <div style="position:absolute;left:27px;top:6px;width:6px;height:31px;border-radius:4px;background:linear-gradient(180deg,#ffffff,#e2e8f0 28%,#cbd5e1 52%,#94a3b8 84%,#334155 100%);transform:rotate(32deg);box-shadow:0 0 12px rgba(255,255,255,0.52),0 0 24px ${glow}"></div>
-          <div style="position:absolute;left:18px;top:30px;width:22px;height:5px;border-radius:6px;background:linear-gradient(90deg,${shade(rare.color,-18)},${rare.color},${shade(rare.color,-18)});transform:rotate(32deg);box-shadow:0 0 10px ${glow}"></div>
-          <div style="position:absolute;left:16px;top:36px;width:8px;height:13px;border-radius:4px;background:linear-gradient(180deg,#7f1d1d,#1f2937);transform:rotate(32deg)"></div>
-          <div style="position:absolute;left:13px;top:10px;width:14px;height:3px;background:rgba(255,255,255,0.95);transform:rotate(-25deg);filter:blur(0.3px)"></div>
-          <div style="position:absolute;left:30px;top:8px;width:3px;height:20px;background:rgba(255,255,255,0.55);transform:rotate(32deg)"></div>
-          <div style="position:absolute;left:33px;top:2px;width:6px;height:6px;border-radius:999px;background:#fff;box-shadow:0 0 16px ${glow},0 0 26px rgba(255,255,255,0.8)"></div>`;
-      } else if (mode === "shield") {
-        bg = `radial-gradient(circle at 50% 20%, ${shade(rare.color, 24)}, #020617 78%)`;
-        shape = `
-          <div style="position:absolute;left:12px;right:12px;top:8px;bottom:10px;background:${metallic};clip-path:polygon(50% 0%, 92% 18%, 86% 72%, 50% 100%, 14% 72%, 8% 18%);border:1px solid rgba(255,255,255,0.16);box-shadow:0 0 12px ${glow}55 inset"></div>
-          <div style="position:absolute;left:17px;right:17px;top:15px;height:6px;border-radius:6px;background:${rare.color};box-shadow:0 0 10px ${glow}"></div>
-          <div style="position:absolute;left:24px;top:18px;width:4px;height:18px;border-radius:4px;background:#ffffff"></div>
-          <div style="position:absolute;left:18px;top:24px;width:16px;height:4px;border-radius:4px;background:#0f172a"></div>
-          <div style="position:absolute;left:22px;top:12px;width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,0.85);box-shadow:0 0 12px ${glow}"></div>`;
+          <div style="position:absolute;right:7px;top:12px;width:11px;height:12px;border-radius:6px;background:linear-gradient(180deg,#0f172a,#334155)"></div>`;
       }
-      const stars = Math.max(1, Math.min(5, Math.ceil((item?.price || 1) / 220)));
-      const gems = Array.from({ length: stars }).map((_, i) => `<div style="position:absolute;bottom:5px;left:${8 + i * 10}px;width:6px;height:6px;border-radius:999px;background:${rare.color};box-shadow:0 0 12px ${glow}"></div>`).join("");
-      const sparks = Array.from({ length: Math.max(3, stars + 1) }).map((_, i) => {
-        const px = 8 + ((i * 13) % 36);
-        const py = 8 + ((i * 11) % 32);
-        const size = i % 2 ? 3 : 2;
-        return `<div style="position:absolute;left:${px}px;top:${py}px;width:${size}px;height:${size}px;border-radius:999px;background:rgba(255,255,255,0.95);box-shadow:0 0 10px ${glow},0 0 18px ${glow};opacity:${0.45 + i * 0.08}"></div>`;
-      }).join("");
-      const activeRing = equipped ? `0 0 0 2px ${rare.color}, 0 0 28px ${glow}, 0 0 52px ${glow}66` : `0 0 0 1px rgba(255,255,255,0.08)`;
-      const auraCols = [rare.flame || glow, glow, "rgba(255,255,255,0.95)"];
-      const flameFx = Array.from({ length: Math.max(3, stars) }).map((_, i) => {
-        const left = 6 + i * 11;
-        const h = 12 + (i % 3) * 6;
-        const col = auraCols[i % auraCols.length];
-        return `<div style="position:absolute;left:${left}px;bottom:${2 + (i%2)*3}px;width:10px;height:${h}px;filter:blur(2px);background:linear-gradient(180deg, rgba(255,255,255,0.0), ${col});clip-path:polygon(50% 0%, 75% 28%, 100% 100%, 0% 100%, 24% 28%)"></div>`;
-      }).join("");
-      return `<div class="item-icon${equipped ? " active" : ""}" style="background:${bg};box-shadow:${activeRing}, ${rim};overflow:hidden"><div style="position:absolute;inset:-10%;background:radial-gradient(circle at 22% 18%, rgba(255,255,255,0.22), transparent 34%), radial-gradient(circle at 80% 78%, ${glow}22, transparent 28%), radial-gradient(circle at 50% 50%, ${glow}20, transparent 56%)"></div>${flameFx}${shape}${gems}${sparks}</div>`;
+      const plusBadge = plus > 0 ? `<div style="position:absolute;right:4px;top:4px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:linear-gradient(180deg,#fbbf24,#f97316);color:#fff;font:1000 9px/16px system-ui;text-align:center;box-shadow:0 0 10px rgba(251,191,36,0.75)">+${plus}</div>` : '';
+      return `<div class="item-icon${equipped ? ' active' : ''}" style="background:${bg};box-shadow:${frameGlow};overflow:hidden"><div style="position:absolute;inset:-14%;background:radial-gradient(circle at 22% 18%, rgba(255,255,255,0.28), transparent 32%), radial-gradient(circle at 80% 78%, ${glow}22, transparent 28%), radial-gradient(circle at 50% 50%, ${glow}18, transparent 56%)"></div>${flares}${art}${embers}${plusBadge}</div>`;
     }
 
-    function renderPanels() {
+function renderPanels() {
       UI.inventoryPanel.style.display = inventoryState.inventoryOpen ? "block" : "none";
       UI.equipmentPanel.style.display = inventoryState.equipmentOpen ? "block" : "none";
       UI.inventoryPanel.style.background = "linear-gradient(180deg, rgba(15,23,42,0.96), rgba(15,23,42,0.88))";
@@ -3073,18 +3061,19 @@
 
       if (hasShopArt(p.key)) {
         const art = shopArt[p.key].img;
-        const pad = 0;
-        const boxW = w;
-        const boxH = h;
-        const ratio = Math.min(boxW / Math.max(1, art.naturalWidth || art.width), boxH / Math.max(1, art.naturalHeight || art.height));
-        const drawW = Math.max(24, (art.naturalWidth || art.width) * ratio);
-        const drawH = Math.max(24, (art.naturalHeight || art.height) * ratio);
-        const dx = x + (w - drawW) * 0.5;
-        const dy = y + (h - drawH) * 0.5;
         ctx.save();
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = "high";
-        ctx.drawImage(art, dx, dy, drawW, drawH);
+        ctx.shadowColor = "rgba(15,23,42,0.28)";
+        ctx.shadowBlur = 22;
+        ctx.drawImage(art, x, y, w, h);
+        const rim = ctx.createLinearGradient(x, y, x, y + h);
+        rim.addColorStop(0, "rgba(255,255,255,0.26)");
+        rim.addColorStop(1, "rgba(15,23,42,0.26)");
+        ctx.strokeStyle = rim;
+        ctx.lineWidth = 3;
+        roundRect(x + 6, y + 6, w - 12, h - 12, 22);
+        ctx.stroke();
         ctx.restore();
       } else {
         if (p.key === "blacksmith") {
@@ -3096,79 +3085,47 @@
           forgeWall.addColorStop(0, "#5b3a28");
           forgeWall.addColorStop(1, "#241711");
           ctx.fillStyle = forgeWall;
-          roundRect(x, wallY, w, wallH, 26);
-          ctx.fill();
+          roundRect(x, wallY, w, wallH, 26); ctx.fill();
           ctx.fillStyle = "#6b1d1d";
-          ctx.beginPath();
-          ctx.moveTo(x + w * 0.05, wallY + 10);
-          ctx.lineTo(x + w * 0.95, wallY + 10);
-          ctx.lineTo(x + w * 0.78, y + 14);
-          ctx.lineTo(x + w * 0.22, y + 14);
-          ctx.closePath();
-          ctx.fill();
+          ctx.beginPath(); ctx.moveTo(x + w * 0.05, wallY + 10); ctx.lineTo(x + w * 0.95, wallY + 10); ctx.lineTo(x + w * 0.78, y + 14); ctx.lineTo(x + w * 0.22, y + 14); ctx.closePath(); ctx.fill();
           ctx.fillStyle = "#111827";
-          roundRect(x + w * 0.10, y + 24, w * 0.80, 44, 16);
-          ctx.fill();
-          ctx.strokeStyle = "rgba(251,191,36,0.65)";
-          ctx.lineWidth = 3;
-          roundRect(x + w * 0.10, y + 24, w * 0.80, 44, 16);
-          ctx.stroke();
-          ctx.fillStyle = "#fde68a";
-          ctx.font = `1000 ${Math.max(14, Math.floor(w * 0.085))}px system-ui`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("BLACKSMITH", x + w * 0.5, y + 46);
-          ctx.fillStyle = "#0f172a";
-          roundRect(x + w * 0.39, y + h * 0.56, w * 0.22, h * 0.22, 18);
-          ctx.fill();
-          ctx.fillStyle = "#94a3b8";
-          roundRect(x + w * 0.16, y + h * 0.56, w * 0.13, h * 0.14, 10);
-          roundRect(x + w * 0.71, y + h * 0.56, w * 0.13, h * 0.14, 10);
-          ctx.fill();
+          roundRect(x + w * 0.10, y + 24, w * 0.80, 44, 16); ctx.fill();
+          ctx.strokeStyle = "rgba(251,191,36,0.65)"; ctx.lineWidth = 3; roundRect(x + w * 0.10, y + 24, w * 0.80, 44, 16); ctx.stroke();
+          ctx.fillStyle = "#fde68a"; ctx.font = `1000 ${Math.max(14, Math.floor(w * 0.085))}px system-ui`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("BLACKSMITH", x + w * 0.5, y + 46);
+          ctx.fillStyle = "#0f172a"; roundRect(x + w * 0.39, y + h * 0.56, w * 0.22, h * 0.22, 18); ctx.fill();
+          ctx.fillStyle = "#94a3b8"; roundRect(x + w * 0.16, y + h * 0.56, w * 0.13, h * 0.14, 10); roundRect(x + w * 0.71, y + h * 0.56, w * 0.13, h * 0.14, 10); ctx.fill();
           const ember = ctx.createRadialGradient(x + w * 0.5, y + h * 0.62, 6, x + w * 0.5, y + h * 0.62, 30);
-          ember.addColorStop(0, "rgba(251,191,36,0.95)");
-          ember.addColorStop(0.5, "rgba(249,115,22,0.55)");
-          ember.addColorStop(1, "rgba(249,115,22,0.00)");
-          ctx.fillStyle = ember;
-          ctx.beginPath(); ctx.arc(x + w * 0.5, y + h * 0.62, 30, 0, Math.PI * 2); ctx.fill();
+          ember.addColorStop(0, "rgba(251,191,36,0.95)"); ember.addColorStop(0.5, "rgba(249,115,22,0.55)"); ember.addColorStop(1, "rgba(249,115,22,0.00)");
+          ctx.fillStyle = ember; ctx.beginPath(); ctx.arc(x + w * 0.5, y + h * 0.62, 30, 0, Math.PI * 2); ctx.fill();
           ctx.restore();
         } else {
-        drawLegoBrickGrid(x, y + 18, w, h - 18);
-
-        ctx.save();
-        ctx.fillStyle = shade(c.wall, -10);
-        roundRect(x + 10, y, w - 20, 28, 16);
-        ctx.fill();
-        drawLegoStudRow(x + 30, y + 8, w - 60, Math.max(4, Math.floor((w - 60) / 44)), shade(c.wall, -12));
-        ctx.restore();
-
-        const signH = Math.max(40, h * 0.19);
-        drawLegoSignPlaque(x + w * 0.10, y + 28, w * 0.80, signH, p.label, Math.max(15, Math.floor(signH * 0.34)), c.sign);
-
-        const winY = y + 28 + signH + 14;
-        const doorY = y + h * 0.54;
-        if (p.size === "L") {
-          drawLegoWindow(x + w * 0.10, winY, w * 0.24, h * 0.18, c.frame, c.glassA, c.glassB);
-          drawLegoDoor(x + w * 0.39, doorY, w * 0.22, h * 0.30, c.accent, c.frame, c.knob);
-          drawLegoWindow(x + w * 0.66, winY, w * 0.24, h * 0.18, c.frame, c.glassA, c.glassB);
-        } else {
-          drawLegoWindow(x + w * 0.12, winY, w * 0.28, h * 0.18, c.frame, c.glassA, c.glassB);
-          drawLegoDoor(x + w * 0.58, doorY, w * 0.22, h * 0.28, c.accent, c.frame, c.knob);
-        }
+          drawLegoBrickGrid(x, y + 18, w, h - 18);
+          ctx.save();
+          const roofGrad = ctx.createLinearGradient(x, y, x, y + 40);
+          roofGrad.addColorStop(0, shade(c.wall, -6)); roofGrad.addColorStop(1, shade(c.wall, -20));
+          ctx.fillStyle = roofGrad;
+          roundRect(x + 10, y, w - 20, 30, 16); ctx.fill();
+          drawLegoStudRow(x + 30, y + 8, w - 60, Math.max(4, Math.floor((w - 60) / 44)), shade(c.wall, -12));
+          ctx.restore();
+          const signH = Math.max(40, h * 0.19);
+          drawLegoSignPlaque(x + w * 0.10, y + 28, w * 0.80, signH, p.label, Math.max(15, Math.floor(signH * 0.34)), c.sign);
+          const winY = y + 28 + signH + 14;
+          const doorY = y + h * 0.54;
+          if (p.size === "L") {
+            drawLegoWindow(x + w * 0.10, winY, w * 0.24, h * 0.18, c.frame, c.glassA, c.glassB);
+            drawLegoDoor(x + w * 0.39, doorY, w * 0.22, h * 0.30, c.accent, c.frame, c.knob);
+            drawLegoWindow(x + w * 0.66, winY, w * 0.24, h * 0.18, c.frame, c.glassA, c.glassB);
+          } else {
+            drawLegoWindow(x + w * 0.12, winY, w * 0.28, h * 0.18, c.frame, c.glassA, c.glassB);
+            drawLegoDoor(x + w * 0.58, doorY, w * 0.22, h * 0.28, c.accent, c.frame, c.knob);
+          }
         }
       }
-
-      ctx.save();
-      ctx.globalAlpha = 0.90;
-      ctx.fillStyle = c.grass;
-      roundRect(x + 14, y + h - 14, w - 28, 10, 8);
-      ctx.fill();
-      ctx.restore();
-
+      ctx.save(); ctx.globalAlpha = 0.90; ctx.fillStyle = c.grass; roundRect(x + 14, y + h - 14, w - 28, 10, 8); ctx.fill(); ctx.restore();
       const ez = portalEnterZone(p);
     }
 
-    function drawCar(c) {
+function drawCar(c) {
       ctx.save();
       ctx.translate(c.x, c.y + Math.sin(c.bob) * 0.8);
       ctx.globalAlpha = 0.18;
@@ -3538,283 +3495,71 @@
 
     function drawMinifig(x, y, opts = {}) {
       const isHero = !!opts.isHero;
-      const pal = opts.palette || {
-        torso: isHero ? "#2563eb" : "#0a84ff",
-        pants: isHero ? "#334155" : "#374151",
-        hat: isHero ? "#ef4444" : "#ffcc00",
-        skin: "#ffd7b5",
-        hair: "#1f2937"
-      };
+      const pal = opts.palette || { torso: isHero ? "#2563eb" : "#0a84ff", pants: isHero ? "#334155" : "#374151", hat: isHero ? "#ef4444" : "#ffcc00", skin: "#ffd7b5", hair: "#1f2937" };
       const gear = isHero ? getEquippedVisuals() : null;
       const dir = opts.dirOverride || player.dir;
       const moving = typeof opts.moving === "boolean" ? opts.moving : player.moving;
       const walkPhase = typeof opts.walkPhase === "number" ? opts.walkPhase : player.walkPhase;
-      const bob = moving ? Math.sin(walkPhase) * 1.5 : 0;
-      const armSwing = moving ? Math.sin(walkPhase) * 0.45 : 0;
-      const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.42 : 0;
+      const bob = moving ? Math.sin(walkPhase) * 1.9 : 0;
+      const armSwing = moving ? Math.sin(walkPhase) * 0.55 : 0;
+      const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.48 : 0;
       const atk = isHero ? combatState.attackT / 0.28 : 0;
       const attackPose = isHero && combatState.attackT > 0;
       const attackEase = attackPose ? Math.sin(Math.min(1, atk) * Math.PI) : 0;
-
+      const armorBase = gear && !window.disableArmorVisual && gear.armorColor ? gear.armorColor : (isHero ? "#111827" : pal.torso);
+      const armorGlow = gear?.armorTier?.glow || shade(armorBase, 20);
+      const helmGlow = gear?.hatTier?.glow || pal.hat;
       ctx.save();
       ctx.translate(x, y + bob + 4);
       if (dir === "left") ctx.scale(-1, 1);
-
       ctx.globalAlpha = 0.24;
-      ctx.fillStyle = "rgba(10,14,24,0.42)";
-      ctx.beginPath();
-      ctx.ellipse(0, 29, 18, 7.5, 0, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.fillStyle = "rgba(10,14,24,0.46)";
+      ctx.beginPath(); ctx.ellipse(0, 31, 20, 8.2, 0, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = 1;
-
-      const armorBase = gear && gear.armorColor ? gear.armorColor : '#111827';
-      const accentGlow = '#374151';
-
-      ctx.save();
-      ctx.translate(0, 10);
-      ctx.rotate(legSwing * 0.16);
-      ctx.fillStyle = shade(armorBase, -28);
-      roundRect(-12, 0, 9, 20, 4);
-      ctx.fill();
-      ctx.fillStyle = "#94a3b8";
-      roundRect(-12, 12, 9, 4, 2);
-      ctx.fill();
-      ctx.restore();
-
-      ctx.save();
-      ctx.translate(0, 10);
-      ctx.rotate(-legSwing * 0.16);
-      ctx.fillStyle = shade(armorBase, -28);
-      roundRect(3, 0, 9, 20, 4);
-      ctx.fill();
-      ctx.fillStyle = "#94a3b8";
-      roundRect(3, 12, 9, 4, 2);
-      ctx.fill();
-      ctx.restore();
-
-      const torsoGrad = ctx.createLinearGradient(0, -18, 0, 14);
-      torsoGrad.addColorStop(0, shade(armorBase, 18));
-      torsoGrad.addColorStop(0.55, armorBase);
-      torsoGrad.addColorStop(1, shade(armorBase, -18));
-      ctx.fillStyle = torsoGrad;
-      roundRect(-18, -15, 36, 30, 10);
-      ctx.fill();
-      ctx.fillStyle = "rgba(255,255,255,0.16)";
-      roundRect(-10, -10, 20, 9, 5);
-      ctx.fill();
-      ctx.strokeStyle = accentGlow;
-      ctx.lineWidth = 2;
-      roundRect(-14, -7, 28, 16, 7);
-      ctx.stroke();
-      ctx.fillStyle = "#111827";
-      roundRect(-5, -4, 10, 18, 4);
-      ctx.fill();
-      ctx.fillStyle = accentGlow;
-      roundRect(-2, -1, 4, 10, 2);
-      ctx.fill();
-      if (gear?.armorTier?.horn > 0) {
-        ctx.shadowColor = gear.armorTier.glow; ctx.shadowBlur = 16;
-        ctx.fillStyle = gear.armorTier.color;
-        ctx.beginPath(); ctx.moveTo(-16,-14); ctx.lineTo(-22,-24); ctx.lineTo(-10,-18); ctx.closePath(); ctx.fill();
-        ctx.beginPath(); ctx.moveTo(16,-14); ctx.lineTo(22,-24); ctx.lineTo(10,-18); ctx.closePath(); ctx.fill();
-      }
-      ctx.fillStyle = "rgba(255,255,255,0.14)";
-      roundRect(-13, -12, 26, 4, 3); ctx.fill();
-
-      ctx.save();
-      ctx.translate(-19, -4);
-      ctx.rotate(-0.35 + armSwing * 0.45);
-      ctx.fillStyle = armorBase;
-      roundRect(-5, 0, 10, 22, 5);
-      ctx.fill();
-      ctx.fillStyle = accentGlow;
-      roundRect(-4, 3, 8, 5, 3);
-      ctx.fill();
-      ctx.restore();
-
-      ctx.save();
-      ctx.translate(18, -5);
-      ctx.rotate(0.18 - armSwing * 0.26 + (attackPose ? (-0.72 - 0.95 * attackEase) : -0.42));
-      ctx.fillStyle = armorBase;
-      roundRect(-5, 0, 10, 22, 5);
-      ctx.fill();
-      ctx.fillStyle = accentGlow;
-      roundRect(-4, 3, 8, 5, 3);
-      ctx.fill();
-
+      const legGrad = ctx.createLinearGradient(0, 10, 0, 34); legGrad.addColorStop(0, shade(armorBase, -4)); legGrad.addColorStop(1, "#020617");
+      ctx.save(); ctx.translate(0, 10); ctx.rotate(legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(-13, 0, 10, 22, 4); ctx.fill(); ctx.fillStyle = "#94a3b8"; roundRect(-13, 15, 10, 4, 2); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.translate(0, 10); ctx.rotate(-legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(3, 0, 10, 22, 4); ctx.fill(); ctx.fillStyle = "#94a3b8"; roundRect(3, 15, 10, 4, 2); ctx.fill(); ctx.restore();
+      const torsoGrad = ctx.createLinearGradient(0, -18, 0, 18); torsoGrad.addColorStop(0, shade(armorBase, 18)); torsoGrad.addColorStop(0.52, armorBase); torsoGrad.addColorStop(1, shade(armorBase, -24));
+      ctx.fillStyle = torsoGrad; roundRect(-18, -15, 36, 32, 11); ctx.fill(); ctx.strokeStyle = armorGlow; ctx.lineWidth = 2; roundRect(-14, -8, 28, 18, 8); ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.14)"; roundRect(-10, -11, 20, 8, 4); ctx.fill();
+      ctx.fillStyle = "#0f172a"; roundRect(-5, -4, 10, 20, 4); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-2, -1, 4, 10, 2); ctx.fill();
+      if (gear?.armorTier?.horn > 0) { ctx.shadowColor = gear.armorTier.glow; ctx.shadowBlur = 16; ctx.fillStyle = gear.armorTier.color; ctx.beginPath(); ctx.moveTo(-16,-14); ctx.lineTo(-22,-24); ctx.lineTo(-10,-18); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(16,-14); ctx.lineTo(22,-24); ctx.lineTo(10,-18); ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0; }
+      ctx.save(); ctx.translate(-19, -4); ctx.rotate(-0.38 + armSwing * 0.50); ctx.fillStyle = torsoGrad; roundRect(-5, 0, 10, 23, 5); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-4, 4, 8, 5, 3); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.translate(18, -5); ctx.rotate(0.18 - armSwing * 0.28 + (attackPose ? (-0.76 - 1.02 * attackEase) : -0.46)); ctx.fillStyle = torsoGrad; roundRect(-5, 0, 10, 23, 5); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-4, 4, 8, 5, 3); ctx.fill();
       if (isHero && gear && gear.weaponColor) {
         ctx.save();
-        const sideMap = {
-          up: -2.36,
-          down: 2.18,
-          left: -2.12,
-          right: 2.02
-        };
+        const sideMap = { up: -2.38, down: 2.20, left: -2.14, right: 2.04 };
         const swingBase = sideMap[dir] ?? 2.18;
-        const swingArc =
-          dir === "up"
-            ? (attackPose ? (0.24 - 0.92 * attackEase) : 0.05)
-            : dir === "left"
-              ? (attackPose ? (0.30 - 0.96 * attackEase) : 0.05)
-              : dir === "right"
-                ? (attackPose ? (0.42 - 1.10 * attackEase) : 0.06)
-                : (attackPose ? (0.42 - 1.18 * attackEase) : 0.06);
+        const swingArc = dir === "up" ? (attackPose ? (0.24 - 0.92 * attackEase) : 0.05) : dir === "left" ? (attackPose ? (0.32 - 0.98 * attackEase) : 0.05) : dir === "right" ? (attackPose ? (0.42 - 1.10 * attackEase) : 0.06) : (attackPose ? (0.42 - 1.18 * attackEase) : 0.06);
         const gripOffsetX = dir === "left" ? -5.0 : dir === "up" ? -1.4 : 5.8;
         const gripOffsetY = dir === "up" ? 11.0 : 13.8;
-        ctx.translate(gripOffsetX, gripOffsetY);
-        ctx.rotate(swingBase + swingArc);
+        ctx.translate(gripOffsetX, gripOffsetY); ctx.rotate(swingBase + swingArc);
         const weaponGlow = gear.weaponTier ? gear.weaponTier.glow : gear.weaponColor;
-        const bladeGrad = ctx.createLinearGradient(0, -40, 0, 14);
-        bladeGrad.addColorStop(0, "#ffffff");
-        bladeGrad.addColorStop(0.22, weaponGlow);
-        bladeGrad.addColorStop(0.60, gear.weaponColor);
-        bladeGrad.addColorStop(1, shade(gear.weaponColor, -35));
-        ctx.shadowColor = weaponGlow;
-        ctx.shadowBlur = 18 + ((gear.weaponTier && gear.weaponTier.label==="MYTHIC") ? 12 : (gear.weaponTier && gear.weaponTier.label==="LEGEND") ? 7 : 0);
-        ctx.fillStyle = bladeGrad;
-        ctx.beginPath();
-        ctx.moveTo(-2.3, 10.5);
-        ctx.lineTo(-3.2, 3.5);
-        ctx.lineTo(-2.4, -8);
-        ctx.lineTo(0, -28);
-        ctx.lineTo(2.4, -8);
-        ctx.lineTo(3.2, 3.5);
-        ctx.lineTo(2.3, 10.5);
-        ctx.closePath();
-        ctx.fill();
-        ctx.lineWidth = 1.2;
-        ctx.strokeStyle = "rgba(255,255,255,0.95)";
-        ctx.beginPath();
-        ctx.moveTo(0, -30); ctx.lineTo(0, 5);
-        ctx.stroke();
-        const guardGrad = ctx.createLinearGradient(-9, 0, 9, 0);
-        guardGrad.addColorStop(0, shade(gear.weaponColor, -28));
-        guardGrad.addColorStop(0.5, weaponGlow);
-        guardGrad.addColorStop(1, shade(gear.weaponColor, -28));
-        ctx.shadowBlur = 8;
-        ctx.fillStyle = guardGrad;
-        roundRect(-7, 5.5, 14, 4, 2.2); ctx.fill();
-        ctx.fillStyle = shade(gear.weaponColor, -18);
-        roundRect(-2.4, 8.5, 4.8, 9.2, 2.6); ctx.fill();
-        const plus = gear.weaponPlus || 0;
-        const spark = 0.35 + 0.45 * Math.sin(performance.now()/170);
-        for (let i = 0; i < Math.max(2, plus); i++) {
-          const ang = performance.now()/240 + i * (Math.PI*2/Math.max(2, plus));
-          const px = Math.cos(ang) * (8 + plus * 0.9);
-          const py = Math.sin(ang) * (15 + plus * 0.6) - 12;
-          ctx.fillStyle = (gear.weaponTier?.flame || weaponGlow) + "cc";
-          ctx.beginPath(); ctx.arc(px, py, 1.4 + (plus>6?0.8:0), 0, Math.PI*2); ctx.fill();
-        }
-        ctx.fillStyle = "rgba(255,255,255,0.98)";
-        ctx.beginPath(); ctx.arc(0, -27, 1.8 + spark, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(2.8, -15, 1.0 + spark*0.5, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(-2.2, -7, 0.9 + spark*0.35, 0, Math.PI*2); ctx.fill();
+        const bladeGrad = ctx.createLinearGradient(0, -42, 0, 14); bladeGrad.addColorStop(0, "#ffffff"); bladeGrad.addColorStop(0.22, shade(gear.weaponColor, 48)); bladeGrad.addColorStop(0.60, gear.weaponColor); bladeGrad.addColorStop(1, shade(gear.weaponColor, -35));
+        ctx.shadowColor = weaponGlow; ctx.shadowBlur = 20 + ((gear.weaponTier && gear.weaponTier.label === "MYTHIC") ? 12 : (gear.weaponTier && gear.weaponTier.label === "LEGEND") ? 8 : 0);
+        ctx.fillStyle = bladeGrad; ctx.beginPath(); ctx.moveTo(-2.5, 11); ctx.lineTo(-3.4, 3.5); ctx.lineTo(-2.2, -8); ctx.lineTo(0, -31); ctx.lineTo(2.2, -8); ctx.lineTo(3.4, 3.5); ctx.lineTo(2.5, 11); ctx.closePath(); ctx.fill();
+        ctx.lineWidth = 1.2; ctx.strokeStyle = "rgba(255,255,255,0.95)"; ctx.beginPath(); ctx.moveTo(0, -31); ctx.lineTo(0, 5); ctx.stroke();
+        const guardGrad = ctx.createLinearGradient(-9, 0, 9, 0); guardGrad.addColorStop(0, shade(gear.weaponColor, -28)); guardGrad.addColorStop(0.5, shade(gear.weaponColor, 26)); guardGrad.addColorStop(1, shade(gear.weaponColor, -28));
+        ctx.shadowBlur = 9; ctx.fillStyle = guardGrad; roundRect(-8, 5.5, 16, 4.5, 2.2); ctx.fill(); ctx.fillStyle = shade(gear.weaponColor, -16); roundRect(-2.5, 9, 5, 10, 2.6); ctx.fill();
+        const plus = gear.weaponPlus || 0; for (let i = 0; i < Math.max(2, plus); i++) { const ang = performance.now() / 240 + i * (Math.PI * 2 / Math.max(2, plus)); const px = Math.cos(ang) * (9 + plus * 0.9); const py = Math.sin(ang) * (15 + plus * 0.6) - 12; ctx.fillStyle = (gear.weaponTier?.flame || weaponGlow) + "cc"; ctx.beginPath(); ctx.arc(px, py, 1.5 + (plus > 6 ? 0.8 : 0), 0, Math.PI * 2); ctx.fill(); }
         ctx.restore();
       }
       ctx.restore();
-
-      if (isHero && gear && gear.shieldColor) {
-        ctx.save();
-        ctx.translate(-22, -1);
-        ctx.rotate(-0.20);
-        const shieldGrad = ctx.createLinearGradient(0, -24, 0, 24);
-        shieldGrad.addColorStop(0, "#f8fafc");
-        shieldGrad.addColorStop(0.20, gear.shieldTier?.color || "#e2e8f0");
-        shieldGrad.addColorStop(0.56, "#94a3b8");
-        shieldGrad.addColorStop(0.72, gear.shieldColor);
-        ctx.shadowColor = gear.shieldTier ? gear.shieldTier.glow : gear.shieldColor;
-        ctx.shadowBlur = 20;
-        shieldGrad.addColorStop(1, "#020617");
-        ctx.fillStyle = shieldGrad;
-        ctx.beginPath();
-        ctx.moveTo(0, -24); ctx.lineTo(17, -14); ctx.lineTo(14, 10); ctx.lineTo(0, 24); ctx.lineTo(-14, 10); ctx.lineTo(-17, -14); ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = "rgba(96,165,250,0.72)";
-        ctx.lineWidth = 2.6; ctx.stroke();
-        ctx.fillStyle = "rgba(255,255,255,0.82)";
-        roundRect(-1.3, -15, 2.6, 28, 1.3); ctx.fill();
-        roundRect(-9, -1.5, 18, 3, 1.3); ctx.fill();
-        for (let i = 0; i < 3 + (gear.shieldTier?.horn || 0); i++) {
-          const ang = performance.now()/380 + i * 2.09;
-          const px = Math.cos(ang) * (11 + i*1.5);
-          const py = Math.sin(ang) * (14 + i*1.5);
-          ctx.fillStyle = (gear.shieldTier?.flame || gear.shieldColor) + 'cc';
-          ctx.beginPath(); ctx.arc(px, py, i % 2 ? 1.6 : 2.1, 0, Math.PI*2); ctx.fill();
-        }
-        ctx.restore();
-      }
-
-      ctx.fillStyle = pal.skin || "#ffd7b5";
-      roundRect(-12, -34, 24, 18, 8);
-      ctx.fill();
-
+      if (isHero && gear && gear.shieldColor) { ctx.save(); ctx.translate(-22, -1); ctx.rotate(-0.22); const shieldGrad = ctx.createLinearGradient(0, -24, 0, 24); shieldGrad.addColorStop(0, "#f8fafc"); shieldGrad.addColorStop(0.20, shade(gear.shieldColor, 34)); shieldGrad.addColorStop(0.56, gear.shieldColor); shieldGrad.addColorStop(1, "#020617"); ctx.shadowColor = gear.shieldTier ? gear.shieldTier.glow : gear.shieldColor; ctx.shadowBlur = 20; ctx.fillStyle = shieldGrad; ctx.beginPath(); ctx.moveTo(0, -24); ctx.lineTo(18, -14); ctx.lineTo(15, 12); ctx.lineTo(0, 25); ctx.lineTo(-15, 12); ctx.lineTo(-18, -14); ctx.closePath(); ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.72)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.fillStyle = "rgba(255,255,255,0.86)"; roundRect(-1.5, -15, 3, 30, 1.4); ctx.fill(); roundRect(-9, -1.5, 18, 3, 1.3); ctx.fill(); for (let i = 0; i < 3 + (gear.shieldTier?.horn || 0); i++) { const ang = performance.now() / 380 + i * 2.09; const px = Math.cos(ang) * (11 + i * 1.5); const py = Math.sin(ang) * (14 + i * 1.5); ctx.fillStyle = (gear.shieldTier?.flame || gear.shieldColor) + 'cc'; ctx.beginPath(); ctx.arc(px, py, i % 2 ? 1.6 : 2.1, 0, Math.PI * 2); ctx.fill(); } ctx.restore(); }
+      ctx.fillStyle = pal.skin || "#ffd7b5"; roundRect(-12, -34, 24, 18, 8); ctx.fill();
       if (isHero) {
-        const helmColor = "#05070c";
-        const helmGrad = ctx.createLinearGradient(0, -58, 0, -18);
-        helmGrad.addColorStop(0, "#4b5563");
-        helmGrad.addColorStop(0.32, helmColor);
-        helmGrad.addColorStop(1, "#000000");
-        ctx.save();
-        for (let i = 0; i < 4; i++) {
-          const flameA = 0.14 - i * 0.025;
-          ctx.globalAlpha = flameA;
-          ctx.fillStyle = i % 2 ? "#111827" : "#000000";
-          ctx.beginPath();
-          ctx.moveTo(-10 - i, -28); ctx.quadraticCurveTo(-18 - i, -44 - i * 2, -9, -54 - i * 3);
-          ctx.quadraticCurveTo(-3, -45, -4, -32); ctx.closePath(); ctx.fill();
-          ctx.beginPath();
-          ctx.moveTo(10 + i, -28); ctx.quadraticCurveTo(18 + i, -44 - i * 2, 9, -54 - i * 3);
-          ctx.quadraticCurveTo(3, -45, 4, -32); ctx.closePath(); ctx.fill();
-        }
-        ctx.restore();
-        ctx.fillStyle = "#020617";
-        ctx.beginPath();
-        ctx.moveTo(-18,-28); ctx.lineTo(-14,-46); ctx.lineTo(-7,-56); ctx.lineTo(-2,-50); ctx.lineTo(0,-58); ctx.lineTo(2,-50); ctx.lineTo(7,-56); ctx.lineTo(14,-46); ctx.lineTo(18,-28); ctx.lineTo(13,-14); ctx.lineTo(7,-9); ctx.lineTo(5,-23); ctx.lineTo(-5,-23); ctx.lineTo(-7,-9); ctx.lineTo(-13,-14); ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = helmGrad;
-        ctx.beginPath();
-        ctx.moveTo(-16,-28); ctx.quadraticCurveTo(-13,-50,0,-54); ctx.quadraticCurveTo(13,-50,16,-28); ctx.lineTo(12,-15); ctx.lineTo(6,-10); ctx.lineTo(4,-21); ctx.lineTo(-4,-21); ctx.lineTo(-6,-10); ctx.lineTo(-12,-15); ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = "#111827";
-        roundRect(-12, -28, 24, 7, 4); ctx.fill();
-        ctx.fillStyle = gear?.hatTier?.color || "#60a5fa";
-        roundRect(-3,-48,6,10,3); ctx.fill();
-        ctx.fillStyle = gear?.hatTier?.color || "#60a5fa";
-        roundRect(-9, -29, 18, 4, 2); ctx.fill();
-        const hornLevel = gear?.hatTier?.horn || 0;
-        if (hornLevel > 0) {
-          ctx.fillStyle = gear?.hatTier?.color || "#60a5fa";
-          ctx.shadowColor = gear?.hatTier?.glow || "#60a5fa";
-          ctx.shadowBlur = 18;
-          ctx.beginPath(); ctx.moveTo(-12,-36); ctx.lineTo(-20,-52); ctx.lineTo(-9,-45); ctx.closePath(); ctx.fill();
-          ctx.beginPath(); ctx.moveTo(12,-36); ctx.lineTo(20,-52); ctx.lineTo(9,-45); ctx.closePath(); ctx.fill();
-          if (hornLevel > 1) { ctx.beginPath(); ctx.moveTo(-4,-50); ctx.lineTo(0,-62); ctx.lineTo(4,-50); ctx.closePath(); ctx.fill(); }
-        }
-        ctx.fillStyle = "rgba(255,255,255,0.20)";
-        roundRect(-10,-42,20,4,2); ctx.fill();
-        ctx.fillStyle = "rgba(255,255,255,0.12)";
-        roundRect(-7,-45,14,4,2); ctx.fill();
-      } else {
-        ctx.fillStyle = pal.hair || "#1f2937";
-        roundRect(-14, -38, 28, 10, 7);
-        ctx.fill();
-        ctx.fillStyle = pal.hat || "#ffcc00";
-        roundRect(-10, -45, 20, 8, 5);
-        ctx.fill();
-      }
-
-      ctx.fillStyle = "#111827";
-      ctx.beginPath(); ctx.arc(-4, -24, 1.4, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(4, -24, 1.4, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 0.8;
-      ctx.fillRect(-4, -20, 8, 1.3);
-      ctx.globalAlpha = 1;
-      if (isHero) drawGearEffect(0, -8);
-      ctx.restore();
+        const helmColor = gear?.hatColor || "#05070c"; const helmGrad = ctx.createLinearGradient(0, -58, 0, -18); helmGrad.addColorStop(0, shade(helmColor, 24)); helmGrad.addColorStop(0.32, helmColor); helmGrad.addColorStop(1, "#000000");
+        ctx.save(); for (let i = 0; i < 4; i++) { const flameA = 0.14 - i * 0.025; ctx.globalAlpha = flameA; ctx.fillStyle = i % 2 ? "#111827" : "#000000"; ctx.beginPath(); ctx.moveTo(-10 - i, -28); ctx.quadraticCurveTo(-18 - i, -44 - i * 2, -9, -54 - i * 3); ctx.quadraticCurveTo(-3, -45, -4, -32); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(10 + i, -28); ctx.quadraticCurveTo(18 + i, -44 - i * 2, 9, -54 - i * 3); ctx.quadraticCurveTo(3, -45, 4, -32); ctx.closePath(); ctx.fill(); } ctx.restore();
+        ctx.fillStyle = "#020617"; ctx.beginPath(); ctx.moveTo(-18,-28); ctx.lineTo(-14,-46); ctx.lineTo(-7,-56); ctx.lineTo(-2,-50); ctx.lineTo(0,-58); ctx.lineTo(2,-50); ctx.lineTo(7,-56); ctx.lineTo(14,-46); ctx.lineTo(18,-28); ctx.lineTo(13,-14); ctx.lineTo(7,-9); ctx.lineTo(5,-23); ctx.lineTo(-5,-23); ctx.lineTo(-7,-9); ctx.lineTo(-13,-14); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = helmGrad; ctx.beginPath(); ctx.moveTo(-16,-28); ctx.quadraticCurveTo(-13,-50,0,-54); ctx.quadraticCurveTo(13,-50,16,-28); ctx.lineTo(12,-15); ctx.lineTo(6,-10); ctx.lineTo(4,-21); ctx.lineTo(-4,-21); ctx.lineTo(-6,-10); ctx.lineTo(-12,-15); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = gear?.hatTier?.color || "#60a5fa"; roundRect(-3,-48,6,10,3); ctx.fill(); roundRect(-9, -29, 18, 4, 2); ctx.fill();
+        const hornLevel = gear?.hatTier?.horn || 0; if (hornLevel > 0) { ctx.fillStyle = gear?.hatTier?.color || "#60a5fa"; ctx.shadowColor = helmGlow; ctx.shadowBlur = 18; ctx.beginPath(); ctx.moveTo(-12,-36); ctx.lineTo(-20,-52); ctx.lineTo(-9,-45); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(12,-36); ctx.lineTo(20,-52); ctx.lineTo(9,-45); ctx.closePath(); ctx.fill(); if (hornLevel > 1) { ctx.beginPath(); ctx.moveTo(-4,-50); ctx.lineTo(0,-62); ctx.lineTo(4,-50); ctx.closePath(); ctx.fill(); } ctx.shadowBlur = 0; }
+        ctx.fillStyle = "rgba(255,255,255,0.18)"; roundRect(-10,-42,20,4,2); ctx.fill();
+      } else { ctx.fillStyle = pal.hair || "#1f2937"; roundRect(-14, -38, 28, 10, 7); ctx.fill(); ctx.fillStyle = pal.hat || "#ffcc00"; roundRect(-10, -45, 20, 8, 5); ctx.fill(); }
+      ctx.fillStyle = "#111827"; ctx.beginPath(); ctx.arc(-4, -24, 1.4, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(4, -24, 1.4, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 0.85; ctx.fillRect(-4, -20, 8, 1.4); ctx.globalAlpha = 1; if (isHero) drawGearEffect(0, -8); ctx.restore();
     }
 
-
-    function seedSlimes(rng) {
+function seedSlimes(rng) {
       combatState.slimes.length = 0;
       const spots = [
         { x: ZONES.game.x + 420, y: ZONES.game.y + ZONES.game.h + 210 },
