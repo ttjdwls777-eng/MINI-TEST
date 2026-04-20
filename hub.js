@@ -110,12 +110,13 @@
   }
 
   function stylePanel(el, opts = {}) {
-    el.style.background = opts.bg || "rgba(255,255,255,0.86)";
-    el.style.border = opts.bd || "1px solid rgba(0,0,0,0.10)";
-    el.style.backdropFilter = "blur(10px)";
-    el.style.webkitBackdropFilter = "blur(10px)";
-    el.style.boxShadow = opts.shadow || "0 18px 44px rgba(0,0,0,0.15)";
+    el.style.background = opts.bg || "linear-gradient(180deg, rgba(18,14,10,0.96), rgba(8,8,10,0.94))";
+    el.style.border = opts.bd || "1px solid rgba(214,174,84,0.38)";
+    el.style.backdropFilter = "blur(12px)";
+    el.style.webkitBackdropFilter = "blur(12px)";
+    el.style.boxShadow = opts.shadow || "0 18px 44px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,244,190,0.12), 0 0 0 1px rgba(120,82,28,0.26)";
     el.style.borderRadius = opts.radius || "18px";
+    el.style.position = el.style.position || el.style.position;
   }
 
   function makeButton(text) {
@@ -123,13 +124,14 @@
     b.type = "button";
     b.textContent = text;
     b.style.cursor = "pointer";
-    b.style.border = "1px solid rgba(0,0,0,0.10)";
-    b.style.background = "rgba(255,255,255,0.92)";
-    b.style.color = "#0a0e18";
-    b.style.font = "900 12px system-ui";
+    b.style.border = "1px solid rgba(214,174,84,0.36)";
+    b.style.background = "linear-gradient(180deg, rgba(53,36,16,0.98), rgba(17,13,10,0.98))";
+    b.style.color = "#f7df9a";
+    b.style.font = "1000 12px system-ui";
+    b.style.letterSpacing = "0.04em";
     b.style.padding = "10px 12px";
     b.style.borderRadius = "12px";
-    b.style.boxShadow = "0 10px 24px rgba(0,0,0,0.10)";
+    b.style.boxShadow = "0 12px 28px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,238,173,0.16)";
     return b;
   }
 
@@ -184,7 +186,7 @@
     coord.style.zIndex = "9999";
     coord.style.padding = "8px 10px";
     coord.style.font = "900 12px system-ui";
-    coord.style.color = "rgba(10,18,30,0.80)";
+    coord.style.color = "rgba(247,223,154,0.92)";
     stylePanel(coord, { radius: "12px", shadow: "0 10px 24px rgba(0,0,0,0.12)" });
     coord.style.display = "none";
 
@@ -195,7 +197,7 @@
     fps.style.zIndex = "9999";
     fps.style.padding = "8px 10px";
     fps.style.font = "900 12px system-ui";
-    fps.style.color = "rgba(10,18,30,0.80)";
+    fps.style.color = "rgba(247,223,154,0.92)";
     stylePanel(fps, { radius: "12px", shadow: "0 10px 24px rgba(0,0,0,0.12)" });
     fps.style.display = "none";
 
@@ -352,12 +354,12 @@
       b.style.minWidth = "96px";
       b.style.cursor = "pointer";
       b.style.border = "1px solid rgba(255,255,255,0.12)";
-      b.style.background = "rgba(255,255,255,0.92)";
-      b.style.color = "#0a0e18";
+      b.style.background = "linear-gradient(180deg, rgba(58,39,18,0.98), rgba(17,13,10,0.98))";
+      b.style.color = "#f7df9a";
       b.style.font = "900 12px system-ui";
       b.style.padding = "12px 14px";
       b.style.borderRadius = "14px";
-      b.style.boxShadow = "0 12px 28px rgba(0,0,0,0.12)";
+      b.style.boxShadow = "0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,233,159,0.14)";
       b.style.transition = "transform 90ms ease, filter 90ms ease, opacity 90ms ease";
     });
     [invBtn, eqBtn, saveBtn, enterBtn, atkBtn, fireBtn, hasteBtn].forEach((b)=>{
@@ -396,13 +398,13 @@
     desktopSaveBtn.style.top = "14px";
     desktopSaveBtn.style.zIndex = "10002";
     desktopSaveBtn.style.cursor = "pointer";
-    desktopSaveBtn.style.border = "1px solid rgba(0,0,0,0.10)";
+    desktopSaveBtn.style.border = "1px solid rgba(214,174,84,0.28)";
     desktopSaveBtn.style.background = "linear-gradient(180deg,#38bdf8,#1d4ed8)";
     desktopSaveBtn.style.color = "#fff";
     desktopSaveBtn.style.font = "900 12px system-ui";
     desktopSaveBtn.style.padding = "10px 14px";
     desktopSaveBtn.style.borderRadius = "14px";
-    desktopSaveBtn.style.boxShadow = "0 12px 28px rgba(0,0,0,0.12)";
+    desktopSaveBtn.style.boxShadow = "0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,233,159,0.14)";
     desktopSaveBtn.style.display = isTouchDevice() ? "none" : "block";
     [desktopFireBtn, desktopHasteBtn].forEach((b, i) => {
       b.style.position = "fixed";
@@ -410,12 +412,12 @@
       b.style.top = "182px";
       b.style.zIndex = "10002";
       b.style.cursor = "pointer";
-      b.style.border = "1px solid rgba(0,0,0,0.10)";
+      b.style.border = "1px solid rgba(214,174,84,0.28)";
       b.style.color = "#fff";
       b.style.font = "900 12px system-ui";
       b.style.padding = "10px 14px";
       b.style.borderRadius = "14px";
-      b.style.boxShadow = "0 12px 28px rgba(0,0,0,0.12)";
+      b.style.boxShadow = "0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,233,159,0.14)";
       b.style.display = isTouchDevice() ? "none" : "block";
     });
     desktopFireBtn.style.background = "linear-gradient(180deg,#fb923c,#ea580c)";
@@ -615,8 +617,8 @@
     joyBase.style.position = "absolute";
     joyBase.style.inset = "0";
     joyBase.style.borderRadius = "999px";
-    joyBase.style.background = "rgba(255,255,255,0.72)";
-    joyBase.style.border = "1px solid rgba(0,0,0,0.10)";
+    joyBase.style.background = "linear-gradient(180deg, rgba(42,28,14,0.92), rgba(12,10,10,0.9))";
+    joyBase.style.border = "1px solid rgba(214,174,84,0.28)";
     joyBase.style.boxShadow = "0 18px 44px rgba(0,0,0,0.16)";
     joyBase.style.backdropFilter = "blur(8px)";
 
@@ -638,7 +640,7 @@
     joyKnob.style.width = `${JOY_KNOB}px`;
     joyKnob.style.height = `${JOY_KNOB}px`;
     joyKnob.style.borderRadius = "999px";
-    joyKnob.style.background = "rgba(255,255,255,0.92)";
+    joyKnob.style.background = "linear-gradient(180deg, rgba(58,39,18,0.98), rgba(17,13,10,0.98))";
     joyKnob.style.border = "1px solid rgba(0,0,0,0.12)";
     joyKnob.style.boxShadow = "0 16px 40px rgba(0,0,0,0.18)";
     joyKnob.style.display = "flex";
@@ -656,7 +658,7 @@
       const px = ax * max;
       const py = ay * max;
       joyKnob.style.transform = `translate(calc(-50% + ${px}px), calc(-50% + ${py}px))`;
-      joyBase.style.background = joyState.active ? "rgba(255,255,255,0.86)" : "rgba(255,255,255,0.72)";
+      joyBase.style.background = joyState.active ? "linear-gradient(180deg, rgba(30,20,12,0.96), rgba(10,8,8,0.94))" : "linear-gradient(180deg, rgba(42,28,14,0.92), rgba(12,10,10,0.9))";
     }
     function joyPointerDown(e) {
       e.preventDefault();
@@ -1736,7 +1738,7 @@
         g.globalAlpha = 1;
       });
       roadPattern = makePattern(260, 260, (g, w, h) => {
-        g.fillStyle = "#262c37";
+        g.fillStyle = "#17141d";
         g.fillRect(0, 0, w, h);
         g.globalAlpha = 0.16;
         for (let i = 0; i < 2200; i++) {
@@ -1753,7 +1755,7 @@
         g.globalAlpha = 1;
       });
       sidewalkPattern = makePattern(240, 240, (g, w, h) => {
-        g.fillStyle = "#f5efe7";
+        g.fillStyle = "#2b2623";
         g.fillRect(0, 0, w, h);
         g.globalAlpha = 0.12;
         g.strokeStyle = "rgba(0,0,0,0.18)";
@@ -1767,7 +1769,7 @@
         g.globalAlpha = 1;
       });
       brickPattern = makePattern(360, 360, (g, w, h) => {
-        g.fillStyle = "#d9c6a3";
+        g.fillStyle = "#3c3020";
         g.fillRect(0, 0, w, h);
         g.globalAlpha = 0.32;
         g.strokeStyle = "rgba(60,45,30,0.34)";
@@ -2523,34 +2525,20 @@
     /* ----------------------- Rendering helpers ----------------------- */
     function drawSkyWorld() {
       const g = ctx.createLinearGradient(0, 0, 0, WORLD.h);
-      g.addColorStop(0, "#bfe7ff");
-      g.addColorStop(0.55, "#d7f1ff");
-      g.addColorStop(1, "#fff2fb");
+      g.addColorStop(0, "#06070d");
+      g.addColorStop(0.24, "#0d1020");
+      g.addColorStop(0.60, "#141324");
+      g.addColorStop(1, "#20151e");
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, WORLD.w, WORLD.h);
-
       ctx.save();
-      ctx.globalAlpha = 0.18;
-      ctx.fillStyle = "rgba(255,255,255,0.60)";
-      ctx.beginPath();
-      ctx.ellipse(WORLD.w * 0.22, WORLD.h * 0.18, 560, 260, 0, 0, Math.PI * 2);
-      ctx.ellipse(WORLD.w * 0.72, WORLD.h * 0.16, 620, 280, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      ctx.save();
-      ctx.globalAlpha = 0.26;
-      ctx.strokeStyle = "rgba(10,14,24,0.52)";
-      ctx.lineWidth = 2;
-      for (const b of birds) {
-        const yy = b.y + Math.sin(b.p) * 6;
-        const xx = b.x;
-        ctx.beginPath();
-        ctx.moveTo(xx - 7, yy);
-        ctx.quadraticCurveTo(xx, yy - 5, xx + 7, yy);
-        ctx.stroke();
-      }
-      ctx.restore();
+      const moon = ctx.createRadialGradient(WORLD.w * 0.82, WORLD.h * 0.14, 18, WORLD.w * 0.82, WORLD.h * 0.14, 140);
+      moon.addColorStop(0, "rgba(236,233,255,0.95)");
+      moon.addColorStop(0.28, "rgba(180,157,255,0.70)");
+      moon.addColorStop(1, "rgba(180,157,255,0)");
+      ctx.fillStyle = moon; ctx.beginPath(); ctx.arc(WORLD.w * 0.82, WORLD.h * 0.14, 140, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 0.92; ctx.fillStyle = "#f5f3ff"; ctx.beginPath(); ctx.arc(WORLD.w * 0.82, WORLD.h * 0.14, 36, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = "rgba(80,50,150,0.55)"; ctx.beginPath(); ctx.ellipse(WORLD.w * 0.22, WORLD.h * 0.20, 660, 260, 0, 0, Math.PI * 2); ctx.ellipse(WORLD.w * 0.66, WORLD.h * 0.18, 560, 230, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.globalAlpha = 0.30; ctx.strokeStyle = "rgba(224,232,255,0.58)"; ctx.lineWidth = 2; for (const b of birds) { const yy = b.y + Math.sin(b.p) * 6; const xx = b.x; ctx.beginPath(); ctx.moveTo(xx - 7, yy); ctx.quadraticCurveTo(xx, yy - 5, xx + 7, yy); ctx.stroke(); } ctx.restore();
     }
 
     function drawCloudsWorld() {
@@ -2569,36 +2557,10 @@
     }
 
     function drawGroundWorld() {
-      ctx.save();
-      ctx.fillStyle = grassPattern || "#2f6f45";
-      ctx.fillRect(0, 0, WORLD.w, WORLD.h);
-      ctx.restore();
-
-      ctx.save();
-      const sh = ctx.createLinearGradient(0, 0, 0, WORLD.h);
-      sh.addColorStop(0, "rgba(10,14,24,0.00)");
-      sh.addColorStop(1, "rgba(10,14,24,0.08)");
-      ctx.fillStyle = sh;
-      ctx.fillRect(0, 0, WORLD.w, WORLD.h);
-      ctx.restore();
-
-      ctx.save();
-      ctx.fillStyle = dirtPattern || "#c79a64";
-      for (const p of groundPatches) {
-        ctx.globalAlpha = p.a;
-        ctx.beginPath();
-        ctx.ellipse(p.x, p.y, p.rx, p.ry, p.rot, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 0.34;
-      for (const po of portals) {
-        const cx = po.x + po.w * 0.5;
-        const cy = po.y + po.h * 0.94;
-        ctx.beginPath();
-        ctx.ellipse(cx, cy + 26, 58, 20, 0, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.restore();
+      ctx.save(); const base = ctx.createLinearGradient(0, 0, 0, WORLD.h); base.addColorStop(0, "#101318"); base.addColorStop(0.55, "#131818"); base.addColorStop(1, "#191316"); ctx.fillStyle = base; ctx.fillRect(0, 0, WORLD.w, WORLD.h); ctx.restore();
+      ctx.save(); ctx.globalAlpha = 0.30; ctx.fillStyle = grassPattern || "#182119"; ctx.fillRect(0, 0, WORLD.w, WORLD.h); ctx.restore();
+      ctx.save(); const mist = ctx.createLinearGradient(0, ART_BOUNDS.skyLineY, 0, WORLD.h); mist.addColorStop(0, "rgba(168,85,247,0.04)"); mist.addColorStop(0.45, "rgba(34,197,94,0.03)"); mist.addColorStop(1, "rgba(239,68,68,0.05)"); ctx.fillStyle = mist; ctx.fillRect(0, 0, WORLD.w, WORLD.h); ctx.restore();
+      ctx.save(); ctx.fillStyle = dirtPattern || "#2a2120"; for (const p of groundPatches) { ctx.globalAlpha = Math.min(0.22, p.a * 0.78); ctx.beginPath(); ctx.ellipse(p.x, p.y, p.rx, p.ry, p.rot, 0, Math.PI * 2); ctx.fill(); } ctx.globalAlpha = 0.26; for (const po of portals) { const cx = po.x + po.w * 0.5; const cy = po.y + po.h * 0.94; ctx.beginPath(); ctx.ellipse(cx, cy + 26, 62, 22, 0, 0, Math.PI * 2); ctx.fill(); } ctx.restore();
     }
 
     function drawRoadsAndSidewalks() {
@@ -2658,7 +2620,7 @@
         ctx.globalAlpha = 0.92;
         for (let i = 0; i < 8; i++) {
           const yy = c.y + 5 + i * 6;
-          ctx.fillStyle = i % 2 === 0 ? "rgba(255,255,255,0.92)" : "rgba(0,0,0,0.08)";
+          ctx.fillStyle = i % 2 === 0 ? "linear-gradient(180deg, rgba(58,39,18,0.98), rgba(17,13,10,0.98))" : "rgba(0,0,0,0.08)";
           ctx.fillRect(c.x + 10, yy, c.w - 20, 4);
         }
         ctx.restore();
@@ -2773,20 +2735,20 @@
 
     function legoStyleForType(type) {
       const map = {
-        arcade:  { wall: "#d8c4a2", frame: "#5e4630", knob: "#ffffff", grass: "#60d878", sign: "#ff5e57", glassA: "#9fe1ff", glassB: "#e8fbff", accent: "#ffd166" },
-        tower:   { wall: "#d9c7a7", frame: "#59402a", knob: "#fff7d6", grass: "#67d67f", sign: "#0a84ff", glassA: "#b8e7ff", glassB: "#eefbff", accent: "#7c4dff" },
-        dojo:    { wall: "#d7c0a4", frame: "#66452f", knob: "#fff0c9", grass: "#62d274", sign: "#ef4444", glassA: "#bfe6ff", glassB: "#eef9ff", accent: "#f59e0b" },
-        cafe:    { wall: "#ddccb1", frame: "#6d4f37", knob: "#fff5da", grass: "#6fd97b", sign: "#ec4899", glassA: "#b6ebff", glassB: "#eefcff", accent: "#fb7185" },
-        igloo:   { wall: "#dfe8ef", frame: "#567",    knob: "#ffffff", grass: "#8be4a7", sign: "#06b6d4", glassA: "#d3f3ff", glassB: "#f5fdff", accent: "#93c5fd" },
-        gym:     { wall: "#d8c5aa", frame: "#5b4634", knob: "#fff2d6", grass: "#68d67e", sign: "#22c55e", glassA: "#afe5ff", glassB: "#eefaff", accent: "#34d399" },
-        social:  { wall: "#d9c9ad", frame: "#5e4a35", knob: "#fff",    grass: "#67d67f", sign: "#0ea5e9", glassA: "#bcecff", glassB: "#eefcff", accent: "#38bdf8" },
-        wallet:  { wall: "#d8c4a5", frame: "#5d4632", knob: "#fff5dc", grass: "#64d679", sign: "#10b981", glassA: "#b9edff", glassB: "#effdff", accent: "#6ee7b7" },
-        market:  { wall: "#dbc9a7", frame: "#60452f", knob: "#fff2d0", grass: "#66d77b", sign: "#f59e0b", glassA: "#baeaff", glassB: "#effcff", accent: "#fbbf24" },
-        support: { wall: "#d8c4aa", frame: "#5b4635", knob: "#fff6df", grass: "#67d67d", sign: "#8b5cf6", glassA: "#c8eaff", glassB: "#f3fbff", accent: "#a78bfa" },
-        mcd:     { wall: "#ddc7a8", frame: "#5e4430", knob: "#fff",    grass: "#67d67f", sign: "#ef4444", glassA: "#bce8ff", glassB: "#eefcff", accent: "#facc15" },
-        bbq:     { wall: "#dcc6a4", frame: "#5f412b", knob: "#fff",    grass: "#66d77c", sign: "#dc2626", glassA: "#bbe6ff", glassB: "#eefcff", accent: "#fb923c" },
-        baskin:  { wall: "#dfcdb7", frame: "#6a4c3a", knob: "#fff",    grass: "#6bd87e", sign: "#ec4899", glassA: "#cceeff", glassB: "#f4fdff", accent: "#f9a8d4" },
-        paris:   { wall: "#e0d0b8", frame: "#6a503a", knob: "#fff",    grass: "#6ad87d", sign: "#2563eb", glassA: "#c6e9ff", glassB: "#f3fcff", accent: "#93c5fd" }
+        arcade:  { wall: "#1a1625", frame: "#09070f", knob: "#d6d3f8", grass: "#1d2b1f", sign: "#8b5cf6", glassA: "#45386e", glassB: "#0f1022", accent: "#c084fc" },
+        tower:   { wall: "#18131f", frame: "#05060b", knob: "#d7f3ff", grass: "#162819", sign: "#38bdf8", glassA: "#28455d", glassB: "#08121d", accent: "#67e8f9" },
+        dojo:    { wall: "#221412", frame: "#090506", knob: "#ffe2c6", grass: "#1e2818", sign: "#ef4444", glassA: "#553030", glassB: "#160a0d", accent: "#fb7185" },
+        cafe:    { wall: "#211823", frame: "#09060c", knob: "#f8d5ec", grass: "#1a2519", sign: "#ec4899", glassA: "#5f3256", glassB: "#150911", accent: "#f472b6" },
+        igloo:   { wall: "#182028", frame: "#060b11", knob: "#f5fbff", grass: "#18251d", sign: "#06b6d4", glassA: "#375164", glassB: "#09131c", accent: "#93c5fd" },
+        gym:     { wall: "#1d1816", frame: "#080706", knob: "#ede7dc", grass: "#172519", sign: "#22c55e", glassA: "#32523a", glassB: "#09110d", accent: "#4ade80" },
+        social:  { wall: "#171722", frame: "#05060b", knob: "#eff3ff", grass: "#17231b", sign: "#0ea5e9", glassA: "#2f4660", glassB: "#08111d", accent: "#38bdf8" },
+        wallet:  { wall: "#1b1715", frame: "#070605", knob: "#f7ecd8", grass: "#17241a", sign: "#10b981", glassA: "#2a5149", glassB: "#08110e", accent: "#6ee7b7" },
+        market:  { wall: "#22190f", frame: "#090603", knob: "#fff0c9", grass: "#1b2616", sign: "#f59e0b", glassA: "#5d431d", glassB: "#160d06", accent: "#fbbf24" },
+        support: { wall: "#191525", frame: "#06060d", knob: "#f3ecff", grass: "#162119", sign: "#8b5cf6", glassA: "#46365e", glassB: "#0d0a18", accent: "#a78bfa" },
+        mcd:     { wall: "#261310", frame: "#090403", knob: "#fff1da", grass: "#1a2616", sign: "#facc15", glassA: "#653624", glassB: "#1b0a05", accent: "#f59e0b" },
+        bbq:     { wall: "#271312", frame: "#090303", knob: "#fff0e2", grass: "#1b2415", sign: "#fb923c", glassA: "#5d2d20", glassB: "#170806", accent: "#f97316" },
+        baskin:  { wall: "#241728", frame: "#08050a", knob: "#ffe9f7", grass: "#172219", sign: "#f472b6", glassA: "#56315d", glassB: "#120816", accent: "#f9a8d4" },
+        paris:   { wall: "#171c24", frame: "#05070c", knob: "#f4f8ff", grass: "#16231c", sign: "#60a5fa", glassA: "#2e475d", glassB: "#0a1219", accent: "#93c5fd" }
       };
       return map[type] || map.arcade;
     }
@@ -2918,235 +2880,157 @@
 
     
 function drawAdBuilding(b, t) {
-  const x = b.x, y = b.y, w = b.w, h = b.h;
-  const palette = {
-    youtube: { a: "#ef4444", b: "#7f1d1d", c: "#fee2e2", trim: "#fef2f2" },
-    tiktok: { a: "#111827", b: "#0f172a", c: "#67e8f9", trim: "#f472b6" },
-    instagram: { a: "#8b5cf6", b: "#ec4899", c: "#f59e0b", trim: "#fdf2f8" }
-  }[b.key] || { a: "#1e293b", b: "#0f172a", c: "#38bdf8", trim: "#e2e8f0" };
-  groundAO(x + 16, y + h - 18, w - 32, 44, 0.16);
-  softShadow(x + 18, y + h - 10, w - 36, 18, 0.08);
+      const x = b.x, y = b.y, w = b.w, h = b.h;
+      const palette = {
+        youtube: { a: "#341016", b: "#120609", c: "#ef4444", trim: "#ffe4e6", rune: "#fca5a5" },
+        tiktok: { a: "#09131a", b: "#020617", c: "#22d3ee", trim: "#f5f3ff", rune: "#f472b6" },
+        instagram: { a: "#2b1136", b: "#120716", c: "#c084fc", trim: "#fdf2f8", rune: "#fb7185" }
+      }[b.key] || { a: "#171b28", b: "#070b12", c: "#38bdf8", trim: "#e2e8f0", rune: "#a78bfa" };
+      const pulse = 0.55 + 0.45 * Math.sin(t * 2.2 + x * 0.002);
+      groundAO(x + 18, y + h - 18, w - 36, 48, 0.18);
+      softShadow(x + 20, y + h - 10, w - 40, 20, 0.10);
 
-  ctx.save();
-  const body = ctx.createLinearGradient(x, y, x, y + h);
-  body.addColorStop(0, palette.a);
-  body.addColorStop(0.52, palette.b);
-  body.addColorStop(1, "#020617");
-  ctx.fillStyle = body;
-  roundRect(x, y + 34, w, h - 34, 28);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.18)";
-  ctx.lineWidth = 3;
-  roundRect(x, y + 34, w, h - 34, 28);
-  ctx.stroke();
+      ctx.save();
+      const body = ctx.createLinearGradient(x, y, x, y + h);
+      body.addColorStop(0, palette.a);
+      body.addColorStop(0.55, palette.b);
+      body.addColorStop(1, "#020617");
+      ctx.fillStyle = body;
+      roundRect(x, y + 40, w, h - 40, 30);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.12)";
+      ctx.lineWidth = 2.5;
+      roundRect(x, y + 40, w, h - 40, 30);
+      ctx.stroke();
 
-  const signW = w * 0.82;
-  const signH = 68;
-  const signX = x + (w - signW) * 0.5;
-  const signY = y;
-  const signGrad = ctx.createLinearGradient(signX, signY, signX + signW, signY + signH);
-  signGrad.addColorStop(0, palette.a);
-  signGrad.addColorStop(1, palette.b);
-  ctx.fillStyle = signGrad;
-  roundRect(signX, signY, signW, signH, 24);
-  ctx.fill();
-  ctx.strokeStyle = palette.trim;
-  ctx.lineWidth = 4;
-  roundRect(signX, signY, signW, signH, 24);
-  ctx.stroke();
-  ctx.fillStyle = "rgba(255,255,255,0.14)";
-  roundRect(signX + 10, signY + 8, signW - 20, 16, 12);
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = `1000 ${b.key === "instagram" ? 24 : 26}px system-ui`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(b.label, x + w * 0.5, signY + signH * 0.56);
+      const signW = w * 0.80;
+      const signH = 70;
+      const signX = x + (w - signW) * 0.5;
+      const signY = y;
+      const signGrad = ctx.createLinearGradient(signX, signY, signX, signY + signH);
+      signGrad.addColorStop(0, shade(palette.c, 10));
+      signGrad.addColorStop(1, shade(palette.a, -8));
+      ctx.fillStyle = signGrad;
+      roundRect(signX, signY, signW, signH, 24);
+      ctx.fill();
+      ctx.shadowColor = palette.c;
+      ctx.shadowBlur = 18 + pulse * 10;
+      ctx.strokeStyle = palette.c;
+      ctx.lineWidth = 3;
+      roundRect(signX, signY, signW, signH, 24);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = palette.trim;
+      ctx.font = `1000 ${b.key === "instagram" ? 24 : 26}px system-ui`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(b.label, x + w * 0.5, signY + signH * 0.54);
 
-  const portalGlow = ctx.createRadialGradient(x + w * 0.5, y + h * 0.58, 6, x + w * 0.5, y + h * 0.58, w * 0.42);
-  portalGlow.addColorStop(0, palette.c + "aa");
-  portalGlow.addColorStop(0.44, palette.a + "44");
-  portalGlow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = portalGlow;
-  ctx.beginPath();
-  ctx.arc(x + w * 0.5, y + h * 0.58, w * 0.28, 0, Math.PI * 2);
-  ctx.fill();
+      const adImg = getAdImageForKey(b.key);
+      if (adImg && adImg.complete && adImg.naturalWidth > 0) {
+        const pad = 26;
+        const availW = w - pad * 2;
+        const availH = h * 0.42;
+        const scale = Math.min(availW / adImg.naturalWidth, availH / adImg.naturalHeight);
+        const iw = adImg.naturalWidth * scale;
+        const ih = adImg.naturalHeight * scale;
+        const ix = x + (w - iw) * 0.5;
+        const iy = y + h * 0.30 - ih * 0.5;
+        ctx.save();
+        ctx.globalAlpha = 0.84;
+        ctx.drawImage(adImg, ix, iy, iw, ih);
+        ctx.restore();
+      }
 
-  const adImg = getAdImageForKey(b.key);
-  if (adImg && adImg.complete && adImg.naturalWidth > 0) {
-    const pad = 14;
-    const availW = w - pad * 2;
-    const availH = h * 0.42;
-    const scale = Math.min(availW / adImg.naturalWidth, availH / adImg.naturalHeight);
-    const iw = adImg.naturalWidth * scale;
-    const ih = adImg.naturalHeight * scale;
-    const ix = x + (w - iw) * 0.5;
-    const iy = y + h * 0.22 - ih * 0.18;
-    ctx.save();
-    ctx.shadowColor = palette.c;
-    ctx.shadowBlur = 20;
-    ctx.drawImage(adImg, ix, iy, iw, ih);
-    ctx.restore();
-  }
+      const windowY = y + h * 0.52;
+      for (let i = 0; i < 3; i++) {
+        const ww = w * 0.18;
+        const wx = x + w * 0.12 + i * (ww + w * 0.07);
+        const wg = ctx.createLinearGradient(wx, windowY, wx, windowY + h * 0.18);
+        wg.addColorStop(0, shade(palette.c, 18));
+        wg.addColorStop(1, "#050816");
+        ctx.fillStyle = wg;
+        roundRect(wx, windowY, ww, h * 0.18, 14);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.lineWidth = 2;
+        roundRect(wx, windowY, ww, h * 0.18, 14);
+        ctx.stroke();
+      }
 
-  ctx.fillStyle = "rgba(2,6,23,0.82)";
-  roundRect(x + w * 0.16, y + h * 0.54, w * 0.18, h * 0.22, 16);
-  roundRect(x + w * 0.66, y + h * 0.54, w * 0.18, h * 0.22, 16);
-  ctx.fill();
-  const doorGrad = ctx.createLinearGradient(x, y, x, y + h);
-  doorGrad.addColorStop(0, palette.c);
-  doorGrad.addColorStop(1, palette.a);
-  ctx.fillStyle = doorGrad;
-  roundRect(x + w * 0.40, y + h * 0.48, w * 0.20, h * 0.32, 18);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.20)";
-  ctx.lineWidth = 2;
-  roundRect(x + w * 0.40, y + h * 0.48, w * 0.20, h * 0.32, 18);
-  ctx.stroke();
-  ctx.fillStyle = "rgba(255,255,255,0.92)";
-  ctx.beginPath();
-  ctx.arc(x + w * 0.56, y + h * 0.65, 4, 0, Math.PI * 2);
-  ctx.fill();
+      ctx.fillStyle = "#07090f";
+      roundRect(x + w * 0.39, y + h * 0.58, w * 0.22, h * 0.24, 18);
+      ctx.fill();
+      ctx.strokeStyle = palette.rune;
+      ctx.lineWidth = 2;
+      roundRect(x + w * 0.39, y + h * 0.58, w * 0.22, h * 0.24, 18);
+      ctx.stroke();
 
-  ctx.fillStyle = "rgba(10,14,24,0.84)";
-  roundRect(x + w * 0.5 - 76, y + h - 54, 152, 28, 14);
-  ctx.fill();
-  ctx.fillStyle = "#f8fafc";
-  ctx.font = "1000 14px system-ui";
-  ctx.fillText("FUTURE RAID GATE", x + w * 0.5, y + h - 39);
-  ctx.restore();
-}
+      ctx.fillStyle = "rgba(8,10,18,0.86)";
+      roundRect(x + w * 0.5 - 72, y + h - 52, 144, 28, 14);
+      ctx.fill();
+      ctx.fillStyle = palette.trim;
+      ctx.font = "900 14px system-ui";
+      ctx.fillText("COMING SOON", x + w * 0.5, y + h - 38);
+      ctx.restore();
+    }
 
-    
-function drawPortalBuilding(p, t) {
-  const c = legoStyleForType(p.type);
-  const x = p.x, y = p.y, w = p.w, h = p.h;
-  const pulse = 0.5 + 0.5 * Math.sin(t * 2.4 + x * 0.002);
-  groundAO(x + 8, y + h - 16, w - 16, 36, 0.24);
-  softShadow(x + 8, y + h - 12, w - 16, 20, 0.12);
+    function drawPortalBuilding(p, t) {
+      const c = legoStyleForType(p.type);
+      const x = p.x, y = p.y, w = p.w, h = p.h;
+      const pulse = 0.5 + 0.5 * Math.sin(t * 2.1 + x * 0.0018);
+      groundAO(x + 6, y + h - 14, w - 12, 38, 0.26);
+      softShadow(x + 10, y + h - 12, w - 20, 20, 0.13);
 
-  if (hasShopArt(p.key)) {
-    const art = shopArt[p.key].img;
-    const ratio = Math.min(w / Math.max(1, art.naturalWidth || art.width), h / Math.max(1, art.naturalHeight || art.height));
-    const drawW = Math.max(24, (art.naturalWidth || art.width) * ratio);
-    const drawH = Math.max(24, (art.naturalHeight || art.height) * ratio);
-    const dx = x + (w - drawW) * 0.5;
-    const dy = y + (h - drawH) * 0.5;
-    ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(art, dx, dy, drawW, drawH);
-    ctx.restore();
-    return;
-  }
+      if (hasShopArt(p.key)) {
+        const art = shopArt[p.key].img;
+        const ratio = Math.min(w / Math.max(1, art.naturalWidth || art.width), h / Math.max(1, art.naturalHeight || art.height));
+        const drawW = Math.max(24, (art.naturalWidth || art.width) * ratio);
+        const drawH = Math.max(24, (art.naturalHeight || art.height) * ratio);
+        const dx = x + (w - drawW) * 0.5;
+        const dy = y + (h - drawH) * 0.5;
+        ctx.save(); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high"; ctx.drawImage(art, dx, dy, drawW, drawH); ctx.restore(); return;
+      }
 
-  ctx.save();
-  const roofH = h * 0.24;
-  const wallY = y + roofH * 0.74;
-  const wallH = h - roofH * 0.74;
-  const wallGrad = ctx.createLinearGradient(x, wallY, x, wallY + wallH);
-  wallGrad.addColorStop(0, shade(c.wall, 20));
-  wallGrad.addColorStop(0.5, c.wall);
-  wallGrad.addColorStop(1, shade(c.frame, -18));
-  ctx.fillStyle = wallGrad;
-  roundRect(x, wallY, w, wallH, 28);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.16)";
-  ctx.lineWidth = 3;
-  roundRect(x, wallY, w, wallH, 28);
-  ctx.stroke();
+      ctx.save();
+      const roofH = h * 0.25;
+      const wallY = y + roofH * 0.78;
+      const wallH = h - roofH * 0.78;
+      const wallGrad = ctx.createLinearGradient(x, wallY, x, wallY + wallH);
+      wallGrad.addColorStop(0, shade(c.wall, 12)); wallGrad.addColorStop(0.52, c.wall); wallGrad.addColorStop(1, shade(c.frame, -6));
+      ctx.fillStyle = wallGrad; roundRect(x, wallY, w, wallH, 28); ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.10)"; ctx.lineWidth = 2.5; roundRect(x, wallY, w, wallH, 28); ctx.stroke();
 
-  const roofGrad = ctx.createLinearGradient(x, y, x, y + roofH);
-  roofGrad.addColorStop(0, shade(c.sign, 26));
-  roofGrad.addColorStop(1, shade(c.sign, -24));
-  ctx.fillStyle = roofGrad;
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.06, wallY + 14);
-  ctx.lineTo(x + w * 0.94, wallY + 14);
-  ctx.lineTo(x + w * 0.78, y + 10);
-  ctx.lineTo(x + w * 0.22, y + 10);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = "rgba(255,255,255,0.18)";
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.26, y + 18);
-  ctx.lineTo(x + w * 0.74, y + 18);
-  ctx.lineTo(x + w * 0.68, y + 30);
-  ctx.lineTo(x + w * 0.32, y + 30);
-  ctx.closePath();
-  ctx.fill();
+      ctx.fillStyle = shade(c.frame, -10);
+      ctx.beginPath(); ctx.moveTo(x + w * 0.04, wallY + 14); ctx.lineTo(x + w * 0.96, wallY + 14); ctx.lineTo(x + w * 0.78, y + 12); ctx.lineTo(x + w * 0.22, y + 12); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = shade(c.sign, 10); ctx.lineWidth = 2; ctx.stroke();
 
-  const signW = w * 0.74;
-  const signH = Math.max(44, h * 0.16);
-  const signX = x + (w - signW) * 0.5;
-  const signY = y + roofH * 0.64;
-  const signGrad = ctx.createLinearGradient(signX, signY, signX + signW, signY + signH);
-  signGrad.addColorStop(0, shade(c.sign, 10));
-  signGrad.addColorStop(1, shade(c.sign, -18));
-  ctx.fillStyle = signGrad;
-  roundRect(signX, signY, signW, signH, 18);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.22)";
-  ctx.lineWidth = 3;
-  roundRect(signX, signY, signW, signH, 18);
-  ctx.stroke();
-  ctx.fillStyle = "rgba(255,255,255,0.98)";
-  ctx.font = `1000 ${Math.max(14, Math.floor(signH * 0.34))}px system-ui`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(p.label, x + w * 0.5, signY + signH * 0.56);
+      const signW = w * 0.78, signH = Math.max(46, h * 0.18), signX = x + (w - signW) * 0.5, signY = y + roofH * 0.46;
+      const signGrad = ctx.createLinearGradient(signX, signY, signX, signY + signH);
+      signGrad.addColorStop(0, shade(c.sign, 20)); signGrad.addColorStop(1, shade(c.frame, -4));
+      ctx.fillStyle = signGrad; roundRect(signX, signY, signW, signH, 20); ctx.fill();
+      ctx.shadowColor = c.sign; ctx.shadowBlur = 18 + pulse * 10; ctx.strokeStyle = c.sign; ctx.lineWidth = 3; roundRect(signX, signY, signW, signH, 20); ctx.stroke(); ctx.shadowBlur = 0;
+      ctx.fillStyle = "#f6d98c"; ctx.font = `1000 ${Math.max(14, Math.floor(signH * 0.32))}px system-ui`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(p.label, x + w * 0.5, signY + signH * 0.54);
 
-  const crystalGlow = ctx.createRadialGradient(x + w * 0.5, y + h * 0.54, 8, x + w * 0.5, y + h * 0.54, w * 0.38);
-  crystalGlow.addColorStop(0, c.accent + "88");
-  crystalGlow.addColorStop(0.42, c.sign + "33");
-  crystalGlow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = crystalGlow;
-  ctx.beginPath();
-  ctx.arc(x + w * 0.5, y + h * 0.54, w * 0.24, 0, Math.PI * 2);
-  ctx.fill();
+      const winY = y + roofH + h * 0.08, doorY = y + h * 0.55;
+      if (p.size === "L") {
+        drawLegoWindow(x + w * 0.10, winY, w * 0.22, h * 0.20, c.frame, c.glassA, c.glassB);
+        drawLegoDoor(x + w * 0.40, doorY, w * 0.20, h * 0.28, c.accent, c.frame, c.knob);
+        drawLegoWindow(x + w * 0.68, winY, w * 0.22, h * 0.20, c.frame, c.glassA, c.glassB);
+      } else {
+        drawLegoWindow(x + w * 0.12, winY, w * 0.24, h * 0.20, c.frame, c.glassA, c.glassB);
+        drawLegoDoor(x + w * 0.60, doorY, w * 0.18, h * 0.26, c.accent, c.frame, c.knob);
+      }
 
-  drawLegoWindow(x + w * 0.10, y + h * 0.34, w * 0.20, h * 0.18, c.frame, c.glassA, c.glassB);
-  drawLegoWindow(x + w * 0.70, y + h * 0.34, w * 0.20, h * 0.18, c.frame, c.glassA, c.glassB);
-  drawLegoWindow(x + w * 0.16, y + h * 0.58, w * 0.14, h * 0.13, c.frame, c.glassA, c.glassB);
-  drawLegoWindow(x + w * 0.70, y + h * 0.58, w * 0.14, h * 0.13, c.frame, c.glassA, c.glassB);
+      ctx.fillStyle = "rgba(255,255,255,0.06)"; roundRect(x + 14, wallY + 16, w - 28, 18, 10); ctx.fill();
+      ctx.fillStyle = c.grass; roundRect(x + 16, y + h - 14, w - 32, 10, 8); ctx.fill();
 
-  const doorX = x + w * 0.39;
-  const doorY = y + h * 0.48;
-  const doorW = w * 0.22;
-  const doorH = h * 0.34;
-  drawLegoDoor(doorX, doorY, doorW, doorH, c.accent, c.frame, c.knob);
-  ctx.fillStyle = c.accent;
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.50, y + h * 0.22);
-  ctx.lineTo(x + w * 0.56, y + h * 0.32);
-  ctx.lineTo(x + w * 0.44, y + h * 0.32);
-  ctx.closePath();
-  ctx.fill();
-
-  for (let i = 0; i < 4; i++) {
-    const px = x + w * (0.18 + i * 0.21);
-    const py = y + h * 0.16 + Math.sin(t * 2 + i) * 2;
-    ctx.fillStyle = i % 2 ? "rgba(255,255,255,0.92)" : c.accent;
-    ctx.beginPath();
-    ctx.arc(px, py, 2.2 + pulse * 1.4, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  if (p.key === "blacksmith") {
-    ctx.fillStyle = "rgba(249,115,22,0.20)";
-    ctx.beginPath();
-    ctx.arc(x + w * 0.5, y + h * 0.62, w * 0.16, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(251,191,36,0.95)";
-    ctx.font = `1000 ${Math.max(12, Math.floor(w * 0.075))}px system-ui`;
-    ctx.fillText("UPGRADE GEAR", x + w * 0.5, y + h * 0.31);
-  }
-
-  ctx.fillStyle = c.grass;
-  roundRect(x + 14, y + h - 14, w - 28, 10, 8);
-  ctx.fill();
-  ctx.restore();
-}
+      const ez = portalEnterZone(p);
+      const portalGlow = ctx.createRadialGradient(ez.x + ez.w * 0.5, ez.y + ez.h * 0.55, 10, ez.x + ez.w * 0.5, ez.y + ez.h * 0.55, ez.w * 0.5);
+      portalGlow.addColorStop(0, c.sign + "aa"); portalGlow.addColorStop(0.45, c.accent + "44"); portalGlow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.globalAlpha = 0.22 + pulse * 0.10; ctx.fillStyle = portalGlow; roundRect(ez.x, ez.y, ez.w, ez.h, 22); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.restore();
+    }
 
     function drawCar(c) {
       ctx.save();
@@ -3204,7 +3088,7 @@ function drawPortalBuilding(p, t) {
       ctx.fillStyle = "#8b5a2b";
       roundRect(-10, -8, 20, 52, 8);
       ctx.fill();
-      const greens = ["#3bcf74", "#35c96d", "#4bd985"];
+      const greens = ["#173423", "#214530", "#2b583c"];
       ctx.fillStyle = greens[(hash01(`${o.x},${o.y}`) * greens.length) | 0];
       ctx.beginPath(); ctx.arc(0, -28, 30, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(-18, -4, 24, 0, Math.PI * 2); ctx.fill();
@@ -3280,7 +3164,7 @@ function drawPortalBuilding(p, t) {
       ctx.moveTo(0, 8);
       ctx.lineTo(0, -10);
       ctx.stroke();
-      const cols = ["#ff6b81", "#ffd166", "#7bdff2", "#c77dff", "#ff9f1c"];
+      const cols = ["#7f1d1d", "#b45309", "#0f766e", "#581c87", "#6b21a8"];
       const col = cols[((hash01(`${o.x}:${o.y}`) * cols.length) | 0)];
       ctx.fillStyle = col;
       for (let i = 0; i < 6; i++) {
@@ -3530,283 +3414,54 @@ function drawWorldTitle() {
 
     
 function drawMinifig(x, y, opts = {}) {
-  const isHero = !!opts.isHero;
-  const pal = opts.palette || {
-    torso: isHero ? "#1d4ed8" : "#0ea5e9",
-    pants: isHero ? "#0f172a" : "#334155",
-    hat: isHero ? "#dc2626" : "#eab308",
-    skin: "#ffd7b5",
-    hair: "#111827"
-  };
-  const gear = isHero ? getEquippedVisuals() : null;
-  const dir = opts.dirOverride || player.dir;
-  const moving = typeof opts.moving === "boolean" ? opts.moving : player.moving;
-  const walkPhase = typeof opts.walkPhase === "number" ? opts.walkPhase : player.walkPhase;
-  const bob = moving ? Math.sin(walkPhase) * 1.8 : 0;
-  const armSwing = moving ? Math.sin(walkPhase) * 0.52 : 0;
-  const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.46 : 0;
-  const atk = isHero ? combatState.attackT / 0.28 : 0;
-  const attackPose = isHero && combatState.attackT > 0;
-  const attackEase = attackPose ? Math.sin(Math.min(1, atk) * Math.PI) : 0;
-  const armorMain = gear?.armorColor || (isHero ? "#0b1220" : pal.torso || "#2563eb");
-  const armorHi = gear?.armorTier?.color || shade(armorMain, 42);
-  const armorGlow = gear?.armorTier?.glow || "#60a5fa";
-  const weaponMain = gear?.weaponColor || "#cbd5e1";
-  const weaponGlow = gear?.weaponTier?.glow || weaponMain;
-  const shieldMain = gear?.shieldColor || "#94a3b8";
-  const shieldGlow = gear?.shieldTier?.glow || shieldMain;
-  const helmGlow = gear?.hatTier?.glow || gear?.hatColor || pal.hat || "#ef4444";
-
-  ctx.save();
-  ctx.translate(x, y + bob + 3);
-  if (dir === "left") ctx.scale(-1, 1);
-
-  ctx.globalAlpha = 0.24;
-  ctx.fillStyle = "rgba(2,6,23,0.55)";
-  ctx.beginPath();
-  ctx.ellipse(0, 31, 22, 8, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalAlpha = 1;
-
-  // back aura / jet glow
-  if (isHero) {
-    const aura = ctx.createRadialGradient(0, -6, 6, 0, -6, 34);
-    aura.addColorStop(0, armorGlow + "55");
-    aura.addColorStop(0.5, armorGlow + "20");
-    aura.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = aura;
-    ctx.beginPath(); ctx.arc(0, -6, 34, 0, Math.PI * 2); ctx.fill();
-  }
-
-  // legs
-  const legGrad = ctx.createLinearGradient(0, -2, 0, 26);
-  legGrad.addColorStop(0, shade(armorMain, 14));
-  legGrad.addColorStop(1, shade(armorMain, -24));
-  ctx.save();
-  ctx.translate(-8, 12);
-  ctx.rotate(legSwing * 0.18);
-  ctx.fillStyle = legGrad;
-  roundRect(-6, 0, 11, 22, 4);
-  ctx.fill();
-  ctx.fillStyle = armorHi;
-  roundRect(-5, 3, 9, 5, 3);
-  ctx.fill();
-  ctx.fillStyle = "#94a3b8";
-  roundRect(-6, 18, 11, 4, 2);
-  ctx.fill();
-  ctx.restore();
-  ctx.save();
-  ctx.translate(8, 12);
-  ctx.rotate(-legSwing * 0.18);
-  ctx.fillStyle = legGrad;
-  roundRect(-5, 0, 11, 22, 4);
-  ctx.fill();
-  ctx.fillStyle = armorHi;
-  roundRect(-4, 3, 9, 5, 3);
-  ctx.fill();
-  ctx.fillStyle = "#94a3b8";
-  roundRect(-5, 18, 11, 4, 2);
-  ctx.fill();
-  ctx.restore();
-
-  // torso core
-  const torsoGrad = ctx.createLinearGradient(0, -22, 0, 16);
-  torsoGrad.addColorStop(0, shade(armorMain, 22));
-  torsoGrad.addColorStop(0.48, armorMain);
-  torsoGrad.addColorStop(1, shade(armorMain, -30));
-  ctx.fillStyle = torsoGrad;
-  roundRect(-19, -16, 38, 32, 11);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.14)";
-  ctx.lineWidth = 2;
-  roundRect(-19, -16, 38, 32, 11);
-  ctx.stroke();
-  ctx.fillStyle = armorHi;
-  roundRect(-13, -10, 26, 7, 4);
-  ctx.fill();
-  ctx.fillStyle = "rgba(255,255,255,0.14)";
-  roundRect(-11, -8, 22, 4, 2);
-  ctx.fill();
-  const core = ctx.createRadialGradient(0, -2, 2, 0, -2, 10);
-  core.addColorStop(0, "rgba(255,255,255,0.98)");
-  core.addColorStop(0.28, armorGlow);
-  core.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = core;
-  ctx.beginPath(); ctx.arc(0, -2, 10, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = shade(armorMain, -28);
-  roundRect(-4, -6, 8, 18, 4);
-  ctx.fill();
-  ctx.fillStyle = armorHi;
-  roundRect(-2, -1, 4, 8, 2);
-  ctx.fill();
-  if (isHero) {
-    ctx.fillStyle = armorHi;
-    ctx.beginPath(); ctx.moveTo(-17,-12); ctx.lineTo(-23,-20); ctx.lineTo(-11,-16); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(17,-12); ctx.lineTo(23,-20); ctx.lineTo(11,-16); ctx.closePath(); ctx.fill();
-  }
-
-  // left arm
-  ctx.save();
-  ctx.translate(-20, -3);
-  ctx.rotate(-0.32 + armSwing * 0.42);
-  ctx.fillStyle = torsoGrad;
-  roundRect(-5, 0, 10, 24, 5);
-  ctx.fill();
-  ctx.fillStyle = armorHi;
-  roundRect(-4, 3, 8, 5, 3);
-  ctx.fill();
-  ctx.restore();
-
-  // right arm + weapon
-  ctx.save();
-  ctx.translate(20, -4);
-  ctx.rotate(0.20 - armSwing * 0.24 + (attackPose ? (-0.80 - 1.04 * attackEase) : -0.44));
-  ctx.fillStyle = torsoGrad;
-  roundRect(-5, 0, 10, 24, 5);
-  ctx.fill();
-  ctx.fillStyle = armorHi;
-  roundRect(-4, 3, 8, 5, 3);
-  ctx.fill();
-  if (isHero) {
-    ctx.save();
-    const sideMap = { up: -2.34, down: 2.16, left: -2.08, right: 2.02 };
-    const swingBase = sideMap[dir] ?? 2.16;
-    const swingArc = dir === "up" ? (attackPose ? 0.18 - 0.94 * attackEase : 0.04)
-      : dir === "left" ? (attackPose ? 0.26 - 0.98 * attackEase : 0.03)
-      : dir === "right" ? (attackPose ? 0.40 - 1.10 * attackEase : 0.06)
-      : (attackPose ? 0.42 - 1.18 * attackEase : 0.07);
-    const gripOffsetX = dir === "left" ? -4.8 : dir === "up" ? -1.2 : 5.9;
-    const gripOffsetY = dir === "up" ? 12.0 : 14.0;
-    ctx.translate(gripOffsetX, gripOffsetY);
-    ctx.rotate(swingBase + swingArc);
-    ctx.shadowColor = weaponGlow;
-    ctx.shadowBlur = 18 + Math.max(0, (gear?.weaponPlus || 0) * 1.2);
-    const bladeGrad = ctx.createLinearGradient(0, -46, 0, 14);
-    bladeGrad.addColorStop(0, "#ffffff");
-    bladeGrad.addColorStop(0.18, armorHi);
-    bladeGrad.addColorStop(0.44, weaponGlow);
-    bladeGrad.addColorStop(0.74, weaponMain);
-    bladeGrad.addColorStop(1, shade(weaponMain, -32));
-    ctx.fillStyle = bladeGrad;
-    ctx.beginPath();
-    ctx.moveTo(-2.8, 12);
-    ctx.lineTo(-4.2, 2.5);
-    ctx.lineTo(-2.8, -12);
-    ctx.lineTo(0, -34);
-    ctx.lineTo(2.8, -12);
-    ctx.lineTo(4.2, 2.5);
-    ctx.lineTo(2.8, 12);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.98)";
-    ctx.lineWidth = 1.2;
-    ctx.beginPath(); ctx.moveTo(0, -34); ctx.lineTo(0, 6); ctx.stroke();
-    const guardGrad = ctx.createLinearGradient(-10, 0, 10, 0);
-    guardGrad.addColorStop(0, shade(weaponMain, -26));
-    guardGrad.addColorStop(0.5, armorHi);
-    guardGrad.addColorStop(1, shade(weaponMain, -26));
-    ctx.fillStyle = guardGrad;
-    roundRect(-8, 6, 16, 4.6, 2.3); ctx.fill();
-    ctx.fillStyle = shade(weaponMain, -12);
-    roundRect(-2.6, 10, 5.2, 10.8, 2.6); ctx.fill();
-    ctx.fillStyle = armorHi;
-    ctx.beginPath(); ctx.moveTo(-5,-18); ctx.lineTo(0,-26); ctx.lineTo(5,-18); ctx.closePath(); ctx.fill();
-    for (let i = 0; i < Math.max(3, gear?.weaponPlus || 0); i++) {
-      const ang = performance.now() / 240 + i * 1.7;
-      const px = Math.cos(ang) * (8 + i * 1.2);
-      const py = Math.sin(ang) * (14 + i * 1.2) - 12;
-      ctx.fillStyle = (gear?.weaponTier?.flame || weaponGlow) + "cc";
-      ctx.beginPath(); ctx.arc(px, py, 1.2 + (i % 2) * 0.7, 0, Math.PI * 2); ctx.fill();
+      const isHero = !!opts.isHero;
+      const pal = opts.palette || { torso: isHero ? "#1b1a2f" : "#172035", pants: isHero ? "#0a0c14" : "#161a27", hat: isHero ? "#7c3aed" : "#22d3ee", skin: "#e7cab4", hair: "#0b0f18" };
+      const gear = isHero ? getEquippedVisuals() : null;
+      const dir = opts.dirOverride || player.dir;
+      const moving = typeof opts.moving === "boolean" ? opts.moving : player.moving;
+      const walkPhase = typeof opts.walkPhase === "number" ? opts.walkPhase : player.walkPhase;
+      const bob = moving ? Math.sin(walkPhase) * 1.9 : 0;
+      const armSwing = moving ? Math.sin(walkPhase) * 0.56 : 0;
+      const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.48 : 0;
+      const atk = isHero ? combatState.attackT / 0.28 : 0;
+      const attackPose = isHero && combatState.attackT > 0;
+      const attackEase = attackPose ? Math.sin(Math.min(1, atk) * Math.PI) : 0;
+      const armorMain = gear?.armorColor || (isHero ? "#0a0b14" : pal.torso || "#1d4ed8");
+      const armorHi = gear?.armorTier?.color || shade(armorMain, 54);
+      const armorGlow = gear?.armorTier?.glow || "#8b5cf6";
+      const weaponMain = gear?.weaponColor || "#cbd5e1";
+      const weaponGlow = gear?.weaponTier?.glow || "#f59e0b";
+      const shieldMain = gear?.shieldColor || "#64748b";
+      const shieldGlow = gear?.shieldTier?.glow || "#38bdf8";
+      ctx.save(); ctx.translate(x, y + bob + 4); if (dir === "left") ctx.scale(-1, 1);
+      ctx.globalAlpha = 0.28; ctx.fillStyle = "rgba(2,6,23,0.74)"; ctx.beginPath(); ctx.ellipse(0, 31, 20, 7.8, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+      const legGrad = ctx.createLinearGradient(0, 0, 0, 22); legGrad.addColorStop(0, shade(armorMain, -8)); legGrad.addColorStop(1, "#020617");
+      ctx.save(); ctx.translate(0, 12); ctx.rotate(legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(-12, 0, 9, 22, 4); ctx.fill(); ctx.fillStyle = "#7c8aa4"; roundRect(-12, 14, 9, 4, 2); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.translate(0, 12); ctx.rotate(-legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(3, 0, 9, 22, 4); ctx.fill(); ctx.fillStyle = "#7c8aa4"; roundRect(3, 14, 9, 4, 2); ctx.fill(); ctx.restore();
+      const torsoGrad = ctx.createLinearGradient(0, -20, 0, 16); torsoGrad.addColorStop(0, armorHi); torsoGrad.addColorStop(0.24, shade(armorMain, 18)); torsoGrad.addColorStop(0.66, armorMain); torsoGrad.addColorStop(1, shade(armorMain, -22));
+      ctx.fillStyle = torsoGrad; roundRect(-18, -16, 36, 32, 10); ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.12)"; ctx.lineWidth = 1.8; roundRect(-18, -16, 36, 32, 10); ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.11)"; roundRect(-10, -11, 20, 9, 5); ctx.fill(); ctx.strokeStyle = armorGlow; ctx.lineWidth = 2.4; roundRect(-13, -6, 26, 15, 7); ctx.stroke();
+      ctx.fillStyle = "#07090f"; roundRect(-5, -4, 10, 20, 4); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-2, -1, 4, 10, 2); ctx.fill();
+      if (gear?.armorTier?.horn > 0) { ctx.shadowColor = armorGlow; ctx.shadowBlur = 18; ctx.fillStyle = armorHi; ctx.beginPath(); ctx.moveTo(-15,-14); ctx.lineTo(-24,-26); ctx.lineTo(-9,-18); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(15,-14); ctx.lineTo(24,-26); ctx.lineTo(9,-18); ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0; }
+      ctx.save(); ctx.translate(-19, -4); ctx.rotate(-0.35 + armSwing * 0.48); ctx.fillStyle = torsoGrad; roundRect(-5, 0, 10, 22, 5); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-4, 3, 8, 5, 3); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.translate(18, -5); ctx.rotate(0.18 - armSwing * 0.28 + (attackPose ? (-0.84 - 1.05 * attackEase) : -0.46)); ctx.fillStyle = torsoGrad; roundRect(-5, 0, 10, 22, 5); ctx.fill(); ctx.fillStyle = armorGlow; roundRect(-4, 3, 8, 5, 3); ctx.fill();
+      if (isHero) {
+        ctx.save(); const sideMap = { up: -2.46, down: 2.24, left: -2.18, right: 2.08 }; const swingBase = sideMap[dir] ?? 2.18; const swingArc = dir === "up" ? (attackPose ? (0.28 - 0.98 * attackEase) : 0.04) : dir === "left" ? (attackPose ? (0.34 - 1.00 * attackEase) : 0.05) : dir === "right" ? (attackPose ? (0.46 - 1.18 * attackEase) : 0.06) : (attackPose ? (0.44 - 1.22 * attackEase) : 0.07);
+        const gripOffsetX = dir === "left" ? -5.5 : dir === "up" ? -1.5 : 6.2; const gripOffsetY = dir === "up" ? 10.8 : 14.0; ctx.translate(gripOffsetX, gripOffsetY); ctx.rotate(swingBase + swingArc);
+        const bladeGrad = ctx.createLinearGradient(0, -46, 0, 16); bladeGrad.addColorStop(0, "#ffffff"); bladeGrad.addColorStop(0.18, armorGlow); bladeGrad.addColorStop(0.50, weaponGlow); bladeGrad.addColorStop(0.82, weaponMain); bladeGrad.addColorStop(1, shade(weaponMain, -40));
+        ctx.shadowColor = weaponGlow; ctx.shadowBlur = 22; ctx.fillStyle = bladeGrad; ctx.beginPath(); ctx.moveTo(-3.0, 11.5); ctx.lineTo(-4.2, 4.0); ctx.lineTo(-2.8, -10); ctx.lineTo(0, -34); ctx.lineTo(2.8, -10); ctx.lineTo(4.2, 4.0); ctx.lineTo(3.0, 11.5); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.96)"; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(0,-35); ctx.lineTo(0,5); ctx.stroke();
+        const guardGrad = ctx.createLinearGradient(-10, 0, 10, 0); guardGrad.addColorStop(0, shade(weaponMain,-30)); guardGrad.addColorStop(0.5, weaponGlow); guardGrad.addColorStop(1, shade(weaponMain,-30)); ctx.fillStyle = guardGrad; ctx.shadowBlur = 8; roundRect(-8, 6, 16, 4, 2.3); ctx.fill();
+        ctx.fillStyle = shade(weaponMain,-16); roundRect(-2.4, 9, 4.8, 10.5, 2.6); ctx.fill(); const plus = gear?.weaponPlus || 0; for (let i = 0; i < Math.max(3, plus + 2); i++) { const ang = performance.now()/220 + i * (Math.PI*2/Math.max(3, plus + 2)); const px = Math.cos(ang) * (8 + plus * 0.9); const py = Math.sin(ang) * (16 + plus * 0.6) - 14; ctx.fillStyle = (gear?.weaponTier?.flame || weaponGlow) + "cc"; ctx.beginPath(); ctx.arc(px, py, 1.4 + (plus > 6 ? 0.8 : 0), 0, Math.PI * 2); ctx.fill(); }
+        ctx.restore();
+      }
+      ctx.restore();
+      if (isHero) { ctx.save(); ctx.translate(-23, -1); ctx.rotate(-0.24); const shieldGrad = ctx.createLinearGradient(0, -26, 0, 26); shieldGrad.addColorStop(0, "#f8fafc"); shieldGrad.addColorStop(0.18, gear?.shieldTier?.color || "#cbd5e1"); shieldGrad.addColorStop(0.56, shieldMain); shieldGrad.addColorStop(1, "#020617"); ctx.shadowColor = shieldGlow; ctx.shadowBlur = 20; ctx.fillStyle = shieldGrad; ctx.beginPath(); ctx.moveTo(0,-26); ctx.lineTo(18,-14); ctx.lineTo(15,12); ctx.lineTo(0,26); ctx.lineTo(-15,12); ctx.lineTo(-18,-14); ctx.closePath(); ctx.fill(); ctx.strokeStyle = shieldGlow; ctx.lineWidth = 2.6; ctx.stroke(); ctx.fillStyle = "rgba(255,255,255,0.82)"; roundRect(-1.4,-16,2.8,30,1.4); ctx.fill(); roundRect(-9.5,-1.5,19,3,1.3); ctx.fill(); for (let i = 0; i < 4 + (gear?.shieldTier?.horn || 0); i++) { const ang = performance.now()/360 + i * 1.86; const px = Math.cos(ang) * (11 + i*1.4); const py = Math.sin(ang) * (14 + i*1.3); ctx.fillStyle = (gear?.shieldTier?.flame || shieldGlow) + "cc"; ctx.beginPath(); ctx.arc(px, py, i % 2 ? 1.6 : 2.1, 0, Math.PI * 2); ctx.fill(); } ctx.restore(); }
+      ctx.fillStyle = pal.skin || "#e7cab4"; roundRect(-12, -35, 24, 18, 8); ctx.fill();
+      if (isHero) { const helmBase = ctx.createLinearGradient(0, -60, 0, -16); helmBase.addColorStop(0, "#5b6478"); helmBase.addColorStop(0.24, "#1a2030"); helmBase.addColorStop(0.7, "#07090f"); helmBase.addColorStop(1, "#000000"); ctx.fillStyle = "#020617"; ctx.beginPath(); ctx.moveTo(-18,-30); ctx.lineTo(-14,-48); ctx.lineTo(-8,-58); ctx.lineTo(-2,-52); ctx.lineTo(0,-60); ctx.lineTo(2,-52); ctx.lineTo(8,-58); ctx.lineTo(14,-48); ctx.lineTo(18,-30); ctx.lineTo(13,-15); ctx.lineTo(7,-10); ctx.lineTo(5,-24); ctx.lineTo(-5,-24); ctx.lineTo(-7,-10); ctx.lineTo(-13,-15); ctx.closePath(); ctx.fill(); ctx.fillStyle = helmBase; ctx.beginPath(); ctx.moveTo(-16,-30); ctx.quadraticCurveTo(-13,-51,0,-55); ctx.quadraticCurveTo(13,-51,16,-30); ctx.lineTo(12,-16); ctx.lineTo(6,-10); ctx.lineTo(4,-21); ctx.lineTo(-4,-21); ctx.lineTo(-6,-10); ctx.lineTo(-12,-16); ctx.closePath(); ctx.fill(); ctx.fillStyle = gear?.hatTier?.color || "#a78bfa"; ctx.shadowColor = gear?.hatTier?.glow || armorGlow; ctx.shadowBlur = 18; roundRect(-10,-30,20,5,2); ctx.fill(); roundRect(-3,-49,6,12,3); ctx.fill(); const hornLevel = gear?.hatTier?.horn || 1; ctx.beginPath(); ctx.moveTo(-12,-38); ctx.lineTo(-22,-55); ctx.lineTo(-8,-46); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(12,-38); ctx.lineTo(22,-55); ctx.lineTo(8,-46); ctx.closePath(); ctx.fill(); if (hornLevel > 1) { ctx.beginPath(); ctx.moveTo(-4,-52); ctx.lineTo(0,-66); ctx.lineTo(4,-52); ctx.closePath(); ctx.fill(); } ctx.shadowBlur = 0; ctx.fillStyle = "rgba(255,255,255,0.22)"; roundRect(-10,-43,20,4,2); ctx.fill(); }
+      else { ctx.fillStyle = pal.hair || "#111827"; roundRect(-14, -38, 28, 10, 7); ctx.fill(); ctx.fillStyle = pal.hat || "#38bdf8"; roundRect(-10, -45, 20, 8, 5); ctx.fill(); }
+      ctx.fillStyle = "#111827"; ctx.beginPath(); ctx.arc(-4, -24, 1.4, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(4, -24, 1.4, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 0.7; ctx.fillRect(-4, -20, 8, 1.2); ctx.globalAlpha = 1; if (isHero) drawGearEffect(0, -8); ctx.restore();
     }
-    ctx.restore();
-  }
-  ctx.restore();
-
-  // shield arm overlay
-  if (isHero) {
-    ctx.save();
-    ctx.translate(-23, -1);
-    ctx.rotate(-0.26);
-    const shieldGrad = ctx.createLinearGradient(0, -24, 0, 24);
-    shieldGrad.addColorStop(0, "#ffffff");
-    shieldGrad.addColorStop(0.16, armorHi);
-    shieldGrad.addColorStop(0.34, shieldGlow);
-    shieldGrad.addColorStop(0.76, shieldMain);
-    shieldGrad.addColorStop(1, "#020617");
-    ctx.shadowColor = shieldGlow;
-    ctx.shadowBlur = 16 + Math.max(0, (gear?.shieldPlus || 0));
-    ctx.fillStyle = shieldGrad;
-    ctx.beginPath();
-    ctx.moveTo(0, -24); ctx.lineTo(18, -14); ctx.lineTo(14, 10); ctx.lineTo(0, 24); ctx.lineTo(-14, 10); ctx.lineTo(-18, -14); ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.78)";
-    ctx.lineWidth = 2.4;
-    ctx.stroke();
-    ctx.fillStyle = armorHi;
-    roundRect(-1.4, -16, 2.8, 30, 1.4); ctx.fill();
-    roundRect(-10, -1.5, 20, 3, 1.3); ctx.fill();
-    if ((gear?.shieldTier?.horn || 0) > 0) {
-      ctx.fillStyle = armorHi;
-      ctx.beginPath(); ctx.moveTo(-10,-18); ctx.lineTo(-16,-26); ctx.lineTo(-8,-22); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(10,-18); ctx.lineTo(16,-26); ctx.lineTo(8,-22); ctx.closePath(); ctx.fill();
-    }
-    ctx.restore();
-  }
-
-  // head / helm
-  ctx.fillStyle = pal.skin || "#ffd7b5";
-  roundRect(-12, -36, 24, 18, 8);
-  ctx.fill();
-  if (isHero) {
-    const helmGrad = ctx.createLinearGradient(0, -60, 0, -16);
-    helmGrad.addColorStop(0, armorHi);
-    helmGrad.addColorStop(0.18, helmGlow);
-    helmGrad.addColorStop(0.42, "#0f172a");
-    helmGrad.addColorStop(1, "#000000");
-    ctx.fillStyle = helmGrad;
-    ctx.beginPath();
-    ctx.moveTo(-17, -28);
-    ctx.quadraticCurveTo(-14, -50, 0, -56);
-    ctx.quadraticCurveTo(14, -50, 17, -28);
-    ctx.lineTo(12, -15);
-    ctx.lineTo(7, -10);
-    ctx.lineTo(5, -22);
-    ctx.lineTo(-5, -22);
-    ctx.lineTo(-7, -10);
-    ctx.lineTo(-12, -15);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = armorHi;
-    roundRect(-10, -29, 20, 5, 3);
-    ctx.fill();
-    ctx.fillStyle = "rgba(96,165,250,0.98)";
-    roundRect(-8, -27, 16, 3.5, 2); ctx.fill();
-    ctx.shadowColor = helmGlow; ctx.shadowBlur = 18;
-    ctx.fillStyle = helmGlow;
-    ctx.beginPath(); ctx.moveTo(-12,-37); ctx.lineTo(-20,-54); ctx.lineTo(-9,-46); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(12,-37); ctx.lineTo(20,-54); ctx.lineTo(9,-46); ctx.closePath(); ctx.fill();
-    if ((gear?.hatTier?.horn || 0) > 1) { ctx.beginPath(); ctx.moveTo(-4,-50); ctx.lineTo(0,-64); ctx.lineTo(4,-50); ctx.closePath(); ctx.fill(); }
-    ctx.shadowBlur = 0;
-  } else {
-    ctx.fillStyle = pal.hair || "#1f2937";
-    roundRect(-14, -39, 28, 11, 7);
-    ctx.fill();
-    ctx.fillStyle = pal.hat || "#facc15";
-    roundRect(-10, -46, 20, 8, 5);
-    ctx.fill();
-  }
-
-  // face/visor
-  ctx.fillStyle = isHero ? "rgba(96,165,250,0.95)" : "#111827";
-  ctx.beginPath(); ctx.arc(-4, -26, 1.5, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(4, -26, 1.5, 0, Math.PI * 2); ctx.fill();
-  ctx.globalAlpha = isHero ? 0.95 : 0.8;
-  ctx.fillRect(-5, -22, 10, 1.5);
-  ctx.globalAlpha = 1;
-  if (isHero) drawGearEffect(0, -8);
-  ctx.restore();
-}
-
 
     function seedSlimes(rng) {
       combatState.slimes.length = 0;
@@ -3818,9 +3473,9 @@ function drawMinifig(x, y, opts = {}) {
         { x: ZONES.ads.x + 520, y: ZONES.ads.y + ZONES.ads.h + 210 }
       ];
       const variants = [
-        { key:"green", colors:["#93f5b0","#22c55e"], reward:1 },
-        { key:"yellow", colors:["#fde68a","#f59e0b"], reward:2 },
-        { key:"purple", colors:["#d8b4fe","#8b5cf6"], reward:2 }
+        { key:"green", colors:["#7ee7c4","#134e4a"], reward:1 },
+        { key:"yellow", colors:["#f5d67a","#8a5a12"], reward:2 },
+        { key:"purple", colors:["#c4a0ff","#3b146c"], reward:2 }
       ];
       for (let i = 0; i < spots.length; i++) {
         const s = spots[i];
@@ -3893,7 +3548,7 @@ function drawMinifig(x, y, opts = {}) {
       ctx.fillStyle = grad;
       roundRect(-width * 0.5 + 1.5, 1.5, (width - 3) * ratio, 7, 5);
       ctx.fill();
-      ctx.fillStyle = "rgba(255,255,255,0.92)";
+      ctx.fillStyle = "linear-gradient(180deg, rgba(58,39,18,0.98), rgba(17,13,10,0.98))";
       ctx.font = "900 10px system-ui";
       ctx.textAlign = "center";
       ctx.fillText(`${Math.max(0, Math.ceil(m.hp))} / ${m.maxHp}`, 0, -4);
@@ -3903,223 +3558,43 @@ function drawMinifig(x, y, opts = {}) {
     function drawTitan(m, t) {
       if (m.dead) return;
       if (m.key === "colossus") {
-        const s = m.scale;
-        const bob = Math.sin(t * 1.6 + m.wobble) * 6;
-        const wingFlap = Math.sin(t * 2.4 + m.wobble) * 0.12;
-        ctx.save();
-        ctx.translate(m.x, m.y + bob);
-        ctx.globalAlpha = 0.18;
-        ctx.fillStyle = "rgba(10,14,24,0.82)";
-        ctx.beginPath();
-        ctx.ellipse(0, s * 1.3, s * 1.26, s * 0.28, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        ctx.shadowColor = m.hitFlash > 0 ? "rgba(255,245,245,0.95)" : "rgba(239,68,68,0.48)";
-        ctx.shadowBlur = 22;
-        const bodyGrad = ctx.createLinearGradient(0, -s * 1.85, 0, s * 1.15);
-        bodyGrad.addColorStop(0, m.hitFlash > 0 ? "#fff1f2" : "#7f1d1d");
-        bodyGrad.addColorStop(0.28, m.hitFlash > 0 ? "#fecdd3" : "#b91c1c");
-        bodyGrad.addColorStop(0.7, "#3f0b12");
-        bodyGrad.addColorStop(1, "#111827");
-        ctx.fillStyle = bodyGrad;
-
-        // wings
-        ctx.save();
-        ctx.rotate(-0.08 + wingFlap);
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.1, -s * 0.52);
-        ctx.quadraticCurveTo(-s * 1.35, -s * 1.55, -s * 2.05, -s * 0.22);
-        ctx.quadraticCurveTo(-s * 1.5, -s * 0.1, -s * 0.88, s * 0.26);
-        ctx.quadraticCurveTo(-s * 0.54, s * 0.02, -s * 0.1, -s * 0.32);
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-        ctx.save();
-        ctx.rotate(0.08 - wingFlap);
-        ctx.beginPath();
-        ctx.moveTo(s * 0.1, -s * 0.52);
-        ctx.quadraticCurveTo(s * 1.35, -s * 1.55, s * 2.05, -s * 0.22);
-        ctx.quadraticCurveTo(s * 1.5, -s * 0.1, s * 0.88, s * 0.26);
-        ctx.quadraticCurveTo(s * 0.54, s * 0.02, s * 0.1, -s * 0.32);
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-
-        // tail
-        ctx.strokeStyle = "rgba(127,29,29,0.96)";
-        ctx.lineWidth = Math.max(10, s * 0.12);
-        ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.1, s * 0.58);
-        ctx.quadraticCurveTo(s * 0.82, s * 0.98, s * 1.48, s * 1.32);
-        ctx.quadraticCurveTo(s * 1.72, s * 1.44, s * 1.58, s * 1.62);
-        ctx.stroke();
-
-        // body / chest
-        roundRect(-s * 0.6, -s * 0.96, s * 1.2, s * 1.5, s * 0.24); ctx.fill();
-        ctx.fillStyle = "rgba(255,245,245,0.16)";
-        roundRect(-s * 0.28, -s * 0.18, s * 0.56, s * 0.44, s * 0.12); ctx.fill();
-        ctx.fillStyle = "rgba(248,113,113,0.95)";
-        roundRect(-s * 0.2, -s * 0.44, s * 0.4, s * 0.12, s * 0.06); ctx.fill();
-        ctx.fillStyle = bodyGrad;
-
-        // neck/head
-        roundRect(-s * 0.24, -s * 1.44, s * 0.48, s * 0.64, s * 0.16); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.28, -s * 1.22);
-        ctx.lineTo(-s * 0.16, -s * 1.68);
-        ctx.lineTo(-s * 0.04, -s * 1.18);
-        ctx.closePath(); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(s * 0.28, -s * 1.22);
-        ctx.lineTo(s * 0.16, -s * 1.68);
-        ctx.lineTo(s * 0.04, -s * 1.18);
-        ctx.closePath(); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.14, -s * 0.82);
-        ctx.lineTo(0, -s * 0.62);
-        ctx.lineTo(s * 0.14, -s * 0.82);
-        ctx.closePath(); ctx.fill();
-
-        // jaw / snout
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.18, -s * 0.92);
-        ctx.quadraticCurveTo(0, -s * 0.7, s * 0.18, -s * 0.92);
-        ctx.lineTo(s * 0.12, -s * 0.68);
-        ctx.lineTo(-s * 0.12, -s * 0.68);
-        ctx.closePath(); ctx.fill();
-
-        // limbs
-        roundRect(-s * 0.5, s * 0.36, s * 0.22, s * 0.78, s * 0.08); ctx.fill();
-        roundRect(s * 0.28, s * 0.36, s * 0.22, s * 0.78, s * 0.08); ctx.fill();
-        roundRect(-s * 1.0, -s * 0.24, s * 0.18, s * 0.86, s * 0.06); ctx.fill();
-        roundRect(s * 0.82, -s * 0.24, s * 0.18, s * 0.86, s * 0.06); ctx.fill();
-
-        // claws
-        ctx.fillStyle = "rgba(255,233,233,0.94)";
-        [[-s * 0.45, s * 1.1], [-s * 0.34, s * 1.12], [s * 0.35, s * 1.1], [s * 0.46, s * 1.12]].forEach(([cx, cy]) => {
-          ctx.beginPath();
-          ctx.moveTo(cx, cy);
-          ctx.lineTo(cx + (cx < 0 ? -s * 0.06 : s * 0.06), cy + s * 0.1);
-          ctx.lineTo(cx + (cx < 0 ? s * 0.02 : -s * 0.02), cy + s * 0.02);
-          ctx.closePath();
-          ctx.fill();
-        });
-
-        // eyes / core
-        ctx.fillStyle = "rgba(251,191,36,0.98)";
-        ctx.beginPath(); ctx.arc(-s * 0.11, -s * 1.12, s * 0.06, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(s * 0.11, -s * 1.12, s * 0.06, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "rgba(255,255,255,0.95)";
-        ctx.beginPath(); ctx.arc(-s * 0.095, -s * 1.14, s * 0.02, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(s * 0.095, -s * 1.14, s * 0.02, 0, Math.PI * 2); ctx.fill();
-
-        // flame breath particles
-        const flamePulse = 0.55 + 0.45 * Math.sin(t * 8);
-        for (let i = 0; i < 6; i++) {
-          const fx = -s * 0.04 + i * s * 0.06;
-          const fy = -s * 0.62 - i * s * 0.045;
-          ctx.fillStyle = i % 2 ? "rgba(255,255,255,0.88)" : `rgba(251,146,60,${0.28 + flamePulse * 0.34})`;
-          ctx.beginPath();
-          ctx.arc(fx, fy, s * (0.03 + i * 0.005), 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.fillStyle = "rgba(255,255,255,0.95)";
-        ctx.font = `900 ${Math.max(14, s * 0.12)}px system-ui`;
-        ctx.textAlign = "center";
-        ctx.fillText("ANCIENT DRAGON", 0, -s * 1.84);
-        if (m.burnT > 0) {
-          for (let i = 0; i < 6; i++) {
-            const fy = -s * 1.2 + i * s * 0.16;
-            ctx.fillStyle = i % 2 ? "rgba(255,245,245,0.72)" : `rgba(249,115,22,${0.22 + i * 0.08})`;
-            ctx.beginPath();
-            ctx.ellipse((i % 2 ? -1 : 1) * s * 0.12, fy, s * 0.10, s * 0.18, 0, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-        ctx.restore();
-        drawMonsterHpBar(m, s * 1.72);
-        return;
-      }
-      if (m.dead) return;
-      const s = m.scale;
-      const bob = Math.sin(t * 2 + m.wobble) * (s > 20 ? 4 : 2);
-      ctx.save();
-      ctx.translate(m.x, m.y + bob);
-      ctx.globalAlpha = 0.24;
-      ctx.fillStyle = "rgba(10,14,24,0.82)";
-      ctx.beginPath();
-      ctx.ellipse(0, s * 2.1, s * 1.45, s * 0.42, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      const flash = m.hitFlash > 0 ? 0.45 + m.hitFlash * 0.35 : 0;
-      const bodyGrad = ctx.createLinearGradient(0, -s * 2.2, 0, s * 1.8);
-      bodyGrad.addColorStop(0, flash ? "#e5e7eb" : "#334155");
-      bodyGrad.addColorStop(0.5, flash ? "#94a3b8" : "#0f172a");
-      bodyGrad.addColorStop(1, "#020617");
-      ctx.fillStyle = bodyGrad;
-      roundRect(-s * 0.8, -s * 1.8, s * 1.6, s * 2.5, Math.max(18, s * 0.25));
-      ctx.fill();
-      ctx.strokeStyle = flash ? "rgba(248,250,252,0.95)" : "rgba(148,163,184,0.42)";
-      ctx.lineWidth = Math.max(2, s * 0.05);
-      roundRect(-s * 0.8, -s * 1.8, s * 1.6, s * 2.5, Math.max(18, s * 0.25));
-      ctx.stroke();
-      ctx.fillStyle = "rgba(59,130,246,0.95)";
-      ctx.fillRect(-s * 0.34, -s * 1.18, s * 0.68, s * 0.16);
-      ctx.fillStyle = "rgba(34,211,238,0.88)";
-      ctx.fillRect(-s * 0.12, -s * 0.72, s * 0.24, s * 0.38);
-      ctx.fillStyle = "#0f172a";
-      roundRect(-s * 0.48, s * 0.72, s * 0.36, s * 1.15, s * 0.14); ctx.fill();
-      roundRect(s * 0.12, s * 0.72, s * 0.36, s * 1.15, s * 0.14); ctx.fill();
-      roundRect(-s * 1.06, -s * 1.05, s * 0.28, s * 1.5, s * 0.12); ctx.fill();
-      roundRect(s * 0.78, -s * 1.05, s * 0.28, s * 1.5, s * 0.12); ctx.fill();
-      ctx.fillStyle = "rgba(239,68,68,0.95)";
-      ctx.beginPath(); ctx.arc(0, -s * 1.42, s * 0.18, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "rgba(255,255,255,0.95)";
-      ctx.font = `900 ${Math.max(10, s * 0.16)}px system-ui`;
-      ctx.textAlign = "center";
-      ctx.fillText(m.label, 0, -s * 2.12);
-      if (m.burnT > 0) {
-        for (let i = 0; i < 5; i++) {
-          const fy = -s * 1.25 + i * s * 0.22;
-          ctx.fillStyle = i % 2 ? "rgba(255,245,245,0.72)" : `rgba(249,115,22,${0.18 + i * 0.08})`;
-          ctx.beginPath();
-          ctx.ellipse((i % 2 ? -1 : 1) * s * 0.10, fy, s * 0.08, s * 0.14, 0, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-      ctx.restore();
-      drawMonsterHpBar(m, s * 1.4);
+        const s = m.scale; const bob = Math.sin(t * 1.6 + m.wobble) * 6; const wingFlap = Math.sin(t * 2.3 + m.wobble) * 0.15;
+        ctx.save(); ctx.translate(m.x, m.y + bob); ctx.globalAlpha = 0.22; ctx.fillStyle = "rgba(2,6,23,0.88)"; ctx.beginPath(); ctx.ellipse(0, s * 1.34, s * 1.32, s * 0.30, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+        ctx.shadowColor = m.hitFlash > 0 ? "rgba(255,245,245,0.95)" : "rgba(168,85,247,0.55)"; ctx.shadowBlur = 24;
+        const bodyGrad = ctx.createLinearGradient(0, -s * 1.95, 0, s * 1.18); bodyGrad.addColorStop(0, m.hitFlash > 0 ? "#f5f3ff" : "#5b21b6"); bodyGrad.addColorStop(0.26, m.hitFlash > 0 ? "#ddd6fe" : "#312e81"); bodyGrad.addColorStop(0.72, "#160b23"); bodyGrad.addColorStop(1, "#020617"); ctx.fillStyle = bodyGrad;
+        ctx.save(); ctx.rotate(-0.10 + wingFlap); ctx.beginPath(); ctx.moveTo(-s * 0.1, -s * 0.52); ctx.quadraticCurveTo(-s * 1.38, -s * 1.62, -s * 2.12, -s * 0.18); ctx.quadraticCurveTo(-s * 1.56, -s * 0.02, -s * 0.90, s * 0.28); ctx.quadraticCurveTo(-s * 0.54, s * 0.06, -s * 0.1, -s * 0.32); ctx.closePath(); ctx.fill(); ctx.restore();
+        ctx.save(); ctx.rotate(0.10 - wingFlap); ctx.beginPath(); ctx.moveTo(s * 0.1, -s * 0.52); ctx.quadraticCurveTo(s * 1.38, -s * 1.62, s * 2.12, -s * 0.18); ctx.quadraticCurveTo(s * 1.56, -s * 0.02, s * 0.90, s * 0.28); ctx.quadraticCurveTo(s * 0.54, s * 0.06, s * 0.1, -s * 0.32); ctx.closePath(); ctx.fill(); ctx.restore();
+        ctx.strokeStyle = "rgba(91,33,182,0.96)"; ctx.lineWidth = Math.max(10, s * 0.12); ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(-s * 0.08, s * 0.58); ctx.quadraticCurveTo(s * 0.82, s * 1.00, s * 1.52, s * 1.38); ctx.quadraticCurveTo(s * 1.74, s * 1.48, s * 1.62, s * 1.66); ctx.stroke();
+        roundRect(-s * 0.62, -s * 0.98, s * 1.24, s * 1.55, s * 0.24); ctx.fill(); ctx.fillStyle = "rgba(255,255,255,0.14)"; roundRect(-s * 0.28, -s * 0.18, s * 0.56, s * 0.46, s * 0.12); ctx.fill(); ctx.fillStyle = "rgba(34,211,238,0.95)"; roundRect(-s * 0.22, -s * 0.46, s * 0.44, s * 0.13, s * 0.06); ctx.fill(); ctx.fillStyle = bodyGrad;
+        roundRect(-s * 0.26, -s * 1.48, s * 0.52, s * 0.68, s * 0.16); ctx.fill(); ctx.beginPath(); ctx.moveTo(-s * 0.30, -s * 1.24); ctx.lineTo(-s * 0.18, -s * 1.74); ctx.lineTo(-s * 0.05, -s * 1.20); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(s * 0.30, -s * 1.24); ctx.lineTo(s * 0.18, -s * 1.74); ctx.lineTo(s * 0.05, -s * 1.20); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(-s * 0.16, -s * 0.84); ctx.lineTo(0, -s * 0.62); ctx.lineTo(s * 0.16, -s * 0.84); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(-s * 0.20, -s * 0.98); ctx.quadraticCurveTo(0, -s * 0.72, s * 0.20, -s * 0.98); ctx.lineTo(s * 0.14, -s * 0.70); ctx.lineTo(-s * 0.14, -s * 0.70); ctx.closePath(); ctx.fill();
+        roundRect(-s * 0.52, s * 0.38, s * 0.24, s * 0.80, s * 0.08); ctx.fill(); roundRect(s * 0.28, s * 0.38, s * 0.24, s * 0.80, s * 0.08); ctx.fill(); roundRect(-s * 1.04, -s * 0.26, s * 0.20, s * 0.90, s * 0.06); ctx.fill(); roundRect(s * 0.84, -s * 0.26, s * 0.20, s * 0.90, s * 0.06); ctx.fill();
+        ctx.fillStyle = "rgba(255,233,233,0.94)"; [[-s * 0.47, s * 1.12], [-s * 0.34, s * 1.16], [s * 0.36, s * 1.12], [s * 0.48, s * 1.16]].forEach(([cx, cy]) => { ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + (cx < 0 ? -s * 0.06 : s * 0.06), cy + s * 0.10); ctx.lineTo(cx + (cx < 0 ? s * 0.02 : -s * 0.02), cy + s * 0.02); ctx.closePath(); ctx.fill(); });
+        ctx.fillStyle = "rgba(34,211,238,0.98)"; ctx.beginPath(); ctx.arc(-s * 0.11, -s * 1.14, s * 0.065, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(s * 0.11, -s * 1.14, s * 0.065, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "rgba(255,255,255,0.96)"; ctx.beginPath(); ctx.arc(-s * 0.095, -s * 1.16, s * 0.02, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(s * 0.095, -s * 1.16, s * 0.02, 0, Math.PI * 2); ctx.fill();
+        const flamePulse = 0.55 + 0.45 * Math.sin(t * 8); for (let i = 0; i < 7; i++) { const fx = -s * 0.10 + i * s * 0.032; const fy = -s * 0.66 - i * s * 0.04; ctx.fillStyle = i % 2 ? "linear-gradient(180deg, rgba(30,20,12,0.96), rgba(10,8,8,0.94))" : `rgba(168,85,247,${0.28 + flamePulse * 0.40})`; ctx.beginPath(); ctx.arc(fx, fy, s * (0.028 + i * 0.004), 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = "rgba(255,255,255,0.96)"; ctx.font = `1000 ${Math.max(14, s * 0.12)}px system-ui`; ctx.textAlign = "center"; ctx.fillText("DREAD DRAGON", 0, -s * 1.88);
+        if (m.burnT > 0) { for (let i = 0; i < 6; i++) { const fy = -s * 1.24 + i * s * 0.16; ctx.fillStyle = i % 2 ? "rgba(255,245,245,0.72)" : `rgba(168,85,247,${0.22 + i * 0.08})`; ctx.beginPath(); ctx.ellipse((i % 2 ? -1 : 1) * s * 0.12, fy, s * 0.10, s * 0.18, 0, 0, Math.PI * 2); ctx.fill(); } }
+        ctx.restore(); drawMonsterHpBar(m, s * 1.72); return; }
+      const s = m.scale, bob = Math.sin(t * 2 + m.wobble) * (s > 20 ? 4 : 2); ctx.save(); ctx.translate(m.x, m.y + bob); ctx.globalAlpha = 0.26; ctx.fillStyle = "rgba(2,6,23,0.82)"; ctx.beginPath(); ctx.ellipse(0, s * 2.1, s * 1.48, s * 0.42, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; const flash = m.hitFlash > 0 ? 0.45 + m.hitFlash * 0.35 : 0;
+      const bodyGrad = ctx.createLinearGradient(0, -s * 2.2, 0, s * 1.8); bodyGrad.addColorStop(0, flash ? "#e9d5ff" : "#5b21b6"); bodyGrad.addColorStop(0.48, flash ? "#c4b5fd" : "#1e1b4b"); bodyGrad.addColorStop(1, "#020617"); ctx.fillStyle = bodyGrad;
+      roundRect(-s * 0.8, -s * 1.8, s * 1.6, s * 2.5, Math.max(18, s * 0.25)); ctx.fill(); ctx.strokeStyle = flash ? "rgba(248,250,252,0.95)" : "rgba(167,139,250,0.48)"; ctx.lineWidth = Math.max(2, s * 0.05); roundRect(-s * 0.8, -s * 1.8, s * 1.6, s * 2.5, Math.max(18, s * 0.25)); ctx.stroke();
+      ctx.fillStyle = "rgba(34,211,238,0.95)"; ctx.fillRect(-s * 0.34, -s * 1.18, s * 0.68, s * 0.16); ctx.fillStyle = "rgba(168,85,247,0.88)"; ctx.fillRect(-s * 0.12, -s * 0.72, s * 0.24, s * 0.38); ctx.fillStyle = "#0f172a"; roundRect(-s * 0.48, s * 0.72, s * 0.36, s * 1.15, s * 0.14); ctx.fill(); roundRect(s * 0.12, s * 0.72, s * 0.36, s * 1.15, s * 0.14); ctx.fill(); roundRect(-s * 1.06, -s * 1.05, s * 0.28, s * 1.5, s * 0.12); ctx.fill(); roundRect(s * 0.78, -s * 1.05, s * 0.28, s * 1.5, s * 0.12); ctx.fill();
+      ctx.fillStyle = "rgba(236,72,153,0.95)"; ctx.beginPath(); ctx.arc(0, -s * 1.42, s * 0.18, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "rgba(255,255,255,0.95)"; ctx.font = `900 ${Math.max(10, s * 0.16)}px system-ui`; ctx.textAlign = "center"; ctx.fillText("ABYSS KNIGHT", 0, -s * 2.12);
+      if (m.burnT > 0) { for (let i = 0; i < 5; i++) { const fy = -s * 1.25 + i * s * 0.22; ctx.fillStyle = i % 2 ? "rgba(255,245,245,0.72)" : `rgba(168,85,247,${0.20 + i * 0.08})`; ctx.beginPath(); ctx.ellipse((i % 2 ? -1 : 1) * s * 0.10, fy, s * 0.08, s * 0.14, 0, 0, Math.PI * 2); ctx.fill(); } }
+      ctx.restore(); drawMonsterHpBar(m, s * 1.4);
     }
 
     function drawSlime(m, t) {
       if (m.dead) return;
-      const squish = 1 + Math.sin(t * 5 + m.wobble) * 0.06;
-      ctx.save();
-      ctx.translate(m.x, m.y);
-      ctx.globalAlpha = 0.2;
-      ctx.fillStyle = "rgba(10,14,24,0.6)";
-      ctx.beginPath(); ctx.ellipse(0, 18, 18, 6, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
-      const g = ctx.createLinearGradient(0, -18, 0, 18);
-      const slimeTop = (m.colors && m.colors[0]) || '#93f5b0';
-      const slimeBot = (m.colors && m.colors[1]) || '#22c55e';
-      g.addColorStop(0, slimeTop); g.addColorStop(1, slimeBot);
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.moveTo(-18, 12);
-      ctx.quadraticCurveTo(-16, -10, 0, -16 * squish);
-      ctx.quadraticCurveTo(16, -10, 18, 12);
-      ctx.quadraticCurveTo(10, 18, 0, 20);
-      ctx.quadraticCurveTo(-10, 18, -18, 12);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.35)';
-      ctx.beginPath(); ctx.ellipse(-5, -4, 5, 3, -0.4, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#111827';
-      ctx.beginPath(); ctx.arc(-5, 2, 1.6, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(5, 2, 1.6, 0, Math.PI * 2); ctx.fill();
-      ctx.fillRect(-4, 8, 8, 1.4);
+      const squish = 1 + Math.sin(t * 5 + m.wobble) * 0.08;
+      const core = m.variant === "yellow" ? "#f59e0b" : m.variant === "purple" ? "#a855f7" : "#22c55e";
+      const top = m.variant === "yellow" ? "#fde68a" : m.variant === "purple" ? "#d8b4fe" : "#86efac";
+      const bot = m.variant === "yellow" ? "#78350f" : m.variant === "purple" ? "#3b0764" : "#14532d";
+      ctx.save(); ctx.translate(m.x, m.y); ctx.globalAlpha = 0.24; ctx.fillStyle = "rgba(2,6,23,0.72)"; ctx.beginPath(); ctx.ellipse(0, 19, 19, 6.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+      const g = ctx.createLinearGradient(0, -20, 0, 20); g.addColorStop(0, top); g.addColorStop(0.38, core); g.addColorStop(1, bot); ctx.fillStyle = g; ctx.shadowColor = core; ctx.shadowBlur = 16; ctx.beginPath(); ctx.moveTo(-19, 12); ctx.quadraticCurveTo(-17, -12, 0, -18 * squish); ctx.quadraticCurveTo(17, -12, 19, 12); ctx.quadraticCurveTo(11, 19, 0, 21); ctx.quadraticCurveTo(-11, 19, -19, 12); ctx.fill(); ctx.shadowBlur = 0;
+      ctx.fillStyle = "rgba(255,255,255,0.28)"; ctx.beginPath(); ctx.ellipse(-5, -5, 5.5, 3.2, -0.4, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "rgba(255,255,255,0.88)"; ctx.beginPath(); ctx.arc(-6, 1, 1.7, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(6, 1, 1.7, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#111827"; ctx.beginPath(); ctx.arc(-6, 1, 0.9, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(6, 1, 0.9, 0, Math.PI * 2); ctx.fill(); ctx.fillRect(-4.5, 8, 9, 1.6);
+      ctx.fillStyle = core; ctx.beginPath(); ctx.arc(0, 6, 3.2, 0, Math.PI * 2); ctx.fill(); for (let i = 0; i < 4; i++) { const ang = t * 2.8 + i * 1.57; const px = Math.cos(ang) * 9; const py = -4 + Math.sin(ang) * 7; ctx.fillStyle = i % 2 ? "rgba(255,255,255,0.82)" : core; ctx.beginPath(); ctx.arc(px, py, 1.2, 0, Math.PI * 2); ctx.fill(); }
       ctx.restore();
     }
 
@@ -5201,4 +4676,120 @@ function loop(){
 
 loop();
 
+})();
+
+
+/* ===== v200 lineage gold-dark UI frame patch ===== */
+(function(){
+  function applyGoldDarkUI(){
+    try{
+      const ids=["toast","coord","fps","inventory_panel","equipment_panel","blacksmith_card","joystick_base","joystick_knob","btn_inventory","btn_equipment","btn_save","btn_enter","btn_attack","btn_fireball","btn_haste","btn_save_desktop","btn_fireball_desktop","btn_haste_desktop"];
+      ids.forEach(id=>{
+        const el=document.getElementById(id);
+        if(!el) return;
+        if(/panel|card|toast|coord|fps/.test(id)){
+          el.style.background='linear-gradient(180deg, rgba(26,18,12,0.96), rgba(8,8,10,0.94))';
+          el.style.border='1px solid rgba(214,174,84,0.38)';
+          el.style.boxShadow='0 20px 48px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,240,176,0.12), 0 0 0 1px rgba(95,64,21,0.22)';
+          el.style.color='#f7df9a';
+        }
+      });
+      document.querySelectorAll('#inventory_panel .panel-title b,#equipment_panel .panel-title b,.panel-title span,.slot-card .meta b,.slot-card .meta span,.mini-label,.empty-text').forEach(el=>{
+        el.style.color = el.tagName==='B' ? '#f7df9a' : 'rgba(231,210,150,0.78)';
+      });
+      document.querySelectorAll('.slot-card').forEach(el=>{
+        el.style.background='linear-gradient(180deg, rgba(34,22,12,0.98), rgba(12,10,10,0.94))';
+        el.style.border='1px solid rgba(214,174,84,0.24)';
+        el.style.boxShadow='inset 0 1px 0 rgba(255,241,190,0.08), 0 14px 28px rgba(0,0,0,0.26)';
+      });
+      document.querySelectorAll('button').forEach(btn=>{
+        const txt=(btn.textContent||'').trim();
+        if(/BUY|SHOP|GO IN|SAVE|ATTACK|FIRE|SPEED|EQUIP|INVEN|TAB|UPGRADE|CLOSE|OFF|UNEQUIP|Q FIRE|R SPEED/.test(txt)){
+          if(!/linear-gradient\(180deg,#/.test(btn.style.background)){
+            btn.style.background='linear-gradient(180deg, rgba(73,49,20,0.98), rgba(23,16,10,0.98))';
+          }
+          btn.style.border='1px solid rgba(214,174,84,0.34)';
+          btn.style.color='#f7df9a';
+          btn.style.textShadow='0 1px 0 rgba(0,0,0,0.46)';
+          btn.style.boxShadow='0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,236,163,0.16)';
+        }
+      });
+      const mm=document.getElementById('world');
+      if(mm){ document.body.style.background='#060608'; }
+    }catch(e){}
+    requestAnimationFrame(applyGoldDarkUI);
+  }
+  applyGoldDarkUI();
+})();
+
+
+/* ===== v300 COMPLETE LINEAGE DARK FANTASY OVERHAUL ===== */
+(function(){
+  function addLineageFrame(){
+    try{
+      let fx = document.getElementById('lineage_ui_frame');
+      if(!fx){
+        fx = document.createElement('div');
+        fx.id = 'lineage_ui_frame';
+        fx.style.position = 'fixed';
+        fx.style.inset = '0';
+        fx.style.pointerEvents = 'none';
+        fx.style.zIndex = '10050';
+        fx.style.background = `
+          radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.18) 78%, rgba(0,0,0,0.44) 100%),
+          linear-gradient(180deg, rgba(190,150,70,0.16), rgba(0,0,0,0) 15%, rgba(0,0,0,0) 85%, rgba(190,150,70,0.14))
+        `;
+        fx.innerHTML = `
+          <div style="position:absolute;inset:10px;border:1px solid rgba(201,164,83,0.42);box-shadow:inset 0 0 0 2px rgba(44,28,12,0.82), inset 0 0 26px rgba(201,164,83,0.10), 0 0 40px rgba(0,0,0,0.34);border-radius:18px"></div>
+          <div style="position:absolute;left:18px;top:18px;width:86px;height:86px;border-left:4px solid rgba(201,164,83,0.52);border-top:4px solid rgba(201,164,83,0.52);border-radius:18px 0 0 0"></div>
+          <div style="position:absolute;right:18px;top:18px;width:86px;height:86px;border-right:4px solid rgba(201,164,83,0.52);border-top:4px solid rgba(201,164,83,0.52);border-radius:0 18px 0 0"></div>
+          <div style="position:absolute;left:18px;bottom:18px;width:86px;height:86px;border-left:4px solid rgba(201,164,83,0.52);border-bottom:4px solid rgba(201,164,83,0.52);border-radius:0 0 0 18px"></div>
+          <div style="position:absolute;right:18px;bottom:18px;width:86px;height:86px;border-right:4px solid rgba(201,164,83,0.52);border-bottom:4px solid rgba(201,164,83,0.52);border-radius:0 0 18px 0"></div>
+        `;
+        document.body.appendChild(fx);
+      }
+    }catch(e){}
+  }
+
+  function styleAllUI(){
+    try{
+      document.body.style.background = '#06050a';
+      const frameBg='linear-gradient(180deg, rgba(32,20,11,0.97), rgba(8,6,10,0.96))';
+      const border='1px solid rgba(201,164,83,0.42)';
+      const glow='0 18px 44px rgba(0,0,0,0.44), inset 0 1px 0 rgba(255,230,160,0.12), inset 0 0 0 1px rgba(93,63,24,0.35), 0 0 18px rgba(201,164,83,0.08)';
+      ['toast','coord','fps','inventory_panel','equipment_panel','blacksmith_card'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(!el) return;
+        el.style.background=frameBg;
+        el.style.border=border;
+        el.style.boxShadow=glow;
+        el.style.color='#f3d488';
+      });
+      document.querySelectorAll('.slot-card,.shop-item,.shop-head,.grid-slot').forEach(el=>{
+        el.style.background='linear-gradient(180deg, rgba(29,17,11,0.98), rgba(10,8,9,0.95))';
+        el.style.border='1px solid rgba(201,164,83,0.22)';
+        el.style.boxShadow='inset 0 1px 0 rgba(255,231,166,0.08), 0 10px 24px rgba(0,0,0,0.28)';
+        el.style.color='#eed58f';
+      });
+      document.querySelectorAll('button').forEach(btn=>{
+        btn.style.border='1px solid rgba(201,164,83,0.36)';
+        btn.style.color='#f5d98b';
+        btn.style.background='linear-gradient(180deg, rgba(83,57,22,0.98), rgba(20,13,9,0.98))';
+        btn.style.textShadow='0 1px 0 rgba(0,0,0,0.55)';
+        btn.style.boxShadow='0 10px 22px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,227,155,0.15)';
+      });
+      const atk=document.getElementById('btn_attack');
+      if(atk) atk.style.background='linear-gradient(180deg, rgba(138,45,31,0.98), rgba(35,9,8,0.98))';
+      const fire=document.getElementById('btn_fireball');
+      if(fire) fire.style.background='linear-gradient(180deg, rgba(159,92,22,0.98), rgba(42,18,6,0.98))';
+      const haste=document.getElementById('btn_haste');
+      if(haste) haste.style.background='linear-gradient(180deg, rgba(72,94,32,0.98), rgba(18,25,10,0.98))';
+      document.querySelectorAll('.panel-title b,.slot-card .meta b,.shop-item .meta b').forEach(el=>el.style.color='#f6dc95');
+      document.querySelectorAll('.panel-title span,.slot-card .meta span,.mini-label,.shop-item .meta span,.empty-text').forEach(el=>el.style.color='rgba(234,214,156,0.76)');
+    }catch(e){}
+    requestAnimationFrame(styleAllUI);
+  }
+
+  addLineageFrame();
+  styleAllUI();
 })();
