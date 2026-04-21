@@ -1545,12 +1545,13 @@
     UI.enterBtn.addEventListener("click", onMobilePortalAction);
     renderPanels();
 
-    (function setupWorldThemeButtons(){
+    
+(function setupWorldThemeButtons(){
       const wrap = document.createElement("div");
       wrap.id = "world_theme_toggle";
       wrap.style.position = "fixed";
-      wrap.style.right = isTouchDevice() ? "14px" : "18px";
-      wrap.style.top = isTouchDevice() ? "14px" : "62px";
+      wrap.style.right = isTouchDevice() ? "18px" : "18px";
+      wrap.style.top = isTouchDevice() ? "128px" : "62px";
       wrap.style.zIndex = "10030";
       wrap.style.display = "flex";
       wrap.style.gap = "0";
@@ -1564,14 +1565,14 @@
         const b = document.createElement("button");
         b.id = id;
         b.type = "button";
-        b.innerHTML = `<span style="font-size:15px">${icon}</span>`;
+        b.innerHTML = `<span style="font-size:${isTouchDevice() ? 17 : 15}px">${icon}</span>`;
         b.title = label;
         b.setAttribute("aria-label", label);
         b.style.cursor = "pointer";
         b.style.border = "none";
         b.style.borderRadius = "999px";
-        b.style.width = isTouchDevice() ? "42px" : "44px";
-        b.style.height = isTouchDevice() ? "42px" : "44px";
+        b.style.width = isTouchDevice() ? "44px" : "44px";
+        b.style.height = isTouchDevice() ? "44px" : "44px";
         b.style.font = "1000 11px system-ui";
         b.style.letterSpacing = "0.06em";
         b.style.boxShadow = "inset 0 1px 0 rgba(255,232,176,0.14)";
@@ -1635,6 +1636,7 @@
       }
     }
 
+    
     function triggerFireball() {
       const now = performance.now();
       if (combatState.fireballCd > now) return;
@@ -1647,41 +1649,45 @@
         const d = Math.hypot(m.x - player.x, m.y - player.y);
         if (d < best) { best = d; target = m; }
       }
-      const aimX = target ? target.x - anchor.x : anchor.vx * 120 + anchor.x;
-      const aimY = target ? target.y - anchor.y : anchor.vy * 120 + anchor.y;
+      const aimX = target ? target.x - anchor.x : anchor.vx * 160 + anchor.x;
+      const aimY = target ? target.y - anchor.y : anchor.vy * 160 + anchor.y;
       const len = Math.hypot(aimX, aimY) || 1;
       combatState.fireballCd = now + 3000;
       combatState.fireballs.push({
-        x: anchor.x, y: anchor.y, vx: (aimX / len) * 520, vy: (aimY / len) * 520,
-        life: 1.4, radius: 14, damage: Math.max(2, Math.round(base * 2)), burn: 2.8, targetId: target ? target.id : null
+        x: anchor.x, y: anchor.y, vx: (aimX / len) * 580, vy: (aimY / len) * 580,
+        life: 1.55, radius: 26, damage: Math.max(3, Math.round(base * 2.65)), burn: 3.4, targetId: target ? target.id : null,
+        flare: 36, core: 12
       });
-      player.gearFlashT = 0.35;
+      player.gearFlashT = 0.42;
     }
 
+    
     function triggerThunderstorm() {
       const now = performance.now();
       if (combatState.thunderCd > now) return;
       combatState.thunderCd = now + 3000;
-      player.gearFlashT = 0.52;
-      const radius = 240;
-      const targets = [...combatState.slimes, ...combatState.titans].filter((m) => !m.dead && Math.hypot(m.x - player.x, m.y - player.y) <= radius + (m.scale ? m.scale * 0.8 : 0));
-      const base = Math.max(3, Math.round(playerAttackPower() * 1.5));
+      player.gearFlashT = 0.62;
+      const radius = 420;
+      const targets = [...combatState.slimes, ...combatState.titans].filter((m) => !m.dead && Math.hypot(m.x - player.x, m.y - player.y) <= radius + (m.scale ? m.scale * 1.15 : 0));
+      const base = Math.max(4, Math.round(playerAttackPower() * 1.85));
       targets.forEach((m, idx) => {
-        const delay = idx * 0.05;
-        const damage = Math.round(base * (m.scale ? 0.95 : 1.15));
-        combatState.thunderBolts.push({ x: m.x, y: m.y, life: 0.52 + delay, maxLife: 0.52 + delay, delay, damage, done: false, target: m });
+        const delay = idx * 0.035;
+        const damage = Math.round(base * (m.scale ? 1.05 : 1.22));
+        combatState.thunderBolts.push({ x: m.x, y: m.y, life: 0.68 + delay, maxLife: 0.68 + delay, delay, damage, done: false, target: m });
       });
-      for (let i = 0; i < 8; i++) {
-        const ang = i / 8 * Math.PI * 2;
-        combatState.thunderBursts.push({ x: player.x + Math.cos(ang) * 60, y: player.y + Math.sin(ang) * 32, life: 0.42, ring: true });
+      for (let i = 0; i < 14; i++) {
+        const ang = i / 14 * Math.PI * 2;
+        const rr = 82 + (i % 3) * 34;
+        combatState.thunderBursts.push({ x: player.x + Math.cos(ang) * rr, y: player.y + Math.sin(ang) * rr * 0.58, life: 0.52, ring: true, big: i % 2 === 0 });
       }
       if (!targets.length) {
-        for (let i = 0; i < 6; i++) {
-          const ang = i / 6 * Math.PI * 2;
-          combatState.thunderBolts.push({ x: player.x + Math.cos(ang) * 130, y: player.y + Math.sin(ang) * 80, life: 0.48, maxLife: 0.48, delay: i * 0.03, damage: 0, done: true, target: null });
+        for (let i = 0; i < 12; i++) {
+          const ang = i / 12 * Math.PI * 2;
+          const rr = 170 + (i % 3) * 48;
+          combatState.thunderBolts.push({ x: player.x + Math.cos(ang) * rr, y: player.y + Math.sin(ang) * rr * 0.62, life: 0.62, maxLife: 0.62, delay: i * 0.02, damage: 0, done: true, target: null });
         }
       }
-      spawnDamageText(player.x, player.y - 54, "THUNDER STORM", "#c4b5fd", 1.08);
+      spawnDamageText(player.x, player.y - 58, "THUNDER STORM", "#c4b5fd", 1.16);
     }
 
     function triggerHaste() {
@@ -3492,6 +3498,7 @@ function drawWorldTitle() {
       ctx.font = "800 11px system-ui";
       ctx.fillStyle = "rgba(10,14,24,0.74)";
       ctx.fillText("MINIMAP", x + 14, y + 16);
+      window.__xgpMiniMapBox = { x, y, w: mw, h: mh };
       ctx.restore();
     }
 
@@ -3569,6 +3576,7 @@ function drawWorldTitle() {
     }
 
     
+
 function drawMinifig(x, y, opts = {}) {
       const isHero = !!opts.isHero;
       const pal = opts.palette || { torso: isHero ? "#1a1723" : "#172035", pants: isHero ? "#08090f" : "#161a27", hat: isHero ? "#7c3aed" : "#22d3ee", skin: "#e7cab4", hair: "#0b0f18" };
@@ -3576,9 +3584,11 @@ function drawMinifig(x, y, opts = {}) {
       const dir = opts.dirOverride || player.dir;
       const moving = typeof opts.moving === "boolean" ? opts.moving : player.moving;
       const walkPhase = typeof opts.walkPhase === "number" ? opts.walkPhase : player.walkPhase;
-      const bob = moving ? Math.sin(walkPhase) * 2.1 : 0;
-      const armSwing = moving ? Math.sin(walkPhase) * 0.62 : 0;
-      const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.54 : 0;
+      const bob = moving ? Math.sin(walkPhase * 1.05) * 3.3 : 0;
+      const sway = moving ? Math.sin(walkPhase * 0.52) * 0.12 : 0;
+      const armSwing = moving ? Math.sin(walkPhase) * 0.92 : 0;
+      const legSwing = moving ? Math.sin(walkPhase + Math.PI) * 0.86 : 0;
+      const shoulderLift = moving ? Math.sin(walkPhase * 2) * 1.8 : 0;
       const atk = isHero ? combatState.attackT / 0.28 : 0;
       const attackPose = isHero && combatState.attackT > 0;
       const attackEase = attackPose ? Math.sin(Math.min(1, atk) * Math.PI) : 0;
@@ -3589,122 +3599,173 @@ function drawMinifig(x, y, opts = {}) {
       const weaponGlow = gear?.weaponTier?.glow || "#f59e0b";
       const shieldMain = gear?.shieldColor || "#475569";
       const shieldGlow = gear?.shieldTier?.glow || "#38bdf8";
+      const heroScaleX = dir === "left" || dir === "right" ? 0.93 : 1.0;
+      const headTilt = dir === "left" ? -0.08 : dir === "right" ? 0.08 : 0;
+      const frontView = dir === "down";
+      const backView = dir === "up";
+      const sideView = dir === "left" || dir === "right";
+
       ctx.save();
       ctx.translate(x, y + bob + 4);
       if (dir === "left") ctx.scale(-1, 1);
+      ctx.scale(heroScaleX, 1);
 
-      ctx.globalAlpha = 0.26;
-      ctx.fillStyle = "rgba(8,6,12,0.58)";
+      ctx.globalAlpha = 0.28;
+      ctx.fillStyle = "rgba(8,6,12,0.62)";
       ctx.beginPath();
-      ctx.ellipse(0, 31, 22, 8.5, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 31, sideView ? 18 : 24, sideView ? 7 : 8.8, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
 
       if (isHero) {
-        const aura = ctx.createRadialGradient(0, 2, 6, 0, 2, 46);
-        aura.addColorStop(0, worldThemeMode === "morning" ? "rgba(255,220,140,0.18)" : "rgba(154,111,255,0.20)");
-        aura.addColorStop(0.45, worldThemeMode === "morning" ? "rgba(255,188,92,0.10)" : "rgba(90,63,178,0.12)");
+        const aura = ctx.createRadialGradient(0, 2, 6, 0, 2, sideView ? 40 : 50);
+        aura.addColorStop(0, worldThemeMode === "morning" ? "rgba(255,220,140,0.16)" : "rgba(154,111,255,0.18)");
+        aura.addColorStop(0.45, worldThemeMode === "morning" ? "rgba(255,188,92,0.08)" : "rgba(90,63,178,0.10)");
         aura.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = aura;
-        ctx.beginPath(); ctx.arc(0, 2, 46, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(0, 2, sideView ? 40 : 50, 0, Math.PI * 2); ctx.fill();
       }
 
       const capeCol = worldThemeMode === "morning" ? "#5b2013" : "#2b0d19";
       ctx.save();
+      ctx.rotate(sway);
       ctx.fillStyle = capeCol;
       ctx.shadowColor = isHero ? "rgba(0,0,0,0.36)" : "transparent";
       ctx.shadowBlur = 12;
-      ctx.beginPath();
-      ctx.moveTo(-15, -13);
-      ctx.quadraticCurveTo(-30, 6, -18, 28);
-      ctx.quadraticCurveTo(-4, 24, 0, 10);
-      ctx.quadraticCurveTo(4, 24, 18, 28);
-      ctx.quadraticCurveTo(30, 6, 15, -13);
-      ctx.quadraticCurveTo(0, -6, -15, -13);
-      ctx.closePath();
+      if (backView) {
+        ctx.beginPath();
+        ctx.moveTo(-14, -16);
+        ctx.quadraticCurveTo(-28, 4, -16, 30);
+        ctx.quadraticCurveTo(0, 22, 16, 30);
+        ctx.quadraticCurveTo(28, 4, 14, -16);
+        ctx.closePath();
+      } else if (sideView) {
+        ctx.beginPath();
+        ctx.moveTo(-8, -14);
+        ctx.quadraticCurveTo(-28, 8, -12, 30);
+        ctx.quadraticCurveTo(0, 18, 10, 10);
+        ctx.quadraticCurveTo(4, -2, -8, -14);
+        ctx.closePath();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(-15, -13);
+        ctx.quadraticCurveTo(-30, 6, -18, 28);
+        ctx.quadraticCurveTo(-4, 24, 0, 10);
+        ctx.quadraticCurveTo(4, 24, 18, 28);
+        ctx.quadraticCurveTo(30, 6, 15, -13);
+        ctx.quadraticCurveTo(0, -6, -15, -13);
+        ctx.closePath();
+      }
       ctx.fill();
       ctx.restore();
 
-      const legGrad = ctx.createLinearGradient(0, 6, 0, 26);
-      legGrad.addColorStop(0, shade(armorMain, -6));
+      const legGrad = ctx.createLinearGradient(0, 6, 0, 28);
+      legGrad.addColorStop(0, shade(armorMain, -4));
       legGrad.addColorStop(1, "#040509");
-      ctx.save(); ctx.translate(0, 10); ctx.rotate(legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(-13, 0, 10, 21, 4); ctx.fill(); ctx.fillStyle = armorHi; roundRect(-12, 10, 8, 4, 2); ctx.fill(); ctx.restore();
-      ctx.save(); ctx.translate(0, 10); ctx.rotate(-legSwing * 0.18); ctx.fillStyle = legGrad; roundRect(3, 0, 10, 21, 4); ctx.fill(); ctx.fillStyle = armorHi; roundRect(4, 10, 8, 4, 2); ctx.fill(); ctx.restore();
+      const legWidth = sideView ? 8 : 10;
+      const legGap = sideView ? 4 : 6;
+      ctx.save(); ctx.translate(0, 10); ctx.rotate(legSwing * 0.26); ctx.fillStyle = legGrad; roundRect(-(legGap + legWidth), 0, legWidth, 23, 4); ctx.fill(); ctx.fillStyle = armorHi; roundRect(-(legGap + legWidth) + 1, 10, legWidth - 2, 4, 2); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.translate(0, 10); ctx.rotate(-legSwing * 0.26); ctx.fillStyle = legGrad; roundRect(legGap, 0, legWidth, 23, 4); ctx.fill(); ctx.fillStyle = armorHi; roundRect(legGap + 1, 10, legWidth - 2, 4, 2); ctx.fill(); ctx.restore();
 
-      const torsoGrad = ctx.createLinearGradient(0, -24, 0, 16);
+      const torsoGrad = ctx.createLinearGradient(0, -26, 0, 18);
       torsoGrad.addColorStop(0, shade(armorMain, 28));
       torsoGrad.addColorStop(0.42, armorMain);
       torsoGrad.addColorStop(1, "#05060b");
       ctx.fillStyle = torsoGrad;
       ctx.shadowColor = armorGlow;
       ctx.shadowBlur = isHero ? 18 : 0;
-      roundRect(-19, -17, 38, 33, 11);
+      if (sideView) {
+        roundRect(-15, -18, 28, 35, 10);
+      } else {
+        roundRect(-19, -17, 38, 35, 11);
+      }
       ctx.fill();
       ctx.shadowBlur = 0;
       ctx.strokeStyle = "rgba(238,203,118,0.62)";
       ctx.lineWidth = 1.8;
-      roundRect(-16, -12, 32, 23, 8);
+      if (sideView) roundRect(-13, -13, 24, 24, 8);
+      else roundRect(-16, -12, 32, 25, 8);
       ctx.stroke();
-      ctx.fillStyle = "rgba(255,238,186,0.18)";
-      roundRect(-12, -11, 24, 7, 4);
-      ctx.fill();
-      ctx.fillStyle = armorHi;
-      roundRect(-5, -8, 10, 20, 4);
-      ctx.fill();
-      ctx.fillStyle = "#f2d181";
-      roundRect(-2, -5, 4, 12, 2);
-      ctx.fill();
-      ctx.fillStyle = shade(armorMain, -22);
-      roundRect(-23, -13, 8, 14, 4); ctx.fill();
-      roundRect(15, -13, 8, 14, 4); ctx.fill();
+
+      if (frontView) {
+        ctx.fillStyle = "rgba(255,238,186,0.18)";
+        roundRect(-12, -11, 24, 8, 4); ctx.fill();
+        ctx.fillStyle = armorHi; roundRect(-5, -8, 10, 22, 4); ctx.fill();
+        ctx.fillStyle = "#f2d181"; roundRect(-2, -6, 4, 13, 2); ctx.fill();
+        ctx.fillStyle = shade(armorMain, -22); roundRect(-23, -13, 8, 15, 4); ctx.fill(); roundRect(15, -13, 8, 15, 4); ctx.fill();
+      } else if (backView) {
+        ctx.fillStyle = "rgba(255,218,120,0.16)";
+        roundRect(-15, -14, 30, 7, 4); ctx.fill();
+        ctx.fillStyle = shade(armorMain, -18);
+        roundRect(-13, -10, 26, 18, 6); ctx.fill();
+        ctx.fillStyle = "rgba(255,230,170,0.14)";
+        roundRect(-10, -8, 20, 4, 2); ctx.fill();
+      } else {
+        ctx.fillStyle = "rgba(255,238,186,0.14)";
+        roundRect(-8, -12, 12, 7, 3); ctx.fill();
+        ctx.fillStyle = armorHi;
+        roundRect(-2, -8, 7, 20, 3); ctx.fill();
+        ctx.fillStyle = shade(armorMain, -22);
+        roundRect(-17, -11, 7, 14, 4); ctx.fill();
+      }
+
       ctx.fillStyle = "rgba(255,218,120,0.28)";
-      ctx.beginPath(); ctx.moveTo(-18, -16); ctx.lineTo(-26, -28); ctx.lineTo(-12, -20); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(18, -16); ctx.lineTo(26, -28); ctx.lineTo(12, -20); ctx.closePath(); ctx.fill();
+      if (!sideView) {
+        ctx.beginPath(); ctx.moveTo(-18, -16); ctx.lineTo(-26, -28); ctx.lineTo(-12, -20); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(18, -16); ctx.lineTo(26, -28); ctx.lineTo(12, -20); ctx.closePath(); ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.moveTo(10, -16); ctx.lineTo(20, -28); ctx.lineTo(8, -20); ctx.closePath(); ctx.fill();
+      }
 
       ctx.save();
-      ctx.translate(-20, -4);
-      ctx.rotate(-0.42 + armSwing * 0.52);
+      ctx.translate(sideView ? -14 : -20, -4 + shoulderLift * 0.18);
+      ctx.rotate(-0.58 + armSwing * 0.72);
       ctx.fillStyle = torsoGrad;
-      roundRect(-5, 0, 10, 23, 5);
+      roundRect(-5, 0, 10, 24, 5);
       ctx.fill();
       ctx.fillStyle = armorHi;
-      roundRect(-4, 2, 8, 6, 3);
+      roundRect(-4, 2, 8, 7, 3);
       ctx.fill();
       ctx.restore();
 
       ctx.save();
-      ctx.translate(19, -5);
-      ctx.rotate(0.20 - armSwing * 0.28 + (attackPose ? (-0.78 - 1.04 * attackEase) : -0.44));
+      ctx.translate(sideView ? 12 : 19, -5 - shoulderLift * 0.18);
+      ctx.rotate(0.24 - armSwing * 0.38 + (attackPose ? (-0.96 - 1.12 * attackEase) : -0.52));
       ctx.fillStyle = torsoGrad;
-      roundRect(-5, 0, 10, 23, 5);
+      roundRect(-5, 0, 10, 24, 5);
       ctx.fill();
       ctx.fillStyle = armorHi;
-      roundRect(-4, 2, 8, 6, 3);
+      roundRect(-4, 2, 8, 7, 3);
       ctx.fill();
+
       if (isHero) {
         ctx.save();
-        const swingBase = dir === "up" ? -2.44 : dir === "left" ? -2.18 : dir === "right" ? 2.06 : 2.22;
-        const swingArc = dir === "up" ? (attackPose ? (0.24 - 0.96 * attackEase) : 0.06) : dir === "left" ? (attackPose ? (0.28 - 0.98 * attackEase) : 0.06) : dir === "right" ? (attackPose ? (0.44 - 1.12 * attackEase) : 0.08) : (attackPose ? (0.46 - 1.22 * attackEase) : 0.08);
-        ctx.translate(dir === "left" ? -6 : dir === "up" ? -1.5 : 6.5, dir === "up" ? 11 : 14.3);
+        const swingBase = dir === "up" ? -2.56 : dir === "left" ? -2.26 : dir === "right" ? 2.12 : 2.32;
+        const swingArc = dir === "up" ? (attackPose ? (0.30 - 1.06 * attackEase) : 0.08) : dir === "left" ? (attackPose ? (0.34 - 1.02 * attackEase) : 0.08) : dir === "right" ? (attackPose ? (0.48 - 1.18 * attackEase) : 0.10) : (attackPose ? (0.52 - 1.28 * attackEase) : 0.10);
+        ctx.translate(dir === "left" ? -7 : dir === "up" ? -2 : 7.6, dir === "up" ? 12 : 14.8);
         ctx.rotate(swingBase + swingArc);
-        ctx.shadowColor = weaponGlow; ctx.shadowBlur = 22;
-        const blade = ctx.createLinearGradient(0, -46, 0, 16);
-        blade.addColorStop(0, "#fff9ec"); blade.addColorStop(0.18, "#f6d67d"); blade.addColorStop(0.34, weaponGlow); blade.addColorStop(0.72, weaponMain); blade.addColorStop(1, "#120d10");
+        ctx.shadowColor = weaponGlow; ctx.shadowBlur = 24 + Math.min(16, (gear?.weaponPlus || 0) * 2);
+        const blade = ctx.createLinearGradient(0, -56, 0, 18);
+        blade.addColorStop(0, "#fff9ec");
+        blade.addColorStop(0.16, "#f6d67d");
+        blade.addColorStop(0.32, weaponGlow);
+        blade.addColorStop(0.72, weaponMain);
+        blade.addColorStop(1, "#120d10");
         ctx.fillStyle = blade;
         ctx.beginPath();
-        ctx.moveTo(-2.8, 12); ctx.lineTo(-4.0, 4); ctx.lineTo(-3.0, -10); ctx.lineTo(-1.2, -25); ctx.lineTo(0, -42); ctx.lineTo(1.2, -25); ctx.lineTo(3.0, -10); ctx.lineTo(4.0, 4); ctx.lineTo(2.8, 12); ctx.closePath();
+        ctx.moveTo(-3.5, 13); ctx.lineTo(-4.7, 5); ctx.lineTo(-3.8, -12); ctx.lineTo(-1.7, -30); ctx.lineTo(0, -52); ctx.lineTo(1.7, -30); ctx.lineTo(3.8, -12); ctx.lineTo(4.7, 5); ctx.lineTo(3.5, 13); ctx.closePath();
         ctx.fill();
-        ctx.lineWidth = 1.4; ctx.strokeStyle = "rgba(255,255,255,0.92)"; ctx.beginPath(); ctx.moveTo(0, -40); ctx.lineTo(0, 7); ctx.stroke();
-        const guard = ctx.createLinearGradient(-10, 0, 10, 0); guard.addColorStop(0, "#5f3f18"); guard.addColorStop(0.5, "#f2d27a"); guard.addColorStop(1, "#5f3f18");
-        ctx.fillStyle = guard; roundRect(-8, 6, 16, 5, 2.5); ctx.fill();
-        ctx.fillStyle = "#2d110e"; roundRect(-2.6, 9.5, 5.2, 11.5, 2.8); ctx.fill();
-        ctx.fillStyle = "#f6d67d"; ctx.beginPath(); ctx.arc(0, 12.5, 2.2, 0, Math.PI * 2); ctx.fill();
-        for (let i = 0; i < 4 + Math.max(1, gear?.weaponPlus || 0); i++) {
+        ctx.lineWidth = 1.6; ctx.strokeStyle = "rgba(255,255,255,0.94)"; ctx.beginPath(); ctx.moveTo(0, -49); ctx.lineTo(0, 8); ctx.stroke();
+        const guard = ctx.createLinearGradient(-12, 0, 12, 0); guard.addColorStop(0, "#5f3f18"); guard.addColorStop(0.5, "#f2d27a"); guard.addColorStop(1, "#5f3f18");
+        ctx.fillStyle = guard; roundRect(-10, 6, 20, 5.5, 2.7); ctx.fill();
+        ctx.fillStyle = "#2d110e"; roundRect(-2.8, 9.8, 5.6, 13, 2.8); ctx.fill();
+        ctx.fillStyle = "#f6d67d"; ctx.beginPath(); ctx.arc(0, 13.6, 2.4, 0, Math.PI * 2); ctx.fill();
+        for (let i = 0; i < 5 + Math.max(1, gear?.weaponPlus || 0); i++) {
           const ang = performance.now()/220 + i * 0.78;
-          const px = Math.cos(ang) * (8 + i * 0.6);
-          const py = -18 + Math.sin(ang) * (13 + i * 0.45);
-          ctx.fillStyle = i % 2 ? "rgba(255,248,218,0.92)" : (weaponGlow + "cc");
-          ctx.beginPath(); ctx.arc(px, py, i % 2 ? 1.25 : 1.8, 0, Math.PI * 2); ctx.fill();
+          const px = Math.cos(ang) * (10 + i * 0.8);
+          const py = -20 + Math.sin(ang) * (15 + i * 0.6);
+          ctx.fillStyle = i % 2 ? "rgba(255,248,218,0.94)" : (weaponGlow + "cc");
+          ctx.beginPath(); ctx.arc(px, py, i % 2 ? 1.35 : 1.95, 0, Math.PI * 2); ctx.fill();
         }
         ctx.restore();
       }
@@ -3712,57 +3773,77 @@ function drawMinifig(x, y, opts = {}) {
 
       if (isHero) {
         ctx.save();
-        ctx.translate(-23, 0);
-        ctx.rotate(-0.24);
-        ctx.shadowColor = shieldGlow; ctx.shadowBlur = 18;
-        const shieldGrad = ctx.createLinearGradient(0, -26, 0, 26);
-        shieldGrad.addColorStop(0, "#fdf6dd"); shieldGrad.addColorStop(0.18, shieldGlow); shieldGrad.addColorStop(0.46, shieldMain); shieldGrad.addColorStop(1, "#090b11");
+        ctx.translate(sideView ? -16 : -23, sideView ? -2 : 0);
+        ctx.rotate(sideView ? -0.40 : -0.24);
+        ctx.shadowColor = shieldGlow; ctx.shadowBlur = 20;
+        const shieldGrad = ctx.createLinearGradient(0, -28, 0, 28);
+        shieldGrad.addColorStop(0, "#fdf6dd");
+        shieldGrad.addColorStop(0.18, shieldGlow);
+        shieldGrad.addColorStop(0.46, shieldMain);
+        shieldGrad.addColorStop(1, "#090b11");
         ctx.fillStyle = shieldGrad;
-        ctx.beginPath(); ctx.moveTo(0, -25); ctx.lineTo(18, -14); ctx.lineTo(14, 11); ctx.lineTo(0, 25); ctx.lineTo(-14, 11); ctx.lineTo(-18, -14); ctx.closePath(); ctx.fill();
-        ctx.strokeStyle = "rgba(242,209,129,0.86)"; ctx.lineWidth = 2.6; ctx.stroke();
-        ctx.fillStyle = "rgba(255,245,210,0.90)"; roundRect(-1.4, -16, 2.8, 30, 1.4); ctx.fill(); roundRect(-9, -1.5, 18, 3, 1.4); ctx.fill();
-        ctx.fillStyle = "rgba(255,214,115,0.94)"; ctx.beginPath(); ctx.arc(0, -12, 3.0, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(0, 12, 3.0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(0, -26); ctx.lineTo(19, -14); ctx.lineTo(15, 12); ctx.lineTo(0, 27); ctx.lineTo(-15, 12); ctx.lineTo(-19, -14); ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "rgba(242,209,129,0.86)"; ctx.lineWidth = 2.8; ctx.stroke();
+        ctx.fillStyle = "rgba(255,245,210,0.90)"; roundRect(-1.5, -17, 3, 32, 1.5); ctx.fill(); roundRect(-10, -1.7, 20, 3.4, 1.5); ctx.fill();
+        ctx.fillStyle = "rgba(255,214,115,0.94)"; ctx.beginPath(); ctx.arc(0, -12, 3.2, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(0, 12, 3.2, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       }
 
+      ctx.save();
+      ctx.rotate(headTilt);
       ctx.fillStyle = pal.skin || "#e7cab4";
-      roundRect(-12, -35, 24, 18, 8); ctx.fill();
+      if (sideView) roundRect(-10, -35, 18, 18, 8);
+      else roundRect(-12, -35, 24, 18, 8);
+      ctx.fill();
       if (isHero) {
-        const helmGrad = ctx.createLinearGradient(0, -60, 0, -15);
-        helmGrad.addColorStop(0, "#5d6471"); helmGrad.addColorStop(0.22, "#10131b"); helmGrad.addColorStop(1, "#000000");
+        const helmGrad = ctx.createLinearGradient(0, -62, 0, -14);
+        helmGrad.addColorStop(0, "#69717f");
+        helmGrad.addColorStop(0.22, "#10131b");
+        helmGrad.addColorStop(1, "#000000");
         ctx.fillStyle = helmGrad;
-        ctx.beginPath();
-        ctx.moveTo(-17,-27); ctx.lineTo(-13,-48); ctx.lineTo(-8,-57); ctx.lineTo(-2,-52); ctx.lineTo(0,-60); ctx.lineTo(2,-52); ctx.lineTo(8,-57); ctx.lineTo(13,-48); ctx.lineTo(17,-27); ctx.lineTo(13,-14); ctx.lineTo(8,-10); ctx.lineTo(6,-24); ctx.lineTo(-6,-24); ctx.lineTo(-8,-10); ctx.lineTo(-13,-14); ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = "rgba(255,220,128,0.88)";
-        roundRect(-10, -30, 20, 4.5, 2); ctx.fill();
-        roundRect(-4, -49, 8, 11, 3); ctx.fill();
-        ctx.shadowColor = armorGlow; ctx.shadowBlur = 14;
-        ctx.beginPath(); ctx.moveTo(-12,-37); ctx.lineTo(-22,-55); ctx.lineTo(-10,-46); ctx.closePath(); ctx.fill();
-        ctx.beginPath(); ctx.moveTo(12,-37); ctx.lineTo(22,-55); ctx.lineTo(10,-46); ctx.closePath(); ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "rgba(120,180,255,0.95)";
-        roundRect(-8, -28, 16, 4, 2); ctx.fill();
+        if (sideView) {
+          ctx.beginPath();
+          ctx.moveTo(-12,-28); ctx.lineTo(-10,-48); ctx.lineTo(-2,-58); ctx.lineTo(9,-51); ctx.lineTo(12,-34); ctx.lineTo(9,-18); ctx.lineTo(-4,-16); ctx.lineTo(-10,-20); ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = "rgba(120,180,255,0.95)";
+          roundRect(-1, -29, 10, 4.2, 2); ctx.fill();
+          ctx.fillStyle = "rgba(255,220,128,0.86)";
+          roundRect(-6, -31, 12, 4, 2); ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(-17,-27); ctx.lineTo(-13,-48); ctx.lineTo(-8,-57); ctx.lineTo(-2,-52); ctx.lineTo(0,-60); ctx.lineTo(2,-52); ctx.lineTo(8,-57); ctx.lineTo(13,-48); ctx.lineTo(17,-27); ctx.lineTo(13,-14); ctx.lineTo(8,-10); ctx.lineTo(6,-24); ctx.lineTo(-6,-24); ctx.lineTo(-8,-10); ctx.lineTo(-13,-14); ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = "rgba(255,220,128,0.88)";
+          roundRect(-10, -30, 20, 4.5, 2); ctx.fill();
+          roundRect(-4, -49, 8, 11, 3); ctx.fill();
+          ctx.shadowColor = armorGlow; ctx.shadowBlur = 14;
+          ctx.beginPath(); ctx.moveTo(-12,-37); ctx.lineTo(-22,-55); ctx.lineTo(-10,-46); ctx.closePath(); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(12,-37); ctx.lineTo(22,-55); ctx.lineTo(10,-46); ctx.closePath(); ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = "rgba(120,180,255,0.95)";
+          roundRect(-8, -28, 16, 4, 2); ctx.fill();
+        }
       } else {
         ctx.fillStyle = pal.hair || "#0b0f18"; roundRect(-14, -38, 28, 10, 7); ctx.fill();
         ctx.fillStyle = pal.hat || "#22d3ee"; roundRect(-10, -45, 20, 8, 5); ctx.fill();
       }
-      if (dir === "up") {
-        ctx.fillStyle = isHero ? "rgba(120,195,255,0.46)" : "#0b1020";
-        roundRect(-7, -30, 14, 5, 2); ctx.fill();
-        ctx.fillStyle = "rgba(30,41,59,0.82)";
-        roundRect(-5, -24, 10, 2.4, 1.2); ctx.fill();
-      } else if (dir === "left") {
-        ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(-3, -24, 1.6, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(-6, -20, 6, 1.4, 0.7); ctx.fill();
-      } else if (dir === "right") {
-        ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(3, -24, 1.6, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(0, -20, 6, 1.4, 0.7); ctx.fill();
+      if (backView) {
+        ctx.fillStyle = "rgba(30,41,59,0.88)";
+        roundRect(-6, -25, 12, 3, 1.5); ctx.fill();
+      } else if (sideView) {
+        ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(2, -24, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(1, -20, 6, 1.4, 0.7); ctx.fill();
       } else {
-        ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(-4, -24, 1.5, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(4, -24, 1.5, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(-4, -20, 8, 1.4, 0.7); ctx.fill();
+        ctx.fillStyle = "#0b1020";
+        ctx.beginPath(); ctx.arc(-4, -24, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(4, -24, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020";
+        roundRect(-4, -20, 8, 1.4, 0.7); ctx.fill();
       }
+      ctx.restore();
+
       if (isHero) drawGearEffect(0, -8);
       ctx.restore();
     }
@@ -4124,7 +4205,7 @@ function drawMinifig(x, y, opts = {}) {
         const baseDamage = playerAttackPower();
         const comboBonus = 1 + (combatState.combo - 1) * 0.22;
         const critChance = 0.14 + getEnhanceLevel("weapon") * 0.015;
-        combatState.slashFx.push({ x: fxX, y: fxY, dir: player.dir, life: 0.34, combo: combatState.combo, color: getEquippedVisuals().weaponTier?.glow || getEquippedVisuals().weaponColor || "#ffffff", tier: getEquippedVisuals().weaponTier?.label || "", plus: getEnhanceLevel("weapon") || 0 });
+        combatState.slashFx.push({ x: fxX, y: fxY, dir: player.dir, life: 0.42, combo: combatState.combo, color: getEquippedVisuals().weaponTier?.glow || getEquippedVisuals().weaponColor || "#ffffff", tier: getEquippedVisuals().weaponTier?.label || "", plus: getEnhanceLevel("weapon") || 0, dragon: (getEquippedVisuals().weaponTier?.label || "") === "MYTHIC" || (getEnhanceLevel("weapon") || 0) >= 8 });
         for (const m of combatState.slimes) {
           if (m.dead) continue;
           if (Math.hypot(m.x - fxX, m.y - fxY) < range) {
@@ -4425,27 +4506,33 @@ function drawMinifig(x, y, opts = {}) {
         ctx.save();
         ctx.translate(f.x, f.y);
         ctx.shadowColor = "rgba(251,146,60,0.98)";
-        ctx.shadowBlur = 34;
-        for (let i = 0; i < 4; i++) {
-          ctx.rotate(0.7 + i * 0.2);
-          ctx.fillStyle = i % 2 ? "rgba(255,240,180,0.32)" : "rgba(249,115,22,0.28)";
+        ctx.shadowBlur = 42;
+        for (let i = 0; i < 6; i++) {
+          ctx.rotate(0.52 + i * 0.12);
+          ctx.fillStyle = i % 2 ? "rgba(255,240,180,0.34)" : "rgba(249,115,22,0.30)";
           ctx.beginPath();
-          ctx.moveTo(-6, 0); ctx.quadraticCurveTo(-22, -9, -34, 0); ctx.quadraticCurveTo(-20, 8, -6, 2); ctx.closePath();
+          ctx.moveTo(-8, 0); ctx.quadraticCurveTo(-26, -12, -42, 0); ctx.quadraticCurveTo(-22, 10, -8, 2); ctx.closePath();
           ctx.fill();
         }
-        const g = ctx.createRadialGradient(0, 0, 2, 0, 0, f.radius + 12);
+        const g = ctx.createRadialGradient(0, 0, 2, 0, 0, f.radius + 22);
         g.addColorStop(0, "rgba(255,255,255,1)");
-        g.addColorStop(0.16, "rgba(255,242,204,1)");
-        g.addColorStop(0.42, "rgba(254,215,170,0.98)");
-        g.addColorStop(0.72, "rgba(249,115,22,0.96)");
+        g.addColorStop(0.12, "rgba(255,250,224,1)");
+        g.addColorStop(0.28, "rgba(255,214,140,0.98)");
+        g.addColorStop(0.56, "rgba(249,115,22,0.98)");
+        g.addColorStop(0.78, "rgba(190,24,93,0.42)");
         g.addColorStop(1, "rgba(153,27,27,0.0)");
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(0, 0, f.radius + 12, 0, Math.PI * 2);
+        ctx.arc(0, 0, f.radius + 22, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        ctx.strokeStyle = "rgba(255,230,190,0.88)";
+        ctx.lineWidth = 2.4;
         ctx.beginPath();
-        ctx.arc(-3, -3, f.radius * 0.38, 0, Math.PI * 2);
+        ctx.arc(0, 0, f.radius + 12, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,0.98)";
+        ctx.beginPath();
+        ctx.arc(-4, -4, Math.max(8, f.radius * 0.46), 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
@@ -4478,34 +4565,46 @@ function drawMinifig(x, y, opts = {}) {
         ctx.save();
         const alpha = Math.max(0, Math.min(1, tb.life / (tb.maxLife || 0.5)));
         ctx.globalAlpha = alpha;
-        ctx.strokeStyle = "rgba(196,181,253,0.95)";
-        ctx.lineWidth = 4;
-        ctx.shadowColor = "rgba(167,139,250,0.95)";
-        ctx.shadowBlur = 22;
-        let px = tb.x + (Math.random() - 0.5) * 10;
-        let py = tb.y - 260;
+        ctx.strokeStyle = "rgba(224,216,255,0.98)";
+        ctx.lineWidth = tb.target && tb.target.scale ? 6 : 4.5;
+        ctx.shadowColor = "rgba(167,139,250,0.98)";
+        ctx.shadowBlur = 28;
+        let px = tb.x + (Math.random() - 0.5) * 14;
+        let py = tb.y - 320;
         ctx.beginPath();
         ctx.moveTo(px, py);
-        for (let i = 0; i < 7; i++) {
-          const ny = tb.y - 220 + i * 38;
-          const nx = tb.x + (Math.random() - 0.5) * 30;
+        for (let i = 0; i < 9; i++) {
+          const ny = tb.y - 280 + i * 40;
+          const nx = tb.x + (Math.random() - 0.5) * 46;
           ctx.lineTo(nx, ny);
         }
+        ctx.lineTo(tb.x, tb.y);
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(255,255,255,0.92)";
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
         ctx.lineTo(tb.x, tb.y);
         ctx.stroke();
         ctx.restore();
       }
       for (const burst of combatState.thunderBursts) {
         ctx.save();
-        const a = Math.max(0, burst.life / 0.45);
+        const a = Math.max(0, burst.life / 0.52);
         ctx.globalAlpha = a;
         ctx.translate(burst.x, burst.y);
-        ctx.strokeStyle = "rgba(196,181,253,0.95)";
-        ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.arc(0, 0, 26 + (1-a) * 42, 0, Math.PI * 2); ctx.stroke();
-        for (let i = 0; i < 6; i++) {
-          const ang = i / 6 * Math.PI * 2;
-          ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(ang) * (26 + (1-a) * 42), Math.sin(ang) * (26 + (1-a) * 42)); ctx.stroke();
+        const rr = (burst.big ? 44 : 30) + (1-a) * (burst.big ? 58 : 44);
+        ctx.strokeStyle = "rgba(196,181,253,0.96)";
+        ctx.lineWidth = burst.big ? 4.5 : 3.2;
+        ctx.beginPath(); ctx.arc(0, 0, rr, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = "rgba(255,255,255,0.84)";
+        ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.arc(0, 0, rr * 0.68, 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < 10; i++) {
+          const ang = i / 10 * Math.PI * 2;
+          ctx.strokeStyle = i % 2 ? "rgba(224,216,255,0.94)" : "rgba(167,139,250,0.84)";
+          ctx.lineWidth = i % 2 ? 2.2 : 1.6;
+          ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(ang) * rr, Math.sin(ang) * rr); ctx.stroke();
         }
         ctx.restore();
       }
@@ -4535,14 +4634,25 @@ function drawMinifig(x, y, opts = {}) {
         ctx.beginPath();
         ctx.arc(0, 0, 27 + (fx.combo||1)*2 + bonus * 0.28, -1.68, -0.28);
         ctx.stroke();
-        if (fx.tier === "MYTHIC") {
-          ctx.fillStyle = "rgba(180,235,255,0.26)";
+        if (fx.dragon) {
+          ctx.fillStyle = "rgba(180,235,255,0.24)";
           ctx.beginPath();
-          ctx.moveTo(-42,-6); ctx.quadraticCurveTo(-12,-46,18,-22); ctx.quadraticCurveTo(34,-12,44,-22); ctx.quadraticCurveTo(24,-4,16,10); ctx.quadraticCurveTo(-4,20,-22,10); ctx.quadraticCurveTo(-34,4,-42,-6); ctx.closePath();
+          ctx.moveTo(-48,-10);
+          ctx.quadraticCurveTo(-22,-54,12,-28);
+          ctx.quadraticCurveTo(26,-18,40,-28);
+          ctx.quadraticCurveTo(52,-14,48,-2);
+          ctx.quadraticCurveTo(36,6,26,10);
+          ctx.quadraticCurveTo(18,14,14,24);
+          ctx.quadraticCurveTo(6,14,-8,10);
+          ctx.quadraticCurveTo(-26,8,-40,-2);
+          ctx.closePath();
           ctx.fill();
-          ctx.strokeStyle = "rgba(120,210,255,0.8)";
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = "rgba(120,210,255,0.86)";
+          ctx.lineWidth = 2.2;
           ctx.stroke();
+          ctx.fillStyle = "rgba(255,255,255,0.92)";
+          ctx.beginPath(); ctx.arc(32,-20,3.2,0,Math.PI*2); ctx.fill();
+          ctx.beginPath(); ctx.arc(38,-18,2.0,0,Math.PI*2); ctx.fill();
         }
         ctx.restore();
       }
@@ -5210,4 +5320,30 @@ loop();
     requestAnimationFrame(styleThemeButtons);
   }
   styleThemeButtons();
+})();
+
+
+/* ===== v400 requested directional-render + mobile theme position patch ===== */
+(function(){
+  function placeThemeToggle(){
+    try{
+      const wrap = document.getElementById('world_theme_toggle');
+      const inv = document.getElementById('inventory_panel');
+      const eq = document.getElementById('equipment_panel');
+      if(!wrap) return;
+      const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || ((navigator.maxTouchPoints||0)>0);
+      if(mobile){
+        wrap.style.right = '18px';
+        wrap.style.top = '128px';
+      } else {
+        wrap.style.right = '18px';
+        wrap.style.top = '62px';
+      }
+      const invOpen = inv && getComputedStyle(inv).display !== 'none';
+      const eqOpen = eq && getComputedStyle(eq).display !== 'none';
+      wrap.style.display = (invOpen || eqOpen) ? 'none' : 'flex';
+    }catch(e){}
+    requestAnimationFrame(placeThemeToggle);
+  }
+  placeThemeToggle();
 })();
