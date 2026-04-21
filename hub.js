@@ -467,36 +467,36 @@
       enterBtn.style.top = "auto";
       enterBtn.style.zIndex = "10003";
       fireBtn.style.position = "fixed";
-      fireBtn.style.right = "106px";
-      fireBtn.style.bottom = "40px";
+      fireBtn.style.right = "104px";
+      fireBtn.style.bottom = "42px";
       fireBtn.style.left = "auto";
       fireBtn.style.top = "auto";
       fireBtn.style.zIndex = "10003";
-      fireBtn.style.width = "64px";
-      fireBtn.style.height = "64px";
-      fireBtn.style.minWidth = "64px";
+      fireBtn.style.width = "58px";
+      fireBtn.style.height = "58px";
+      fireBtn.style.minWidth = "58px";
       fireBtn.style.padding = "0";
       fireBtn.style.borderRadius = "999px";
       hasteBtn.style.position = "fixed";
-      hasteBtn.style.right = "28px";
-      hasteBtn.style.bottom = "114px";
+      hasteBtn.style.right = "30px";
+      hasteBtn.style.bottom = "112px";
       hasteBtn.style.left = "auto";
       hasteBtn.style.top = "auto";
       hasteBtn.style.zIndex = "10003";
-      hasteBtn.style.width = "64px";
-      hasteBtn.style.height = "64px";
-      hasteBtn.style.minWidth = "64px";
+      hasteBtn.style.width = "58px";
+      hasteBtn.style.height = "58px";
+      hasteBtn.style.minWidth = "58px";
       hasteBtn.style.padding = "0";
       hasteBtn.style.borderRadius = "999px";
       thunderBtn.style.position = "fixed";
-      thunderBtn.style.right = "104px";
-      thunderBtn.style.bottom = "114px";
+      thunderBtn.style.right = "100px";
+      thunderBtn.style.bottom = "112px";
       thunderBtn.style.left = "auto";
       thunderBtn.style.top = "auto";
       thunderBtn.style.zIndex = "10003";
-      thunderBtn.style.width = "64px";
-      thunderBtn.style.height = "64px";
-      thunderBtn.style.minWidth = "64px";
+      thunderBtn.style.width = "58px";
+      thunderBtn.style.height = "58px";
+      thunderBtn.style.minWidth = "58px";
       thunderBtn.style.padding = "0";
       thunderBtn.style.borderRadius = "999px";
       mobileBtns.style.pointerEvents = "none";
@@ -2263,10 +2263,10 @@
         { key: "instagram", label: "INSTAGRAM", color: "#8b5cf6", accent: "#f59e0b" }
       ];
       const mobileAds = isTouchDevice();
-      const startX = ZONES.ads.x + (mobileAds ? 132 : 228);
-      const gap = mobileAds ? 14 : 24;
-      const w = mobileAds ? 536 : 522, h = mobileAds ? 350 : 342;
-      const y = ZONES.ads.y + (mobileAds ? 88 : 74);
+      const startX = ZONES.ads.x + (mobileAds ? 78 : 128);
+      const gap = mobileAds ? 18 : 42;
+      const w = mobileAds ? 388 : 442, h = mobileAds ? 328 : 332;
+      const y = ZONES.ads.y + (mobileAds ? 94 : 80);
       for (let i = 0; i < items.length; i++) {
         adBuildings.push({ ...items[i], x: startX + i * (w + gap), y, w, h });
       }
@@ -3038,97 +3038,37 @@
     
 function drawAdBuilding(b, t) {
       const x = b.x, y = b.y, w = b.w, h = b.h;
-      const palette = {
-        youtube: { a: "#341016", b: "#120609", c: "#ef4444", trim: "#ffe4e6", rune: "#fca5a5" },
-        tiktok: { a: "#09131a", b: "#020617", c: "#22d3ee", trim: "#f5f3ff", rune: "#f472b6" },
-        instagram: { a: "#2b1136", b: "#120716", c: "#c084fc", trim: "#fdf2f8", rune: "#fb7185" }
-      }[b.key] || { a: "#171b28", b: "#070b12", c: "#38bdf8", trim: "#e2e8f0", rune: "#a78bfa" };
-      const pulse = 0.55 + 0.45 * Math.sin(t * 2.2 + x * 0.002);
-      groundAO(x + 18, y + h - 18, w - 36, 48, 0.18);
-      softShadow(x + 20, y + h - 10, w - 40, 20, 0.10);
-
-      ctx.save();
-      const body = ctx.createLinearGradient(x, y, x, y + h);
-      body.addColorStop(0, palette.a);
-      body.addColorStop(0.55, palette.b);
-      body.addColorStop(1, "#020617");
-      ctx.fillStyle = body;
-      roundRect(x, y + 40, w, h - 40, 30);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255,255,255,0.12)";
-      ctx.lineWidth = 2.5;
-      roundRect(x, y + 40, w, h - 40, 30);
-      ctx.stroke();
-
-      const signW = w * 0.80;
-      const signH = 70;
-      const signX = x + (w - signW) * 0.5;
-      const signY = y;
-      const signGrad = ctx.createLinearGradient(signX, signY, signX, signY + signH);
-      signGrad.addColorStop(0, shade(palette.c, 10));
-      signGrad.addColorStop(1, shade(palette.a, -8));
-      ctx.fillStyle = signGrad;
-      roundRect(signX, signY, signW, signH, 24);
-      ctx.fill();
-      ctx.shadowColor = palette.c;
-      ctx.shadowBlur = 18 + pulse * 10;
-      ctx.strokeStyle = palette.c;
-      ctx.lineWidth = 3;
-      roundRect(signX, signY, signW, signH, 24);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = palette.trim;
-      ctx.font = `1000 ${b.key === "instagram" ? 24 : 26}px system-ui`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(b.label, x + w * 0.5, signY + signH * 0.54);
-
       const adImg = getAdImageForKey(b.key);
+      groundAO(x + 12, y + h - 14, w - 24, 42, 0.16);
+      softShadow(x + 16, y + h - 8, w - 32, 18, 0.10);
       if (adImg && adImg.complete && adImg.naturalWidth > 0) {
-        const pad = 26;
-        const availW = w - pad * 2;
-        const availH = h * 0.42;
-        const scale = Math.min(availW / adImg.naturalWidth, availH / adImg.naturalHeight);
+        ctx.save();
+        roundRect(x, y, w, h, 28);
+        ctx.clip();
+        const scale = Math.min(w / adImg.naturalWidth, h / adImg.naturalHeight);
         const iw = adImg.naturalWidth * scale;
         const ih = adImg.naturalHeight * scale;
         const ix = x + (w - iw) * 0.5;
-        const iy = y + h * 0.30 - ih * 0.5;
-        ctx.save();
-        ctx.globalAlpha = 0.84;
+        const iy = y + (h - ih) * 0.5;
         ctx.drawImage(adImg, ix, iy, iw, ih);
         ctx.restore();
-      }
-
-      const windowY = y + h * 0.52;
-      for (let i = 0; i < 3; i++) {
-        const ww = w * 0.18;
-        const wx = x + w * 0.12 + i * (ww + w * 0.07);
-        const wg = ctx.createLinearGradient(wx, windowY, wx, windowY + h * 0.18);
-        wg.addColorStop(0, shade(palette.c, 18));
-        wg.addColorStop(1, "#050816");
-        ctx.fillStyle = wg;
-        roundRect(wx, windowY, ww, h * 0.18, 14);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(255,255,255,0.10)";
-        ctx.lineWidth = 2;
-        roundRect(wx, windowY, ww, h * 0.18, 14);
+        ctx.save();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = 'rgba(255,230,170,0.18)';
+        roundRect(x, y, w, h, 28);
         ctx.stroke();
+        ctx.restore();
+        return;
       }
-
-      ctx.fillStyle = "#07090f";
-      roundRect(x + w * 0.39, y + h * 0.58, w * 0.22, h * 0.24, 18);
+      ctx.save();
+      ctx.fillStyle = 'linear-gradient(180deg, rgba(58,39,18,0.98), rgba(17,13,10,0.98))';
+      roundRect(x, y, w, h, 28);
       ctx.fill();
-      ctx.strokeStyle = palette.rune;
-      ctx.lineWidth = 2;
-      roundRect(x + w * 0.39, y + h * 0.58, w * 0.22, h * 0.24, 18);
-      ctx.stroke();
-
-      ctx.fillStyle = "rgba(8,10,18,0.86)";
-      roundRect(x + w * 0.5 - 72, y + h - 52, 144, 28, 14);
-      ctx.fill();
-      ctx.fillStyle = palette.trim;
-      ctx.font = "900 14px system-ui";
-      ctx.fillText("COMING SOON", x + w * 0.5, y + h - 38);
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '1000 24px system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(b.label, x + w * 0.5, y + h * 0.5);
       ctx.restore();
     }
 
@@ -3705,10 +3645,13 @@ function drawMinifig(x, y, opts = {}) {
         roundRect(-2, -5, 4, 12, 2);
         ctx.fill();
       } else if (backView) {
-        roundRect(-12, -10, 24, 9, 4);
+        roundRect(-13, -11, 26, 10, 4);
         ctx.fill();
-        ctx.fillStyle = shade(armorMain, -16);
-        roundRect(-7, -6, 14, 17, 4);
+        ctx.fillStyle = shade(armorMain, -18);
+        roundRect(-9, -8, 18, 20, 5);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,216,120,0.18)';
+        roundRect(-11, -13, 22, 3.2, 1.6);
         ctx.fill();
       } else {
         roundRect(-9, -10, 18, 6, 4);
@@ -3789,11 +3732,13 @@ function drawMinifig(x, y, opts = {}) {
 
       ctx.save();
       ctx.translate(profile ? 0 : 0, headLag * 0.15);
-      ctx.fillStyle = pal.skin || "#e7cab4";
-      if (profile) {
-        roundRect(-9, -35, 18, 18, 8); ctx.fill();
-      } else {
-        roundRect(-12, -35, 24, 18, 8); ctx.fill();
+      if (!backView) {
+        ctx.fillStyle = pal.skin || "#e7cab4";
+        if (profile) {
+          roundRect(-9, -35, 18, 18, 8); ctx.fill();
+        } else {
+          roundRect(-12, -35, 24, 18, 8); ctx.fill();
+        }
       }
 
       if (isHero) {
@@ -3808,6 +3753,19 @@ function drawMinifig(x, y, opts = {}) {
           roundRect(-6, -30, 12, 4.5, 2); ctx.fill();
           ctx.fillStyle = "rgba(120,180,255,0.95)";
           roundRect(-2, -27, 8, 4, 2); ctx.fill();
+        } else if (backView) {
+          ctx.beginPath();
+          ctx.moveTo(-17,-29); ctx.lineTo(-13,-49); ctx.lineTo(-8,-57); ctx.lineTo(0,-61); ctx.lineTo(8,-57); ctx.lineTo(13,-49); ctx.lineTo(17,-29); ctx.lineTo(14,-13); ctx.lineTo(9,-8); ctx.lineTo(-9,-8); ctx.lineTo(-14,-13); ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = "rgba(255,220,128,0.72)";
+          roundRect(-10, -31, 20, 4, 2); ctx.fill();
+          roundRect(-3, -50, 6, 12, 3); ctx.fill();
+          ctx.fillStyle = "rgba(255,220,128,0.18)";
+          roundRect(-7, -18, 14, 7, 3); ctx.fill();
+          ctx.shadowColor = armorGlow; ctx.shadowBlur = 14;
+          ctx.beginPath(); ctx.moveTo(-12,-39); ctx.lineTo(-22,-56); ctx.lineTo(-10,-47); ctx.closePath(); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(12,-39); ctx.lineTo(22,-56); ctx.lineTo(10,-47); ctx.closePath(); ctx.fill();
+          ctx.shadowBlur = 0;
         } else {
           ctx.beginPath();
           ctx.moveTo(-17,-27); ctx.lineTo(-13,-48); ctx.lineTo(-8,-57); ctx.lineTo(-2,-52); ctx.lineTo(0,-60); ctx.lineTo(2,-52); ctx.lineTo(8,-57); ctx.lineTo(13,-48); ctx.lineTo(17,-27); ctx.lineTo(13,-14); ctx.lineTo(8,-10); ctx.lineTo(6,-24); ctx.lineTo(-6,-24); ctx.lineTo(-8,-10); ctx.lineTo(-13,-14); ctx.closePath();
@@ -3834,10 +3792,12 @@ function drawMinifig(x, y, opts = {}) {
       }
 
       if (backView) {
-        ctx.fillStyle = isHero ? "rgba(120,195,255,0.46)" : "#0b1020";
-        roundRect(-7, -30, 14, 5, 2); ctx.fill();
-        ctx.fillStyle = "rgba(30,41,59,0.82)";
-        roundRect(-5, -24, 10, 2.4, 1.2); ctx.fill();
+        ctx.fillStyle = "rgba(255,216,120,0.22)";
+        roundRect(-8, -30, 16, 4.4, 2); ctx.fill();
+        ctx.fillStyle = "rgba(30,41,59,0.92)";
+        roundRect(-6, -24, 12, 5.4, 2.2); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.10)";
+        roundRect(-9, -35, 18, 3.6, 1.8); ctx.fill();
       } else if (profile) {
         ctx.fillStyle = "#0b1020"; ctx.beginPath(); ctx.arc(3, -24, 1.6, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = isHero ? "rgba(120,195,255,0.92)" : "#0b1020"; roundRect(0, -20, 7, 1.4, 0.7); ctx.fill();
